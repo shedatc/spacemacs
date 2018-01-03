@@ -83,13 +83,15 @@
         )
 
 
-  ;; Use ctsr-like bindings.
+  ;; Use ctsr bindings to navigate lines and sources.
   (add-hook 'helm-mode-hook
             (lambda ()
               (sheda-core/adjust-keys-for-helm helm-map)
               (with-eval-after-load 'helm-bookmark
                 (sheda-core/adjust-keys-for-helm helm-bookmark-map)
-                (sheda-core/adjust-keys-for-helm helm-bookmark-find-files-map)))))
+                (sheda-core/adjust-keys-for-helm helm-bookmark-find-files-map))
+              (with-eval-after-load 'helm-org-rifle
+                (sheda-core/adjust-keys-for-helm helm-org-rifle-map)))))
 
 (defun sheda-core/init-nyan-mode ()
   "Initialize nyan-mode."

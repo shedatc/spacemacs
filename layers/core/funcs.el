@@ -41,7 +41,7 @@
                          (sheda-core/message "Session unlocked."))))
 
 (defun sheda-core/adjust-keys-for-helm (map)
+  (define-key map (kbd "C-c") 'helm-previous-source)
   (define-key map (kbd "C-t") 'helm-next-line)
   (define-key map (kbd "C-s") 'helm-previous-line)
-  (define-key map (kbd "C-r") 'helm-next-source)
-  (define-key map (kbd "C-n") 'helm-previous-source))
+  (define-key map (kbd "C-r") 'helm-next-source))
