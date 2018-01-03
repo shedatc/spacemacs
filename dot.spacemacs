@@ -43,10 +43,6 @@ values."
       auto-completion-complete-with-key-sequence-delay 0.1
       )
      c-c++
-     (elfeed :variables
-             elfeed-feeds '(("https://labo-sns.stormshield.eu/viewvc/viewvc.py/qualif/?date=month&view=query&format=rss" dev)
-                            ("https://labo-sns.stormshield.eu/viewvc/viewvc.py/devel/?date=month&view=query&format=rss" dev)
-                            ))
      emacs-lisp
      (git
       :variables
