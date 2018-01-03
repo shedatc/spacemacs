@@ -84,14 +84,14 @@ Each entry is either:
         org-export-with-smart-quotes t
         org-export-backends          '(ascii html icalendar latex md org)
         org-archive-location         "attic/%s_archive::"
+        org-id-search-archives       nil
         org-link-abbrev-alist
         '(("wikipedia"                     . "https://en.wikipedia.org/wiki/%s")
           ("man"                           . "http://www.freebsd.org/cgi/man.cgi?query=%s")
           ("bug"                           . "https://mantis.stormshield.eu/view.php?id=%s")
           ("review"                        . "https://labo-sns.stormshield.eu/reviewboard/r/%s")
           ("wiki"                          . "https://wiki.stormshield.eu/pmwiki_labo/index.php?n=%s")
-          ("file"                          . "file:///home/stephaner/ens/files/%s")
-          ;; ("code"                          . 'sheda-org/org-link-tag-to-code-view-url)
+          ("file"                          . "file:///home/stephaner/ens/files/%s") ;; XXX How should I invoke concat and expand-file-name to build it from user-home-directory?
           ("freebsd-architecture-handbook" . "https://www.freebsd.org/doc/en_US.ISO8859-1/books/arch-handbook/$1.html")
           ("freebsd-handbook"              . "https://www.freebsd.org/doc/en_US.ISO8859-1/books/handbook/$1.html")
           ("freebsd-wiki"                  . "https://wiki.freebsd.org/")
@@ -118,7 +118,7 @@ Each entry is either:
   (spacemacs/set-leader-keys
     "ol" 'org-open-at-point-global)
 
-  (add-hook 'org-mode-hook 'aggressive-indent-mode)
+  ;; (add-hook 'org-mode-hook 'aggressive-indent-mode) ;; XXX Re-enable only when indent in #+BEGIN_SRC blocks is OK.
   (setq org-agenda-custom-commands '(("u" "All TODOs sorted by urgency"
                                       alltodo ""
                                       ((org-agenda-cmp-user-defined 'sheda-org/cmp-urgencies)
@@ -143,10 +143,8 @@ Each entry is either:
                org-brain-visualize-mode)
     ;; :defer t
     :init
-    (setq org-brain-path      "~/ens/org"
-          ;; org-brain-data-file (expand-file-name "org-brain-data.el" no-littering-var-directory)
-          org-brain-data-file (expand-file-name "org-brain-data.el" spacemacs-cache-directory)
-          )
+    (setq org-brain-path      my-org-directory
+          org-brain-data-file (expand-file-name "org-brain/data.el" spacemacs-cache-directory)) ;; XXX Why can't I use no-littering-var-directory here?
     (spacemacs/declare-prefix "ob" "org-brain")
     (spacemacs/declare-prefix "obc" "child")
     (spacemacs/declare-prefix "obp" "parent")
