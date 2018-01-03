@@ -85,6 +85,28 @@ Each entry is either:
         org-export-backends          '(ascii html icalendar latex md org)
         org-archive-location         "attic/%s_archive::"
         org-id-search-archives       nil
+        org-tag-alist                '((:startgrouptag)
+                                       ("@context")
+                                       (:grouptags)
+                                       (:startgroup)
+                                       ("home"      . ?h)
+                                       ("reference" . ?r)
+                                       ("work"      . ?w)
+                                       (:endgroup)
+                                       (:endgrouptag)
+
+                                       (:startgrouptag)
+                                       ("@work")
+                                       (:grouptags)
+                                       (:startgroup)
+                                       ("packager" . ?p)
+                                       ("qa"       . ?q)
+                                       ("tac"      . ?t)
+                                       (:endgroup)
+                                       (:endgrouptag)
+
+                                       ;; Often used:
+                                       ("emacs" . ?e))
         org-link-abbrev-alist
         '(("wikipedia"                     . "https://en.wikipedia.org/wiki/%s")
           ("man"                           . "http://www.freebsd.org/cgi/man.cgi?query=%s")
