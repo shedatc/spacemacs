@@ -62,12 +62,6 @@ values."
      haskell
      helm
      jabber
-     (keyboard-layout
-      :variables
-      kl-layout 'bepo
-      :packages
-      (not twittering-mode)
-      )
      markdown
      org
      ;; search-engine
@@ -102,8 +96,17 @@ values."
      sheda-org
      sheda-communication
      sheda-coding
-     tw4e
-     )
+     ;; tw4e
+
+     ;; SPECIAL LAYERS ---------------------------------------------------------
+
+     (keyboard-layout
+      :variables
+      kl-layout 'bepo
+      :packages
+      (not twittering-mode)
+      )
+ )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
