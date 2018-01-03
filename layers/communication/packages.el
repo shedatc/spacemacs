@@ -1,29 +1,24 @@
 (defconst sheda-communication-packages
   '(
-    ;; elfeed
     helm-mu
     jabber
     ;; jabber-otr
     mu4e
-    ;; org-caldav
-    ;; org-mu4e
     persp-mode
     )
 )
-
-(defun sheda-communication/post-init-elfeed ()
-  "Post-initialize the elfeed package."
-  (setq elfeed-feeds
-        '(("https://labo-sns.stormshield.eu/viewvc/viewvc.py/qualif/?date=month&view=query&format=rss" dev))))
 
 (defun sheda-communication/init-helm-mu ()
   "Initialize the helm-mu package if the mu4e one is installed."
   (use-package helm-mu
     :if (configuration-layer/package-usedp 'mu4e)
+    ;; :commands (list 'helm-mu 'helm-mu-contacts)
     :commands 'helm-mu
     :init
+    ;; The "om" prefix is declared by sheda-communication/pre-init-mu4e.
     (spacemacs/set-leader-keys
-      "om"  'helm-mu)
+      "omc"  'helm-mu-contacts
+      "omm"  'helm-mu)
     :config
     (setq helm-mu-default-search-string "(m:/inbox OR m:/sent OR m:/irp) AND d:2w..now")
     (helm-add-action-to-source "Jump to containing maildir" 'sheda-communication/jump-to-containing-maildir helm-source-mu)))
@@ -93,15 +88,14 @@
 (defun sheda-communication/pre-init-mu4e ()
   "Pre-initialize the mu4e package."
 
-  ;; Decide on the maildir using the hostname (system-name).
-  (cond ((string= system-name "azathoth.labo.int")
-         (setq mu4e-maildir   "~/.mails/stormshield"))
-        ((string= system-name "davinel.mg.rsph.local")
-         (setq mu4e-maildir   "~/.mails/sheda")))
+  (spacemacs/declare-prefix "om" "mu4e")
 
-  (let* ((me (cond ((string= system-name "azathoth.labo.int")     "stephane.rochoy")
-                   ((string= system-name "davinel.mg.rsph.local") "sheda")
-                   (t                                             "sheda"))))
+  ;; Decide on the maildir using the hostname (system-name).
+  (setq mu4e-maildir (cond ((string= system-name "azathoth.labo.int") "~/.mails/stormshield")
+                           (t                                         (concat "~/.mails/" user-login-name))))
+
+  (let* ((me (cond ((string= system-name "azathoth.labo.int") "stephane.rochoy")
+                   (t                                         user-login-name))))
     (setq mu4e-bookmarks
           (list (list (concat "( m:/inbox OR m:/irp ) AND g:unread AND NOT g:trashed AND t:" me) "My unreads"         ?i)
                 (list "( m:/inbox OR m:/irp ) AND g:unread AND NOT g:trashed"                    "All unread"         ?I)
@@ -277,21 +271,6 @@
                 "d" 'message-dont-send
                 )))
   )
-
-(defun sheda-communication/init-org-caldav ()
-  "Initialize the org-caldav package."
-  (use-package org-caldav
-    :init
-    ;; (setq org-caldav-url          "https://work.stormshield.eu/home/stephane.rochoy@stormshield.eu/Calendar")
-    (sheda-core/message "event: init: org-caldav")))
-
-;; XXX Need to adapt use-package to make it know that org-mu4e is part of org-plus-contrib.
-(defun sheda-communication/init-org-mu4e ()
-  "Initialize the org-mu4e package."
-  (use-package org-mu4e
-    :if (and (configuration-layer/package-usedp 'mu4e) (configuration-layer/package-usedp 'org))
-    :init
-    (sheda-core/message "event: init: org-mu4e")))
 
 (defun sheda-communication/post-init-persp-mode ()
   (spacemacs|define-custom-layout "@mu4e"
