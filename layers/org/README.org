@@ -1,0 +1,128 @@
+#+TITLE: sheda-org layer
+
+* Table of Contents                                        :TOC_4_gh:noexport:
+- [[#description][Description]]
+- [[#install][Install]]
+- [[#key-bindings][Key bindings]]
+- [[#implementation-details][Implementation Details]]
+
+* Description
+
+  This layer add a function to sort Org TODO entries using [[https:taskwarrior.org][Task Warrior]]'s
+  algorithm.
+
+  Here are the differences with Task Warrior:
+  - An Org TODO entry have priority #B by default while TW give a priority lower
+    than #C to tasks with no explicitly defined priority.
+
+    #+BEGIN_SRC elisp
+    (setq org-lowest-priority ?D)
+    (setq org-default-priority org-lowest-priority)
+    #+END_SRC
+
+* Install
+
+  To use this configuration layer, add it to your =~/.spacemacs=. You will need
+  to add =sheda-org= to the existing =dotspacemacs-configuration-layers= list in
+  this file.
+
+* Key bindings
+
+  | Key Binding | Description    |
+  |-------------+----------------|
+  | ~SPC x x x~ | Does thing01   |
+  # Use GitHub URLs if you wish to link a Spacemacs documentation file or its heading.
+  # Examples:
+  # [[https://github.com/syl20bnr/spacemacs/blob/master/doc/VIMUSERS.org#sessions]]
+  # [[https://github.com/syl20bnr/spacemacs/blob/master/layers/%2Bfun/emoji/README.org][Link to Emoji layer README.org]]
+  # If space-doc-mode is enabled, Spacemacs will open a local copy of the linked file.
+
+* Implementation Details
+
+  The sorting algorithm is a copy of [[https:taskwarrior.org][Task Warrior]]'s one.
+
+  Default coefficients are:
+
+  #+BEGIN_EXAMPLE
+  urgency.user.tag.next.coefficient          15.0 # +next tag
+  urgency.due.coefficient                    12.0 # overdue or near due date
+  urgency.blocking.coefficient                8.0 # blocking other tasks
+  urgency.uda.priority.H.coefficient          6.0 # high Priority
+  urgency.uda.priority.M.coefficient          3.9 # medium Priority
+  urgency.uda.priority.L.coefficient          1.8 # low Priority
+  urgency.active.coefficient                  4.0 # already started tasks
+  urgency.scheduled.coefficient               4.0 # scheduled tasks
+  urgency.age.coefficient                     2.0 # coefficient for age
+  urgency.annotations.coefficient             1.0 # has annotations
+  urgency.tags.coefficient                    1.0 # has tags
+  urgency.project.coefficient                 1.0 # assigned to any project
+  urgency.blocked.coefficient                 -5.0 # blocked by other tasks
+  urgency.waiting.coefficient                 -3.0 # waiting task
+  urgency.user.project.<project>.coefficient  5.0 # specific project
+  urgency.user.tag.<tag>.coefficient          5.0 # specific tag
+  urgency.uda.<name>.coefficient              5.0 # specific UDA
+  #+END_EXAMPLE
+
+  From =src/Task.cpp=:
+
+  #+BEGIN_SRC cpp
+  ////////////////////////////////////////////////////////////////////////////////
+  //
+  //     Past                  Present                              Future
+  //     Overdue               Due                                     Due
+  //
+  //     -7 -6 -5 -4 -3 -2 -1  0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 days
+  //
+  // <-- 1.0                         linear                            0.2 -->
+  //     capped                                                        capped
+  //
+  //
+  float Task::urgency_due () const
+  {
+    if (has ("due"))
+    {
+      Datetime now;
+      Datetime due (get_date ("due"));
+
+      // Map a range of 21 days to the value 0.2 - 1.0
+      float days_overdue = (now - due) / 86400.0;
+           if (days_overdue >= 7.0)   return 1.0;   // < 1 wk ago
+      else if (days_overdue >= -14.0) return ((days_overdue + 14.0) * 0.8 / 21.0) + 0.2;
+      else                            return 0.2;   // > 2 wks
+    }
+
+    return 0.0;
+  }
+  #+END_SRC
+
+  #+BEGIN_SRC cpp
+  ////////////////////////////////////////////////////////////////////////////////
+  // Urgency is defined as a polynomial, the value of which is calculated in this
+  // function, according to:
+  //
+  //   U = A.t  + B.t  + C.t  ...
+  //          a      b      c
+  //
+  //   U       = urgency
+  //   A       = coefficient for term a
+  //   t sub a = numeric scale from 0 -> 1, with 1 being the highest
+  //             urgency, derived from one task attribute and mapped
+  //             to the numeric scale
+  //
+  // See rfc31-urgency.txt for full details.
+  //
+  float Task::urgency_c () const
+  {
+    float value = 0.0;
+  #ifdef PRODUCT_TASKWARRIOR
+    value += fabsf (Task::urgencyProjectCoefficient)     > epsilon ? (urgency_project ()     * Task::urgencyProjectCoefficient)     : 0.0;
+    value += fabsf (Task::urgencyActiveCoefficient)      > epsilon ? (urgency_active ()      * Task::urgencyActiveCoefficient)      : 0.0;
+    value += fabsf (Task::urgencyScheduledCoefficient)   > epsilon ? (urgency_scheduled ()   * Task::urgencyScheduledCoefficient)   : 0.0;
+    value += fabsf (Task::urgencyWaitingCoefficient)     > epsilon ? (urgency_waiting ()     * Task::urgencyWaitingCoefficient)     : 0.0;
+    value += fabsf (Task::urgencyBlockedCoefficient)     > epsilon ? (urgency_blocked ()     * Task::urgencyBlockedCoefficient)     : 0.0;
+    value += fabsf (Task::urgencyAnnotationsCoefficient) > epsilon ? (urgency_annotations () * Task::urgencyAnnotationsCoefficient) : 0.0;
+    value += fabsf (Task::urgencyTagsCoefficient)        > epsilon ? (urgency_tags ()        * Task::urgencyTagsCoefficient)        : 0.0;
+    value += fabsf (Task::urgencyDueCoefficient)         > epsilon ? (urgency_due ()         * Task::urgencyDueCoefficient)         : 0.0;
+    value += fabsf (Task::urgencyBlockingCoefficient)    > epsilon ? (urgency_blocking ()    * Task::urgencyBlockingCoefficient)    : 0.0;
+    value += fabsf (Task::urgencyAgeCoefficient)         > epsilon ? (urgency_age ()         * Task::urgencyAgeCoefficient)         : 0.0;
+  #+END_SRC
