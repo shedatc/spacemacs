@@ -65,7 +65,15 @@ values."
      (shell
       :variables
       shell-enable-smart-eshell t
-      eshell-path-env           "/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/home/stephaner/bin"
+      eshell-path-env           (string-join (list "/usr/local/sbin"
+                                                   "/usr/local/bin"
+                                                   "/usr/bin"
+                                                   "/usr/lib/jvm/default/bin"
+                                                   "/usr/bin/site_perl"
+                                                   "/usr/bin/vendor_perl"
+                                                   "/usr/bin/core_perl"
+                                                   (expand-file-name "bin" user-home-directory))
+                                             ":")
       shell-default-term-shell  "/bin/zsh"
       shell-default-shell       'eshell
       shell-default-height      30

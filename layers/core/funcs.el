@@ -26,7 +26,7 @@
 
 (defun sheda-core/run-push ()
   "Run the push command."
-  (start-process "push" "*Push Log*" "/home/stephaner/bin/push"))
+  (start-process "push" "*Push Log*" (expand-file-name "bin/push" user-home-directory)))
 
 (defun sheda-core/go-away ()
   "Go away from keyboard."
@@ -35,7 +35,7 @@
   ;; XXX Should test for existence before using the jabber-* functions.
   (jabber-send-presence "away" "I'm away from keyboard right now" 0)
   (async-start-process "lock-session"
-                       "/home/stephaner/bin/lock-session"
+                       (expand-file-name "bin/lock-session" user-home-directory)
                        (lambda (process)
                          (jabber-send-presence "" "Ready to chat" 0)
                          (sheda-core/message "Session unlocked."))))

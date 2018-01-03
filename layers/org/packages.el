@@ -72,8 +72,8 @@ Each entry is either:
 
 (defun sheda-org/pre-init-org ()
   "Pre-initialize the org package (org-mode)."
-  (setq org-agenda-files             (list (expand-file-name "~/ens/org"))
-        org-directory                (expand-file-name "~/ens/org")
+  (setq org-agenda-files           (list my-org-directory)
+        org-directory              my-org-directory
         org-capture-templates
         '(
           ("j" "Journal Entry" entry
