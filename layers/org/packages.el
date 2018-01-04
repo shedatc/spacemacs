@@ -1,9 +1,9 @@
 ;;; packages.el --- sheda-org layer packages file for Spacemacs.
 ;;
-;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
+;; Copyright (c) 2017 Sheda
 ;;
 ;; Author: Sheda <sheda@fsfe.org>
-;; URL: https://github.com/syl20bnr/spacemacs
+;; URL: https://github.com/shedatc/spacemacs
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
