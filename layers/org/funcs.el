@@ -112,6 +112,10 @@ References:
     (message "\tTags:        tags='%s' score=%f" tags score)
     score))
 
+(defun sheda-org/blocking-score (position)
+  "List the TODO entries blocked by the one at the given POSITION and return the corresponding score."
+  0.0)
+
 (defun sheda-org/urgency (position)
   "Return the urgency of the TODO entry at the given POSITION."
   (message "Position: %s" position)
@@ -120,7 +124,8 @@ References:
          (activity (sheda-org/activity-score position))
          (age      (sheda-org/age-score      position))
          (tags     (sheda-org/tags-score     position))
-         (urgency  (+ priority deadline activity age tags)))
+         (blocking (sheda-org/blocking-score position))
+         (urgency  (+ priority deadline activity age tags blocking)))
     (message "Urgency: %f" urgency)
     urgency))
 

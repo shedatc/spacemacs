@@ -72,31 +72,35 @@ Each entry is either:
 
 (defun sheda-org/pre-init-org ()
   "Pre-initialize the org package (org-mode)."
-  (setq org-agenda-files           (list my-org-directory)
+
+  (setq org-agenda-files           (list my-org-directory my-org-agenda-directory)
         org-directory              my-org-directory
+        org-agenda-span            15
         org-capture-templates
         '(
           ("j" "Journal Entry" entry
            (file+datetree "journal.org") (file "journal-entry.org-template"))
-          ;; ("c" "Contact"       entry
-          ;;  (file+datetree "journal.org") (file "contact.org-template"))
+          ("c" "Contact"       entry
+           (file+datetree "journal.org") (file "contact.org-template"))
+          ("s" "Secret"       entry
+           (file+datetree "secret.org") (file "secret.org-template"))
           )
         org-export-with-smart-quotes t
         org-export-backends          '(ascii html icalendar latex md org)
         org-archive-location         "attic/%s_archive::"
         org-id-search-archives       nil
         org-tag-alist                '((:startgrouptag)
-                                       ("@context")
+                                       ("Context")
                                        (:grouptags)
                                        (:startgroup)
-                                       ("home"      . ?h)
-                                       ("reference" . ?r)
-                                       ("work"      . ?w)
+                                       ("@ens"  . ?e)
+                                       ("@home" . ?h)
+                                       ("@work" . ?w)
                                        (:endgroup)
                                        (:endgrouptag)
 
                                        (:startgrouptag)
-                                       ("@work")
+                                       ("Work")
                                        (:grouptags)
                                        (:startgroup)
                                        ("packager" . ?p)
@@ -106,19 +110,25 @@ Each entry is either:
                                        (:endgrouptag)
 
                                        ;; Often used:
-                                       ("emacs" . ?e))
+                                       ("contact"   . ?c)
+                                       ("emacs"     . ?m)
+                                       ("reference" . ?r)
+                                       ("secret"    . ?s)
+                                       )
         org-link-abbrev-alist
         '(("wikipedia"                     . "https://en.wikipedia.org/wiki/%s")
           ("man"                           . "http://www.freebsd.org/cgi/man.cgi?query=%s")
-          ("bug"                           . "https://mantis.stormshield.eu/view.php?id=%s")
-          ("review"                        . "https://labo-sns.stormshield.eu/reviewboard/r/%s")
-          ("wiki"                          . "https://wiki.stormshield.eu/pmwiki_labo/index.php?n=%s")
           ("file"                          . "file:///home/stephaner/ens/files/%s") ;; XXX How should I invoke concat and expand-file-name to build it from user-home-directory?
           ("freebsd-architecture-handbook" . "https://www.freebsd.org/doc/en_US.ISO8859-1/books/arch-handbook/$1.html")
           ("freebsd-handbook"              . "https://www.freebsd.org/doc/en_US.ISO8859-1/books/handbook/$1.html")
           ("freebsd-wiki"                  . "https://wiki.freebsd.org/")
           ("fxr"                           . "http://fxr.watson.org/fxr/source/")
-          ("freebsd-pr"                    . "https://bugs.freebsd.org/bugzilla/show_bug.cgi?id="))
+          ("freebsd-pr"                    . "https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=")
+          ;; Work-related:
+          ("bug"    . "https://mantis.stormshield.eu/view.php?id=%s")
+          ("review" . "https://labo-sns.stormshield.eu/reviewboard/r/%s")
+          ("wiki"   . "https://wiki.stormshield.eu/pmwiki_labo/index.php?n=%s")
+          )
         ;; org-use-speed-commands      t
         org-export-initial-scope       'subtree
         org-enforce-todo-dependencies  t
@@ -127,24 +137,28 @@ Each entry is either:
         org-default-priority           org-lowest-priority
 
         ;; #+SEQ_TODO: TODO(t) IN-PROGRESS(p) UNDER-REVIEW(r) WAIT-NIGHTLY(n) | DONE(d) CANCELLED(c)
-        ;; org-todo-keywords '(sequence "TODO(t)" "IN-PROGRESS(p)" "UNDER-REVIEW(r)" "WAIT-NIGHTLY(n)" "|" "DONE(d)" "CANCELLED(c)")
+        org-todo-keywords '((sequence "TODO(t)" "IN-PROGRESS(p)" "UNDER-REVIEW(r)" "WAIT-NIGHTLY(n)" "|" "DONE(d)" "CANCELLED(c)"))
         ))
 
 (defun sheda-org/post-init-org ()
   "Post-initialize the org package (org-mode)."
   (spacemacs/set-leader-keys-for-major-mode 'org-mode
-    "f" 'org-fill-paragraph ;; KEY OVERRIDE
+    "f"  'org-fill-paragraph ;; KEY OVERRIDE
     "St" 'org-move-subtree-down
     "Ss" 'org-move-subtree-up
-    "u" 'org-toggle-link-display)
+    "u"  'org-toggle-link-display)
   (spacemacs/set-leader-keys
-    "ol" 'org-open-at-point-global)
+    "ol" 'org-open-at-point-global
+    "oi" 'org-id-get-create)
 
   ;; (add-hook 'org-mode-hook 'aggressive-indent-mode) ;; XXX Re-enable only when indent in #+BEGIN_SRC blocks is OK.
   (setq org-agenda-custom-commands '(("u" "All TODOs sorted by urgency"
                                       alltodo ""
                                       ((org-agenda-cmp-user-defined 'sheda-org/cmp-urgencies)
                                        (org-agenda-sorting-strategy '(user-defined-up))))))
+
+  ;; Ensure new entries get an ID.
+  (add-hook 'org-capture-prepare-finalize-hook 'org-id-get-create)
 
   ;; Use org structures and tables in message mode.
   (add-hook 'message-mode-hook 'turn-on-orgtbl)
@@ -167,14 +181,14 @@ Each entry is either:
     :init
     (setq org-brain-path      my-org-directory
           org-brain-data-file (expand-file-name "org-brain/data.el" spacemacs-cache-directory)) ;; XXX Why can't I use no-littering-var-directory here?
-    (spacemacs/declare-prefix "ob" "org-brain")
+    (spacemacs/declare-prefix "ob"  "org-brain")
     (spacemacs/declare-prefix "obc" "child")
+    (spacemacs/declare-prefix "obf" "friendship")
     (spacemacs/declare-prefix "obp" "parent")
     (spacemacs/declare-prefix "obr" "resource")
     (spacemacs/set-leader-keys
       "ab"   'org-brain-visualize
       "obb"  'sheda-org/switch-to-brain-buffer
-      "obi"  'org-id-get-create
       ;; Children:
       "obca" 'org-brain-add-child
       "obcr" 'org-brain-remove-child
