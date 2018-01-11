@@ -100,9 +100,10 @@ Each entry is either:
                                        (:endgrouptag)
 
                                        (:startgrouptag)
-                                       ("Work")
+                                       ("When @work")
                                        (:grouptags)
                                        (:startgroup)
+                                       ("irp"      . ?i)
                                        ("packager" . ?p)
                                        ("qa"       . ?q)
                                        ("tac"      . ?t)
@@ -138,6 +139,14 @@ Each entry is either:
 
         ;; #+SEQ_TODO: TODO(t) IN-PROGRESS(p) UNDER-REVIEW(r) WAIT-NIGHTLY(n) | DONE(d) CANCELLED(c)
         org-todo-keywords '((sequence "TODO(t)" "IN-PROGRESS(p)" "UNDER-REVIEW(r)" "WAIT-NIGHTLY(n)" "|" "DONE(d)" "CANCELLED(c)"))
+
+
+        org-agenda-custom-commands '(("u" "All TODOs sorted by urgency"
+                                            alltodo ""
+                                            ((org-agenda-cmp-user-defined 'sheda-org/cmp-urgencies)
+                                             (org-agenda-sorting-strategy '(user-defined-up)))))
+        sheda-org/per-tag-scores '(("next" . 15.0)
+                                   ("emacs" . 0.5))
         ))
 
 (defun sheda-org/post-init-org ()
@@ -152,10 +161,6 @@ Each entry is either:
     "oi" 'org-id-get-create)
 
   ;; (add-hook 'org-mode-hook 'aggressive-indent-mode) ;; XXX Re-enable only when indent in #+BEGIN_SRC blocks is OK.
-  (setq org-agenda-custom-commands '(("u" "All TODOs sorted by urgency"
-                                      alltodo ""
-                                      ((org-agenda-cmp-user-defined 'sheda-org/cmp-urgencies)
-                                       (org-agenda-sorting-strategy '(user-defined-up))))))
 
   ;; Ensure new entries get an ID.
   (add-hook 'org-capture-prepare-finalize-hook 'org-id-get-create)
