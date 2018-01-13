@@ -147,6 +147,8 @@ Each entry is either:
                                              (org-agenda-sorting-strategy '(user-defined-up)))))
         sheda-org/per-tag-scores '(("next" . 15.0)
                                    ("emacs" . 0.5))
+
+        org-table-separator-space " " ;; XXX Break tables alignment when set to a propertized value with (space :width 1).
         ))
 
 (defun sheda-org/post-init-org ()
@@ -185,7 +187,8 @@ Each entry is either:
     ;; :defer t
     :init
     (setq org-brain-path      my-org-directory
-          org-brain-data-file (expand-file-name "org-brain/data.el" spacemacs-cache-directory)) ;; XXX Why can't I use no-littering-var-directory here?
+          org-brain-data-file (expand-file-name "org-brain/data.el" spacemacs-cache-directory) ;; XXX Why can't I use no-littering-var-directory here?
+          org-brain-show-text nil)
     (spacemacs/declare-prefix "ob"  "org-brain")
     (spacemacs/declare-prefix "obc" "child")
     (spacemacs/declare-prefix "obf" "friendship")
