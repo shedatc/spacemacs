@@ -388,7 +388,6 @@ you should place your code here."
   (setq-default
    bookmark-default-file         (expand-file-name "bookmarks" no-littering-etc-directory)
    browse-url-browser-function   'browse-url-firefox
-   ;; auto-fill-function            'do-auto-fill
    tab-width                     4)
 
   (cond ((string= system-name "azathoth.labo.int")
