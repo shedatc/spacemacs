@@ -85,6 +85,9 @@ Each entry is either:
           ("s" "Secret"       entry
            (file+datetree "secret.org") (file "secret.org-template"))
           )
+        org-refile-targets
+        '((nil              :maxlevel . 3)
+          (org-agenda-files :maxlevel . 3))
         org-export-with-smart-quotes t
         org-export-backends          '(ascii html icalendar latex md org)
         org-archive-location         "attic/%s_archive::"
@@ -137,8 +140,8 @@ Each entry is either:
         org-lowest-priority            ?D
         org-default-priority           org-lowest-priority
 
-        ;; #+SEQ_TODO: TODO(t) IN-PROGRESS(p) UNDER-REVIEW(r) WAIT-NIGHTLY(n) | DONE(d) CANCELLED(c)
-        org-todo-keywords '((sequence "TODO(t)" "IN-PROGRESS(p)" "UNDER-REVIEW(r)" "WAIT-NIGHTLY(n)" "|" "DONE(d)" "CANCELLED(c)"))
+        ;; #+SEQ_TODO: TODO(t) IN-PROGRESS(p) UNDER-REVIEW(r) WAIT-NIGHTLY(n) BLOCKED(b) | DONE(d) CANCELLED(c)
+        org-todo-keywords '((sequence "TODO(t)" "IN-PROGRESS(p)" "UNDER-REVIEW(r)" "WAIT-NIGHTLY(n)" "BLOCKED(b)" "|" "DONE(d)" "CANCELLED(c)"))
 
 
         org-agenda-custom-commands '(("u" "All TODOs sorted by urgency"
