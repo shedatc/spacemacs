@@ -120,19 +120,20 @@ Each entry is either:
                                        ("secret"    . ?s)
                                        )
         org-link-abbrev-alist
-        '(("wikipedia"                     . "https://en.wikipedia.org/wiki/%s")
-          ("man"                           . "http://www.freebsd.org/cgi/man.cgi?query=%s")
-          ("file"                          . "file:///home/stephaner/ens/files/%s") ;; XXX How should I invoke concat and expand-file-name to build it from user-home-directory?
-          ("freebsd-architecture-handbook" . "https://www.freebsd.org/doc/en_US.ISO8859-1/books/arch-handbook/$1.html")
-          ("freebsd-handbook"              . "https://www.freebsd.org/doc/en_US.ISO8859-1/books/handbook/$1.html")
-          ("freebsd-wiki"                  . "https://wiki.freebsd.org/")
-          ("fxr"                           . "http://fxr.watson.org/fxr/source/")
-          ("freebsd-pr"                    . "https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=")
-          ;; Work-related:
-          ("bug"    . "https://mantis.stormshield.eu/view.php?id=%s")
-          ("review" . "https://labo-sns.stormshield.eu/reviewboard/r/%s")
-          ("wiki"   . "https://wiki.stormshield.eu/pmwiki_labo/index.php?n=%s")
-          )
+        (list (cons "wikipedia"                     "https://en.wikipedia.org/wiki/%s")
+              (cons "man"                           "http://www.freebsd.org/cgi/man.cgi?query=%s")
+              (cons "file"                          "file:///home/stephaner/ens/files/%s") ;; XXX How should I invoke concat and expand-file-name to build it from user-home-directory?
+              (cons "freebsd-architecture-handbook" "https://www.freebsd.org/doc/en_US.ISO8859-1/books/arch-handbook/$1.html")
+              (cons "freebsd-handbook"              "https://www.freebsd.org/doc/en_US.ISO8859-1/books/handbook/$1.html")
+              (cons "freebsd-wiki"                  "https://wiki.freebsd.org/")
+              (cons "fxr"                           "http://fxr.watson.org/fxr/source/")
+              (cons "freebsd-pr"                    "https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=")
+              (cons "pix"                           (concat "file://" (expand-file-name "ens/pix/%s" user-home-directory)))
+              ;; Work-related:
+              (cons "bug"    "https://mantis.stormshield.eu/view.php?id=%s")
+              (cons "review" "https://labo-sns.stormshield.eu/reviewboard/r/%s")
+              (cons "wiki"   "https://wiki.stormshield.eu/pmwiki_labo/index.php?n=%s")
+              )
         ;; org-use-speed-commands      t
         org-export-initial-scope       'subtree
         org-enforce-todo-dependencies  t
@@ -151,8 +152,9 @@ Each entry is either:
         sheda-org/per-tag-scores '(("next" . 15.0)
                                    ("emacs" . 0.5))
 
-        org-table-separator-space " " ;; XXX Break tables alignment when set to a propertized value with (space :width 1).
-        ))
+        ;; org-table-separator-space " " ;; XXX Break tables alignment when set to a propertized value with (space :width 1).
+        )
+  )
 
 (defun sheda-org/post-init-org ()
   "Post-initialize the org package (org-mode)."
