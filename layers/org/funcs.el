@@ -112,6 +112,19 @@ References:
     (message "\tTags:        tags='%s' score=%f" tags score)
     score))
 
+(defun sheda-org/children-ids (&optional pom property)
+  "Return the ID of each children of the TODO entry at the given position or marker (POM)."
+  (interactive)
+  (let* ((pom (if (null pom) (point-marker) pom))
+         (children (org-entry-get pom
+                                  (if (null property)
+                                      "BRAIN_CHILDREN"
+                                    property))))
+    (message "Children at %s: %s" pom children)
+    (if (null children)
+        nil
+      (split-string children " "))))
+
 (defun sheda-org/blocking-score (position)
   "List the TODO entries blocked by the one at the given POSITION and return the corresponding score."
   0.0)
