@@ -122,8 +122,10 @@
   (spacemacs/declare-prefix "om" "mu4e")
 
   ;; Decide on the maildir using the hostname (system-name).
-  (setq mu4e-maildir (cond ((string= system-name "azathoth.labo.int") "~/.mails/stormshield")
-                           (t                                         (concat "~/.mails/" user-login-name))))
+  (setq mu4e-maildir (expand-file-name (concat ".mails/"
+                                               (cond ((string= system-name "azathoth.labo.int") "stormshield")
+                                                     (t                                         user-login-name)))
+                                       user-home-directory))
 
   (let* ((me (cond ((string= system-name "azathoth.labo.int") "stephane.rochoy")
                    (t                                         user-login-name))))
