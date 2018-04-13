@@ -462,5 +462,5 @@ you should place your code here."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(org-agenda-current-time ((t (:inherit org-time-grid :foreground "#6c71c4" :weight bold))) t)
- '(org-agenda-date ((t (:background "#fdf6e3" :foreground "#268bd2" :inverse-video nil :box (:line-width 2 :color "#fdf6e3") :overline nil :underline t :slant normal :weight normal :height 1.0))) t))
+ '(org-agenda-current-time ((t (:inherit org-time-grid :foreground "#6c71c4" :weight bold))))
+ '(org-agenda-date ((t (:background "#fdf6e3" :foreground "#268bd2" :inverse-video nil :box (:line-width 2 :color "#fdf6e3") :overline nil :underline t :slant normal :weight normal :height 1.0)))))
