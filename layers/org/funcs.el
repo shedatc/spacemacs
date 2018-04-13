@@ -101,9 +101,13 @@ References:
         sheda-org/default-tag-score
       (cdr kv))))
 
-(defun sheda-org/tags-score (position)
+(defun sheda-org/get-entry-tags (pom)
+  "Return the list of all the tags bound to the entry at POM. Include inherited tags."
+  (split-string (org-entry-get pom "ALLTAGS" t) ":" t))
+
+(defun sheda-org/tags-score (pom)
   "Extract the tags attached to the TODO entry at the given POSITION and return their aggregated scores."
-  (let* ((tags       (org-entry-get position "TAGS"))
+  (let* ((tags (sheda-org/get-entry-tags pom))
          (per-tag-scores (mapcar 'sheda-org/tag-score tags))
          ;; (tags-count (length tags))
          ;; (score      (* tags-count sheda-org/tags-coefficient))
@@ -112,35 +116,47 @@ References:
     (message "\tTags:        tags='%s' score=%f" tags score)
     score))
 
-(defun sheda-org/children-ids (&optional pom property)
-  "Return the ID of each children of the TODO entry at the given position or marker (POM)."
-  (interactive)
-  (let* ((pom (if (null pom) (point-marker) pom))
-         (children (org-entry-get pom
-                                  (if (null property)
-                                      "BRAIN_CHILDREN"
-                                    property))))
-    (message "Children at %s: %s" pom children)
-    (if (null children)
-        nil
-      (split-string children " "))))
+(defun sheda-org/children-ids (pom &optional children-property)
+  "Return the IDs of the children of the entry at the given POM (position or marker). The CHILDREN-PROPERTY default to 'BRAIN_CHILDREN'."
+  (let* ((prop (if (null children-property) "BRAIN_CHILDREN" children-property))
+         (ids (org-entry-get pom prop)))
+    (message "Children at %s: %s" pom ids)
+    (if (null ids)
+        (list)
+      (split-string ids " "))))
+
+(defun sheda-org/is-not-done-p (id)
+  "Tell if the entry with the given ID is a TODO entry that is not done. Will return nil if the entry is not a TODO entry."
+  (save-excursion ;; XXX save-excursion don't seems to work as expected.
+    (org-id-open id)
+    (and (org-entry-is-todo-p)
+         (not (org-entry-is-done-p)))))
 
 (defun sheda-org/blocking-score (position)
   "List the TODO entries blocked by the one at the given POSITION and return the corresponding score."
-  0.0)
+  (let* ((children (sheda-org/children-ids position))
+         (score (apply '+ (mapcar (lambda (id)
+                                    (if (sheda-org/is-not-done-p id)
+                                        1.0
+                                      0.0))
+                                  children))))
+    (message "\tBlocking:    children-count=%d score=%f" (length children) score)
+    score))
 
-(defun sheda-org/urgency (position)
-  "Return the urgency of the TODO entry at the given POSITION."
-  (message "Position: %s" position)
-  (let* ((priority (sheda-org/priority-score position))
-         (deadline (sheda-org/deadline-score position))
-         (activity (sheda-org/activity-score position))
-         (age      (sheda-org/age-score      position))
-         (tags     (sheda-org/tags-score     position))
-         (blocking (sheda-org/blocking-score position))
-         (urgency  (+ priority deadline activity age tags blocking)))
-    (message "Urgency: %f" urgency)
-    urgency))
+(defun sheda-org/urgency (&optional pom)
+  "Return the urgency of the TODO entry at the given POM (position or marker). Default to the current point position."
+  (interactive)
+  (let* ((pom (if (null pom) (point-marker) pom)))
+    (message "POM: %s" pom)
+    (let* ((priority (sheda-org/priority-score pom))
+           (deadline (sheda-org/deadline-score pom))
+           (activity (sheda-org/activity-score pom))
+           (age      (sheda-org/age-score      pom))
+           (tags     (sheda-org/tags-score     pom))
+           (blocking (sheda-org/blocking-score pom))
+           (urgency  (+ priority deadline activity age tags blocking)))
+      (message "Urgency of %s is %f." pom urgency)
+      urgency)))
 
 (defun sheda-org/cmp-urgencies (a b)
   "Compare two TODO entries, A and B, by computing their urgency.

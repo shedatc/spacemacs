@@ -31,20 +31,41 @@
 
 (defconst sheda-core-packages
   '(
+    atomic-chrome
     beacon
+    doc-view
     evil
     ;; (flycheck-grammalecte :location local)
     helm
+    (i3 :location local)
     nyan-mode
     )
 )
+
+(defun sheda-core/init-atomic-chrome ()
+  "Initialize and configure the atomic-chrome package."
+  (use-package atomic-chrome
+    ;; :defer t
+    :config
+    (atomic-chrome-start-server)))
 
 (defun sheda-core/init-beacon ()
   "Initialize and configure the beacon package."
   (use-package beacon
     ;; :defer t
     :config
+    (setq beacon-color "#268bd2")
     (beacon-mode)))
+
+(defun sheda-core/post-init-doc-view ()
+  "Initialize and configure the doc-view package."
+  (add-hook 'doc-view-mode-hook
+            (lambda ()
+              (define-key doc-view-mode-map (kbd "t") 'doc-view-next-line)
+              (define-key doc-view-mode-map (kbd "T") 'doc-view-next-page)
+              (define-key doc-view-mode-map (kbd "s") 'doc-view-previous-line)
+              (define-key doc-view-mode-map (kbd "S") 'doc-view-previous-page)))
+  )
 
 (defun sheda-core/post-init-evil ()
   "Post-initialize the evil package."
@@ -124,9 +145,28 @@
               (with-eval-after-load 'helm-org-rifle
                 (sheda-core/adjust-keys-for-helm helm-org-rifle-map)))))
 
-(defun sheda-core/init-nyan-mode ()
-  "Initialize nyan-mode."
-  (use-package nyan-mode
+(defun sheda-core/init-i3 ()
+  "Initialize and configure the i3 package."
+
+  (use-package i3
     ;; :defer t
+    ;; :config
+    ;; (beacon-mode)
+    )
+
+  (use-package i3-integration
+    :after i3
+    ;; :defer t
+    ;; :config
+    ;; (beacon-mode)
+    )
+
+
+  )
+
+(defun sheda-core/init-nyan-mode ()
+  "Initialize the nyan-mode package."
+  (use-package nyan-mode
     :config
+    (setq nyan-minimum-window-width 250)
     (nyan-mode)))

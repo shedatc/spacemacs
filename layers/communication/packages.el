@@ -48,10 +48,12 @@
     :init
     ;; The "om" prefix is declared by sheda-communication/pre-init-mu4e.
     (spacemacs/set-leader-keys
+      "omb"  'mu4e-headers-search-bookmark
       "omc"  'helm-mu-contacts
+      "omj"  'mu4e~headers-jump-to-maildir
       "omm"  'helm-mu)
     :config
-    (setq helm-mu-default-search-string "(m:/inbox OR m:/sent OR m:/irp) AND d:2w..now")
+    (setq helm-mu-default-search-string "(m:/archive OR m:/inbox OR m:/sent OR m:/irp) AND d:2w..now")
     (helm-add-action-to-source "Jump to containing maildir" 'sheda-communication/jump-to-containing-maildir helm-source-mu)))
 
 (defun sheda-communication/setup-jabber-hooks ()
@@ -70,7 +72,7 @@
           spacemacs/jabber-connect-hook
           jabber-keepalive-start
           jabber-autoaway-start
-          jabber-mode-line-mode
+          ;; jabber-mode-line-mode
           ;; sheda-communication/jabber-update-activity-count
           )
         jabber-alert-muc-hooks
@@ -138,12 +140,13 @@
                 (list "g:attach"                                                                 "With attachment(s)" ?a))))
 
   (setq mu4e-debug             nil
-        mu4e-maildir-shortcuts '(("/inbox"   . ?i)
-                                 ("/irp"     . ?I)
+        mu4e-maildir-shortcuts '(("/archive" . ?a)
                                  ("/bugs"    . ?b)
                                  ("/drafts"  . ?d)
+                                 ("/inbox"   . ?i)
+                                 ("/irp"     . ?I)
+                                 ("/reviews" . ?r)
                                  ("/sent"    . ?s)
-                                 ("/archive" . ?a)
                                  ("/trash"   . ?t))
         mu4e-update-interval     120
         mu4e-use-fancy-chars     t
@@ -310,14 +313,10 @@
     :binding "m"
     :body
     (progn
-      (sheda-core/message "define-custom-layout: @mu4e")
-      (defun sheda-communication/add-mu4e-buffer-to-persp ()
-        (persp-add-buffer (current-buffer)
-                          (persp-get-by-name "@mu4e")))
-      (add-hook 'mu4e-compose-mode-hook #'sheda-communication/add-mu4e-buffer-to-persp)
-      (add-hook 'mu4e-headers-mode-hook #'sheda-communication/add-mu4e-buffer-to-persp)
-      (add-hook 'mu4e-main-mode-hook    #'sheda-communication/add-mu4e-buffer-to-persp)
-      (add-hook 'mu4e-view-mode-hook    #'sheda-communication/add-mu4e-buffer-to-persp)
+      (add-hook 'mu4e-compose-mode-hook #'sheda-communication/add-mu4e-buffer-to-persp-and-switch)
+      (add-hook 'mu4e-headers-mode-hook #'sheda-communication/add-mu4e-buffer-to-persp-and-switch)
+      (add-hook 'mu4e-main-mode-hook    #'sheda-communication/add-mu4e-buffer-to-persp-and-switch)
+      (add-hook 'mu4e-view-mode-hook    #'sheda-communication/add-mu4e-buffer-to-persp-and-switch)
       (call-interactively 'mu4e))
     ;; (let ((agenda-files (org-agenda-files)))
     ;;   (if agenda-files

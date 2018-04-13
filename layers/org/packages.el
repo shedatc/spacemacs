@@ -78,12 +78,18 @@ Each entry is either:
         org-agenda-span            15
         org-capture-templates
         '(
-          ("j" "Journal Entry" entry
-           (file+datetree "journal.org") (file "journal-entry.org-template"))
-          ("c" "Contact"       entry
-           (file+datetree "journal.org") (file "contact.org-template"))
-          ("s" "Secret"       entry
-           (file+datetree "secret.org") (file "secret.org-template"))
+          ("c" "Contact" entry
+           (file+datetree "contacts.org") (file "contact.org-template"))
+          ("m" "Maybe Task" entry
+           (file+olp+datetree "maybe.org" "Maybe") (file "maybe-task.org-template"))
+          ("o" "Mockup Task" entry
+           (file+olp+datetree "qa.org" "Reducing Chaos") (file "mockup-task.org-template"))
+          ("r" "Reference" entry
+           (file+olp+datetree "references.org" "References") (file "reference.org-template"))
+          ("s" "Secret" entry
+           (file+datetree "secrets.org") (file "secret.org-template"))
+          ("t" "QA Task" entry
+           (file+olp+datetree "qa.org" "QA") (file "qa-task.org-template"))
           )
         org-refile-targets
         '((nil              :maxlevel . 3)
@@ -120,6 +126,7 @@ Each entry is either:
                                        ("secret"    . ?s)
                                        )
         org-link-abbrev-alist
+
         (list (cons "wikipedia"                     "https://en.wikipedia.org/wiki/%s")
               (cons "man"                           "http://www.freebsd.org/cgi/man.cgi?query=%s")
               (cons "file"                          "file:///home/stephaner/ens/files/%s") ;; XXX How should I invoke concat and expand-file-name to build it from user-home-directory?
@@ -149,11 +156,14 @@ Each entry is either:
                                             alltodo ""
                                             ((org-agenda-cmp-user-defined 'sheda-org/cmp-urgencies)
                                              (org-agenda-sorting-strategy '(user-defined-up)))))
-        sheda-org/per-tag-scores '(("next" . 15.0)
-                                   ("emacs" . 0.5))
 
-        ;; org-table-separator-space " " ;; XXX Break tables alignment when set to a propertized value with (space :width 1).
+        org-table-separator-space " " ;; XXX Break tables alignment when set to a propertized value with (space :width 1).
         )
+
+  (setq sheda-org/per-tag-scores '(("next" . 15.0)
+                                   ("emacs" . 0.1))
+   )
+
   )
 
 (defun sheda-org/post-init-org ()

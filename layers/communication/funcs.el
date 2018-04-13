@@ -36,3 +36,7 @@ Returns the chat buffer."
   "Jump to the maildir containing MSG."
   (let ((maildir (mu4e-message-field msg :maildir)))
     (mu4e~headers-jump-to-maildir maildir)))
+
+(defun sheda-communication/add-mu4e-buffer-to-persp-and-switch ()
+  (persp-add-buffer (current-buffer) (persp-get-by-name "@mu4e"))
+  (persp-switch "@mu4e"))

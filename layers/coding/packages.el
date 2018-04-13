@@ -150,11 +150,10 @@
   (spacemacs|define-jump-handlers perl-mode)
   (spacemacs/helm-gtags-define-keys-for-mode 'perl-mode) ;; XXX Why perl-mode instead of cperl-mode?
 
-  (setq flycheck-perl-perlcritic-executable "/usr/bin/vendor_perl/perlcritic"
-        tab-width                           4)
-
   (add-hook 'perl-mode-hook (lambda ()
-                              (setq indent-tabs-mode t))))
+                              (setq indent-tabs-mode t)
+                              (spacemacs/toggle-syntax-checking-on)))
+  )
 
 (defun sheda-coding/init-flycheck-clang-analyzer ()
   "Initialize the flycheck-clang-analyzer package."
@@ -174,8 +173,11 @@
 
 (defun sheda-coding/post-init-magit ()
   "Post-initialize the magit package."
-  (setq magit-blame-heading-format "%s | %a | %C"
-        magit-diff-refine-hunk     'all)
+  (setq magit-blame-heading-format       "%s | %a | %C"
+        magit-diff-refine-hunk           'all
+        magit-prefer-remote-upstream     '("master" "devel" "devel.v2")
+        magit-popup-show-common-commands t
+        )
 
   ;; ‘magit-blame-mode-map and ~magit-blob-mode-map’, and in the popup
   ;;  ‘t’     (‘magit-blame-toggle-headings’)
