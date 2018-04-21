@@ -37,7 +37,7 @@
     evil
     ;; (flycheck-grammalecte :location local)
     helm
-    (i3 :location local)
+    ;; (i3 :location local)
     nyan-mode
     )
 )
