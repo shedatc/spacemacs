@@ -203,7 +203,7 @@ Each entry is either:
     :init
     (setq org-brain-path      my-org-directory
           org-brain-data-file (expand-file-name "org-brain/data.el" spacemacs-cache-directory) ;; XXX Why can't I use no-littering-var-directory here?
-          org-brain-show-text nil)
+          org-brain-show-text t)
     (spacemacs/declare-prefix "ob"  "org-brain")
     (spacemacs/declare-prefix "obc" "child")
     (spacemacs/declare-prefix "obf" "friendship")
