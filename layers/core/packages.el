@@ -134,7 +134,6 @@
         ;; "https://fr.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page="
         )
 
-
   ;; Use ctsr bindings to navigate lines and sources.
   (add-hook 'helm-mode-hook
             (lambda ()
