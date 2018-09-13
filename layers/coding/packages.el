@@ -34,6 +34,7 @@
     (astyle :location local)
     cc-mode
     cperl-mode
+    company-childframe
     flycheck-clang-analyzer
     helm-perldoc
     magit
@@ -153,6 +154,20 @@
   (add-hook 'perl-mode-hook (lambda ()
                               (setq indent-tabs-mode t)
                               (spacemacs/toggle-syntax-checking-on)))
+  )
+
+(defun sheda-coding/init-company-childframe ()
+  "Initialize the company-childframe package."
+
+  ;; Use the child-frame feature with company if available.
+  (use-package company-childframe
+    :after company
+    :ensure t
+    :if (>= emacs-major-version 26)
+    :diminish company-childframe-mode
+    :config
+    (company-childframe-mode 1)
+    )
   )
 
 (defun sheda-coding/init-flycheck-clang-analyzer ()

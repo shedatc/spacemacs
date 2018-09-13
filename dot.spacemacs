@@ -61,7 +61,7 @@ values."
      jabber
      markdown
      org
-     ;; php
+     php
      ;; search-engine
      semantic
      (shell
@@ -121,7 +121,7 @@ values."
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '()
+   dotspacemacs-excluded-packages '(org-projectile)
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
    ;; `used-only' installs only explicitly used packages and uninstall any
@@ -430,14 +430,38 @@ you should place your code here."
  '(fill-column 120)
  '(flycheck-clang-blocks t)
  '(flyspell-default-dictionary "fr")
+ '(hl-todo-keyword-faces
+   (quote
+    (("HOLD" . "#d0bf8f")
+     ("TODO" . "#cc9393")
+     ("PASS" . "#dca3a3")
+     ("NOTREACHED" . "#dca3a3")
+     ("NEXT" . "#dca3a3")
+     ("THEM" . "#dc8cc3")
+     ("PROG" . "#7cb8bb")
+     ("OKAY" . "#7cb8bb")
+     ("DONT" . "#5f7f5f")
+     ("FAIL" . "#8c5353")
+     ("DONE" . "#afd8af")
+     ("NOTE" . "#d0bf8f")
+     ("KLUDGE" . "#d0bf8f")
+     ("ASSERT" . "#cc9393")
+     ("DEBUG" . "#cc9393")
+     ("HACK" . "#d0bf8f")
+     ("FIXME" . "#cc9393")
+     ("XXX" . "#cc9393")
+     ("XXXX" . "#cc9393")
+     ("???" . "#cc9393"))))
  '(jabber-version-show nil)
+ '(magit-log-arguments (quote ("--graph" "--color" "--decorate" "-n256")))
  '(magit-prefer-remote-upstream t)
  '(org-agenda-text-search-extra-files (quote (agenda-archives)))
  '(package-selected-packages
    (quote
-    (pcre2el gntp parent-mode request fringe-helper git-gutter+ git-gutter pos-tip flx anzu bind-map auto-complete popup flyspell-correct gitignore-mode atomic-chrome websocket epl projectile org-mime go-mode ghub org-brain iedit elfeed-web elfeed-org elfeed-goodies ace-jump-mode noflet elfeed org-category-capture packed haml-mode web-completion-data powerline helm-org-rifle highlight stickyfunc-enhance srefactor imenu-list company-quickhelp flycheck-clang-analyzer no-littering skewer-mode simple-httpd multiple-cursors dash-functional tern phpunit phpcbf php-extras php-auto-yasnippets drupal-mode php-mode orgnav csv-mode intero ghc haskell-mode inf-ruby git-commit markdown-mode async alert s magit-popup with-editor yaml-mode winum which-key web-mode use-package toc-org restart-emacs persp-mode paredit mu4e-alert live-py-mode json-mode jabber fsm highlight-indentation helm-projectile helm-make helm-flx git-timemachine fuzzy eyebrowse evil-mc dumb-jump company-go coffee-mode beacon aggressive-indent ace-link anaconda-mode smartparens evil flycheck company deferred helm helm-core yasnippet avy log4e magit hydra f js2-mode yapfify xterm-color ws-butler window-numbering web-beautify volatile-highlights vi-tilde-fringe uuidgen undo-tree tagedit spacemacs-theme spaceline solarized-theme smeargle smart-tabs-mode slim-mode shell-pop scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe rbenv rake rainbow-delimiters quelpa pyvenv pytest pyenv-mode py-isort pug-mode popwin pkg-info pip-requirements paradox orgit org-projectile org-present org-pomodoro org-plus-contrib org-download org-bullets open-junk-file nyan-mode neotree multi-term mu4e-maildirs-extension move-text mmm-mode minitest markdown-toc magit-gitflow macrostep lorem-ipsum livid-mode linum-relative link-hint less-css-mode json-snatcher json-reformat js2-refactor js-doc info+ indent-guide ido-vertical-mode hy-mode hungry-delete htmlize ht hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers hide-comnt help-fns+ helm-themes helm-swoop helm-pydoc helm-perldoc helm-mu helm-mode-manager helm-hoogle helm-gtags helm-gitignore helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag haskell-snippets graphviz-dot-mode goto-chg google-translate golden-ratio go-guru go-eldoc gnuplot gitconfig-mode gitattributes-mode git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md ggtags flyspell-correct-helm flycheck-pos-tip flycheck-haskell flx-ido fill-column-indicator fancy-battery expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help erc-yt erc-view-log erc-social-graph erc-image erc-hl-nicks engine-mode emmet-mode elisp-slime-nav disaster diminish diff-hl define-word cython-mode company-web company-tern company-statistics company-ghci company-ghc company-cabal company-c-headers company-anaconda column-enforce-mode cmm-mode cmake-mode clean-aindent-mode clang-format chruby bundler bind-key auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile adaptive-wrap ace-window ace-jump-helm-line ac-ispell)))
+    (treepy graphql pcre2el gntp parent-mode request fringe-helper git-gutter+ git-gutter pos-tip flx anzu bind-map auto-complete popup gnuplot-mode company-posframe company-childframe posframe flyspell-correct gitignore-mode atomic-chrome websocket epl projectile org-mime go-mode ghub org-brain iedit elfeed-web elfeed-org elfeed-goodies ace-jump-mode noflet elfeed org-category-capture packed haml-mode web-completion-data powerline helm-org-rifle highlight stickyfunc-enhance srefactor imenu-list company-quickhelp flycheck-clang-analyzer no-littering skewer-mode simple-httpd multiple-cursors dash-functional tern phpunit phpcbf php-extras php-auto-yasnippets drupal-mode php-mode orgnav csv-mode intero ghc haskell-mode inf-ruby git-commit markdown-mode async alert s magit-popup with-editor yaml-mode winum which-key web-mode use-package toc-org restart-emacs persp-mode paredit mu4e-alert live-py-mode json-mode jabber fsm highlight-indentation helm-projectile helm-make helm-flx git-timemachine fuzzy eyebrowse evil-mc dumb-jump company-go coffee-mode beacon aggressive-indent ace-link anaconda-mode smartparens evil flycheck company deferred helm helm-core yasnippet avy log4e magit hydra f js2-mode yapfify xterm-color ws-butler window-numbering web-beautify volatile-highlights vi-tilde-fringe uuidgen undo-tree tagedit spacemacs-theme spaceline solarized-theme smeargle smart-tabs-mode slim-mode shell-pop scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe rbenv rake rainbow-delimiters quelpa pyvenv pytest pyenv-mode py-isort pug-mode popwin pkg-info pip-requirements paradox orgit org-projectile org-present org-pomodoro org-plus-contrib org-download org-bullets open-junk-file nyan-mode neotree multi-term mu4e-maildirs-extension move-text mmm-mode minitest markdown-toc magit-gitflow macrostep lorem-ipsum livid-mode linum-relative link-hint less-css-mode json-snatcher json-reformat js2-refactor js-doc info+ indent-guide ido-vertical-mode hy-mode hungry-delete htmlize ht hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers hide-comnt help-fns+ helm-themes helm-swoop helm-pydoc helm-perldoc helm-mu helm-mode-manager helm-hoogle helm-gtags helm-gitignore helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag haskell-snippets graphviz-dot-mode goto-chg google-translate golden-ratio go-guru go-eldoc gnuplot gitconfig-mode gitattributes-mode git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md ggtags flyspell-correct-helm flycheck-pos-tip flycheck-haskell flx-ido fill-column-indicator fancy-battery expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help erc-yt erc-view-log erc-social-graph erc-image erc-hl-nicks engine-mode emmet-mode elisp-slime-nav disaster diminish diff-hl define-word cython-mode company-web company-tern company-statistics company-ghci company-ghc company-cabal company-c-headers company-anaconda column-enforce-mode cmm-mode cmake-mode clean-aindent-mode clang-format chruby bundler bind-key auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile adaptive-wrap ace-window ace-jump-helm-line ac-ispell)))
  '(paradox-github-token t)
  '(password-cache-expiry nil)
+ '(reb-re-syntax (quote string))
  '(safe-local-eval-forms
    (quote
     ((add-hook

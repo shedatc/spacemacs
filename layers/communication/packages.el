@@ -53,7 +53,7 @@
       "omj"  'mu4e~headers-jump-to-maildir
       "omm"  'helm-mu)
     :config
-    (setq helm-mu-default-search-string "(m:/archive OR m:/inbox OR m:/sent OR m:/irp) AND d:2w..now")
+    (setq helm-mu-default-search-string "(m:/inbox OR m:/sent OR m:/irp) AND d:2w..now")
     (helm-add-action-to-source "Jump to containing maildir" 'sheda-communication/jump-to-containing-maildir helm-source-mu)))
 
 (defun sheda-communication/setup-jabber-hooks ()
@@ -96,20 +96,37 @@
 
 (defun sheda-communication/post-init-jabber ()
   (setq jabber-account-list    '(("stephane.rochoy@itvucom02" (:connection-type . starttls)))
-        jabber-muc-autojoin    '("cloudservices@conference.itvucom02")
         jabber-history-enabled t
         jabber-history-dir     "~/.emacs.d/private/jabber-history"
         jabber-auto-reconnect  t
         ;; jabber-events-confirm-composing nil
         ;; jabber-chatstates-confirm       nil
         )
+
+  ;; XXX
+  ;;
+  ;; This variable is obsolete since 24.3;
+  ;; use ‘display-buffer-alist’ instead.
+  ;; This variable may be risky if used as a file-local variable.
+  ;;
+  ;; (setq special-display-regexps
+  ;;       '(("jabber-chat"
+  ;;          (width . 80)
+  ;;          (scroll-bar-width . 16)
+  ;;          (height . 15)
+  ;;          (tool-bar-lines . 0)
+  ;;          (menu-bar-lines 0)
+  ;;          (font . "-GURSoutline-Courier New-normal-r-normal-normal-11-82-96-96-c-70-iso8859-1")
+  ;;          (left . 80))))
+
   (sheda-communication/setup-jabber-hooks)
   (spacemacs/declare-prefix "oj" "jabber")
   (spacemacs/set-leader-keys
-    "oc"  'sheda-communication/jabber-chat-with
-    "ojr" 'jabber-switch-to-roster-buffer)
+    "oc" 'sheda-communication/jabber-chat-with
+    "oj" 'jabber-switch-to-roster-buffer)
   ;; (spacemacs/set-leader-keys-for-major-mode 'jabber-chat-mode
   ;;   (kbd "<ESC>") 'delete-window)
+  (jabber-connect-all)
   )
 
 (defun sheda-communication/init-jabber-otr ()
@@ -133,21 +150,24 @@
                    (t                                         user-login-name))))
     (setq mu4e-bookmarks
           (list (list (concat "( m:/inbox OR m:/irp ) AND g:unread AND NOT g:trashed AND t:" me) "My unreads"         ?i)
-                (list "( m:/inbox OR m:/irp ) AND g:unread AND NOT g:trashed"                    "All unread"         ?I)
+                (list "( m:/inbox OR m:/irp ) AND g:unread AND NOT g:trashed"                    "All unreads"        ?I)
                 (list "g:flagged AND NOT g:trashed"                                              "Flagged"            ?f)
                 (list "d:today..now"                                                             "Today's"            ?t)
                 (list "d:7d..now"                                                                "Last 7 days"        ?w)
                 (list "g:attach"                                                                 "With attachment(s)" ?a))))
 
-  (setq mu4e-debug             nil
-        mu4e-maildir-shortcuts '(("/archive" . ?a)
-                                 ("/bugs"    . ?b)
-                                 ("/drafts"  . ?d)
-                                 ("/inbox"   . ?i)
-                                 ("/irp"     . ?I)
-                                 ("/reviews" . ?r)
-                                 ("/sent"    . ?s)
-                                 ("/trash"   . ?t))
+  (let* ((current-archive-maildir (concat "/archive/" (format-time-string "%Y"))))
+    (setq mu4e-maildir-shortcuts
+          (list (cons current-archive-maildir ?a)
+                (cons "/bugs"                 ?b)
+                (cons "/drafts"               ?d)
+                (cons "/inbox"                ?i)
+                (cons "/irp"                  ?I)
+                (cons "/reviews"              ?r)
+                (cons "/sent"                 ?s)
+                (cons "/trash"                ?t))))
+
+  (setq mu4e-debug               nil
         mu4e-update-interval     120
         mu4e-use-fancy-chars     t
         mu4e-hide-index-messages t
@@ -268,15 +288,14 @@
 (defun sheda-communication/post-init-mu4e ()
   "Post-initialize the mu4e package."
 
-  ;; (mu4e-alert-enable-mode-line-display) ; XXX Don't seems to work.
-
   (add-hook 'mu4e-main-mode-hook
             (lambda ()
               (evilified-state-evilify mu4e-main-mode mu4e-main-mode-map
                 (kbd "/") 'mu4e-headers-search
                 (kbd "q") 'bury-buffer
                 (kbd "Q") 'mu4e-quit
-                (kbd "u") 'mu4e-update-mail-and-index)))
+                (kbd "u") 'mu4e-update-mail-and-index)
+              (mu4e-alert-enable-mode-line-display)))
   (add-hook 'mu4e-headers-mode-hook
             (lambda ()
               (evilified-state-evilify mu4e-headers-mode mu4e-headers-mode-map

@@ -3,6 +3,11 @@
   (interactive)
   (switch-to-buffer "*org-brain*"))
 
+(defun sheda-org/switch-to-agenda-buffer ()
+  "Switch to the *Org Agenda* buffer."
+  (interactive)
+  (switch-to-buffer "*Org Agenda*"))
+
 (defvar sheda-org/deadline-coefficient 12.0
   "The coefficient for the deadline property.")
 
@@ -11,6 +16,9 @@
 
 (defvar sheda-org/age-coefficient 2.0
   "The coefficient for the age of tasks.")
+
+(defvar sheda-org/blocking-coefficient 2.0
+  "The coefficient for blocking tasks.")
 
 (defvar sheda-org/max-age 365
   "The maximum age of a task in days.")
@@ -30,7 +38,6 @@
                  ((string= "B" priority) 3.9)
                  ((string= "C" priority) 1.8)
                  (t                      0.0))))
-    (message "\tPriority:    raw-value='%s' score=%f" priority score)
     score))
 
 (defun sheda-org/scaled-deadline (position)
@@ -55,7 +62,6 @@ References:
         0.0
       (let* ((distance (* -1.0 (org-time-stamp-to-now deadline))))
         ;; Distance is positive if deadline is in the past (i.e., the task is overdue).
-        (message "\tDeadline:    raw-value='%s'" deadline)
         (cond
          ((>= distance 7.0)   1.0)                                           ;; Is overdue for more than one week so highest urgency.
          ((>= distance -14.0) (+ (/ (* (+ distance 14.0) 0.8) 21.0) 0.2))
@@ -65,7 +71,6 @@ References:
   "Extract the deadline of the TODO entry at the given POSITION and return its corresponding score."
   (let* ((scaled-deadline (sheda-org/scaled-deadline position))
          (score (* sheda-org/deadline-coefficient scaled-deadline)))
-    (message "\tDeadline:    scaled=%f coefficient=%f score=%f" scaled-deadline sheda-org/deadline-coefficient score)
     score))
 
 ;; XXX Need to find the first keyword of the TODO sequence of type.
@@ -77,8 +82,6 @@ References:
          (score (if is-active
                     sheda-org/activity-coefficient
                   0.0)))
-    (message "\tActivity:    state='%s' is-active=%s coefficient=%f score=%f"
-             state is-active sheda-org/age-coefficient score)
     score))
 
 (defun sheda-org/age-score (position)
@@ -90,8 +93,6 @@ References:
              (score (if (> age sheda-org/max-age)
                         sheda-org/age-coefficient
                       (* sheda-org/age-coefficient (/ age sheda-org/max-age) ))))
-        (message "\tAge:         timestamp=%s age=%s max-age=%f coefficient=%f score=%f"
-                 timestamp age sheda-org/max-age sheda-org/age-coefficient score)
         score))))
 
 (defun sheda-org/tag-score (tag)
@@ -103,24 +104,23 @@ References:
 
 (defun sheda-org/get-entry-tags (pom)
   "Return the list of all the tags bound to the entry at POM. Include inherited tags."
-  (split-string (org-entry-get pom "ALLTAGS" t) ":" t))
+  (let* ((tags (org-entry-get pom "ALLTAGS" t)))
+    (if (null tags)
+        (list)
+      (split-string tags ":" t))))
 
 (defun sheda-org/tags-score (pom)
   "Extract the tags attached to the TODO entry at the given POSITION and return their aggregated scores."
   (let* ((tags (sheda-org/get-entry-tags pom))
          (per-tag-scores (mapcar 'sheda-org/tag-score tags))
-         ;; (tags-count (length tags))
-         ;; (score      (* tags-count sheda-org/tags-coefficient))
          (score (apply '+ per-tag-scores))
          )
-    (message "\tTags:        tags='%s' score=%f" tags score)
     score))
 
-(defun sheda-org/children-ids (pom &optional children-property)
-  "Return the IDs of the children of the entry at the given POM (position or marker). The CHILDREN-PROPERTY default to 'BRAIN_CHILDREN'."
-  (let* ((prop (if (null children-property) "BRAIN_CHILDREN" children-property))
+(defun sheda-org/parent-ids (pom &optional parents-property)
+  "Return the IDs of the parents of the entry at the given POM (position or marker). The PARENTS-PROPERTY default to 'BRAIN_PARENTS'."
+  (let* ((prop (if (null parents-property) "BRAIN_PARENTS" parents-property))
          (ids (org-entry-get pom prop)))
-    (message "Children at %s: %s" pom ids)
     (if (null ids)
         (list)
       (split-string ids " "))))
@@ -134,20 +134,18 @@ References:
 
 (defun sheda-org/blocking-score (position)
   "List the TODO entries blocked by the one at the given POSITION and return the corresponding score."
-  (let* ((children (sheda-org/children-ids position))
+  (let* ((parents (sheda-org/parent-ids position))
          (score (apply '+ (mapcar (lambda (id)
                                     (if (sheda-org/is-not-done-p id)
-                                        1.0
+                                        sheda-org/blocking-coefficient
                                       0.0))
-                                  children))))
-    (message "\tBlocking:    children-count=%d score=%f" (length children) score)
+                                  parents))))
     score))
 
 (defun sheda-org/urgency (&optional pom)
   "Return the urgency of the TODO entry at the given POM (position or marker). Default to the current point position."
   (interactive)
   (let* ((pom (if (null pom) (point-marker) pom)))
-    (message "POM: %s" pom)
     (let* ((priority (sheda-org/priority-score pom))
            (deadline (sheda-org/deadline-score pom))
            (activity (sheda-org/activity-score pom))
@@ -155,7 +153,6 @@ References:
            (tags     (sheda-org/tags-score     pom))
            (blocking (sheda-org/blocking-score pom))
            (urgency  (+ priority deadline activity age tags blocking)))
-      (message "Urgency of %s is %f." pom urgency)
       urgency)))
 
 (defun sheda-org/cmp-urgencies (a b)
@@ -167,8 +164,12 @@ If A is before B, return -1. If A is after B, return 1. If they are equal return
          (a-urgency  (sheda-org/urgency a-position))
          (b-urgency  (sheda-org/urgency b-position)))
     (progn
-      (message "A: marker=%s urgency=%f" a a-urgency)
-      (message "B: marker=%s urgency=%f" b b-urgency)
       (cond ((= a-urgency b-urgency) nil)
             ((> a-urgency b-urgency) -1)
             ((< a-urgency b-urgency) 1)))))
+
+(defun sheda-org/show-tasks-by-urgency ()
+  "Hello world!"
+  (interactive)
+  (org-agenda nil "u")
+  (sheda-org/switch-to-agenda-buffer))

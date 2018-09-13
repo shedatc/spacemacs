@@ -80,12 +80,14 @@
   `(let ((old-point (point)))
      ,@body
      (goto-char old-point)))
-    
+
 (defun perltidy-region (beg end)
   "Tidy perl code in the region."
   (interactive "r")
   (perltidy-save-point
-    (call-process-region beg end perltidy-program t t)))
+    (call-process-region beg end perltidy-program t t)
+    )
+  )
 
 (defun perltidy-buffer ()
   "Call perltidy for whole buffer."
