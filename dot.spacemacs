@@ -60,7 +60,10 @@ values."
      helm
      jabber
      markdown
-     org
+     (org
+      :variables
+      org-enable-reveal-js-support t
+      )
      php
      ;; search-engine
      semantic
