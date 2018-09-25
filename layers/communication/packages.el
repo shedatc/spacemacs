@@ -96,12 +96,14 @@
   )
 
 (defun sheda-communication/post-init-jabber ()
+  ;; Passwords taken from ~/.netrc.
   (setq jabber-account-list    '(("stephane.rochoy@itvucom02" (:connection-type . starttls)))
         jabber-history-enabled t
         jabber-history-dir     "~/.emacs.d/private/jabber-history"
         jabber-auto-reconnect  t
         ;; jabber-events-confirm-composing nil
         ;; jabber-chatstates-confirm       nil
+        jabber-libnotify-icon "/usr/share/icons/Adwaita/32x32/status/user-available.png"
         )
 
   ;; XXX
