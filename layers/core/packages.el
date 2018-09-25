@@ -39,8 +39,7 @@
     helm
     ;; (i3 :location local)
     nyan-mode
-    )
-)
+    ))
 
 (defun sheda-core/init-atomic-chrome ()
   "Initialize and configure the atomic-chrome package."
@@ -133,6 +132,12 @@
         ;; helm-wikipedia-summary-url
         ;; "https://fr.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page="
         )
+
+
+  ;; Use the childframe if available.
+  ;; (setq helm-display-function             'helm-display-buffer-in-own-frame
+  ;;       helm-display-buffer-reuse-frame   t
+  ;;       helm-use-undecorated-frame-option t)
 
   ;; Use ctsr bindings to navigate lines and sources.
   (add-hook 'helm-mode-hook

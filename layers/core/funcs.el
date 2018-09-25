@@ -46,3 +46,8 @@
   "Switch to the qa.org buffer."
   (interactive)
   (sheda-core/switch-to-file-buffer "qa.org" "~/ens/org"))
+
+(defun sheda-core/shell-command-on-region (start end command)
+  "Passes the content of the region as the standard input to the shell command and replace it with the resulting output."
+  (interactive "r\nsCommand: ")
+  (shell-command-on-region start end command nil t))

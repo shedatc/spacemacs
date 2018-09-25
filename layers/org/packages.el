@@ -1,4 +1,4 @@
-;;; packages.el --- sheda-org layer packages file for Spacemacs.
+;; packages.el --- sheda-org layer packages file for Spacemacs.
 ;;
 ;; Copyright (c) 2017 Sheda
 ;;
@@ -31,9 +31,11 @@
 
 (defconst sheda-org-packages
   '(
+    gnuplot-mode
     helm-org-rifle
     org
     org-brain
+    (org-urgency :location local)
     )
   "The list of Lisp packages required by the sheda-org layer.
 
@@ -61,6 +63,17 @@ Each entry is either:
 
       - A list beginning with the symbol `recipe' is a melpa
         recipe.  See: https://github.com/milkypostman/melpa#recipe-format")
+
+(defun sheda-org/init-gnuplot-mode ()
+  "Intialize the gnuplot-mode package."
+  (use-package gnuplot-mode
+    :commands 'gnuplot-mode
+    :init
+    ;; Reference: https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-gnuplot.html
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((gnuplot . t)))
+    ))
 
 (defun sheda-org/init-helm-org-rifle ()
   "Intialize the helm-org-rifle package."
@@ -126,7 +139,6 @@ Each entry is either:
                                        ("secret"    . ?s)
                                        )
         org-link-abbrev-alist
-
         (list (cons "wikipedia"                     "https://en.wikipedia.org/wiki/%s")
               (cons "man"                           "http://www.freebsd.org/cgi/man.cgi?query=%s")
               (cons "file"                          "file:///home/stephaner/ens/files/%s") ;; XXX How should I invoke concat and expand-file-name to build it from user-home-directory?
@@ -138,11 +150,11 @@ Each entry is either:
               (cons "pix"                           (concat "file://" (expand-file-name "ens/pix/%s" user-home-directory)))
               ;; Work-related:
               (cons "bug"    "https://mantis.stormshield.eu/view.php?id=%s")
-              (cons "review" "https://labo-sns.stormshield.eu/reviewboard/r/%s")
+              (cons "review" "https://review-sns.stormshield.eu/D%s")
               (cons "wiki"   "https://wiki.stormshield.eu/pmwiki_labo/index.php?n=%s")
               )
         ;; org-use-speed-commands      t
-        org-export-initial-scope       'subtree
+        org-export-initial-scope       'buffer
         org-enforce-todo-dependencies  t
         org-fontify-whole-heading-line t
         org-lowest-priority            ?D
@@ -150,12 +162,6 @@ Each entry is either:
 
         ;; #+SEQ_TODO: TODO(t) IN-PROGRESS(p) UNDER-REVIEW(r) WAIT-NIGHTLY(n) BLOCKED(b) | DONE(d) CANCELLED(c)
         org-todo-keywords '((sequence "TODO(t)" "IN-PROGRESS(p)" "UNDER-REVIEW(r)" "WAIT-NIGHTLY(n)" "BLOCKED(b)" "|" "DONE(d)" "CANCELLED(c)"))
-
-
-        org-agenda-custom-commands '(("u" "All TODOs sorted by urgency"
-                                            alltodo ""
-                                            ((org-agenda-cmp-user-defined 'sheda-org/cmp-urgencies)
-                                             (org-agenda-sorting-strategy '(user-defined-up)))))
 
         org-table-separator-space " " ;; XXX Break tables alignment when set to a propertized value with (space :width 1).
         )
@@ -199,7 +205,6 @@ Each entry is either:
                org-brain-remove-parent
                org-brain-visualize
                org-brain-visualize-mode)
-    ;; :defer t
     :init
     (setq org-brain-path      my-org-directory
           org-brain-data-file (expand-file-name "org-brain/data.el" spacemacs-cache-directory) ;; XXX Why can't I use no-littering-var-directory here?
@@ -210,7 +215,9 @@ Each entry is either:
     (spacemacs/declare-prefix "obp" "parent")
     (spacemacs/declare-prefix "obr" "resource")
     (spacemacs/set-leader-keys
+      ;; Applications:
       "ab"   'org-brain-visualize
+      ;; Buffers:
       "obb"  'sheda-org/switch-to-brain-buffer
       ;; Children:
       "obca" 'org-brain-add-child
@@ -223,12 +230,20 @@ Each entry is either:
       "obpr" 'org-brain-remove-parent
       ;; Resources:
       "obra" 'org-brain-add-resource
-      "obrp" 'org-brain-paste-resource
-      )
-    ;; (eval-after-load 'evil
-    ;;   (evil-set-initial-state 'org-brain-visualize-mode 'emacs))
+      "obrp" 'org-brain-paste-resource)
     :config
-    (evilified-state-evilify org-brain-visualize-mode org-brain-visualize-mode-map)
-  ))
+    (evilified-state-evilify org-brain-visualize-mode org-brain-visualize-mode-map)))
+
+(defun sheda-org/init-org-urgency ()
+  "Initialize the org-urgency package."
+  (use-package org-urgency
+    :if (configuration-layer/package-usedp 'org-brain)
+    :commands (org-urgency/show-tasks-by-urgency)
+    :init
+    (setq org-agenda-custom-commands '(("u" "All TODOs sorted by urgency"
+                                        alltodo ""
+                                        ((org-agenda-cmp-user-defined 'org-urgency/cmp-urgencies)
+                                         (org-agenda-sorting-strategy '(user-defined-up))))))
+    (spacemacs/set-leader-keys "ou" 'org-urgency/show-tasks-by-urgency)))
 
 ;;; packages.el ends here
