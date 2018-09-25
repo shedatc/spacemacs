@@ -1,4 +1,4 @@
-;f;; packages.el --- sheda-org layer packages file for Spacemacs.
+;; packages.el --- sheda-org layer packages file for Spacemacs.
 ;;
 ;; Copyright (c) 2017 Sheda
 ;;
@@ -154,7 +154,7 @@ Each entry is either:
               (cons "wiki"   "https://wiki.stormshield.eu/pmwiki_labo/index.php?n=%s")
               )
         ;; org-use-speed-commands      t
-        org-export-initial-scope       'subtree
+        org-export-initial-scope       'buffer
         org-enforce-todo-dependencies  t
         org-fontify-whole-heading-line t
         org-lowest-priority            ?D
@@ -205,7 +205,6 @@ Each entry is either:
                org-brain-remove-parent
                org-brain-visualize
                org-brain-visualize-mode)
-    ;; :defer t
     :init
     (setq org-brain-path      my-org-directory
           org-brain-data-file (expand-file-name "org-brain/data.el" spacemacs-cache-directory) ;; XXX Why can't I use no-littering-var-directory here?
