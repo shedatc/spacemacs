@@ -35,6 +35,7 @@
     jabber
     ;; jabber-otr
     mu4e
+    mu4e-alert
     persp-mode
     )
 )
@@ -183,10 +184,6 @@
         mm-decrypt-option 'always
         mm-verify-option  'always
 
-        mu4e-alert-style                  'libnotify
-        mu4e-alert-group-by               :from
-        mu4e-alert-interesting-mail-query "( m:/inbox OR m:/irp ) AND g:unread AND NOT g:trashed AND NOT ( f:mantis OR s:\"Review Request\" )"
-
         mu4e-marks '((refile
                       :char ("r" . "▶")
                       :prompt "refile"
@@ -326,6 +323,13 @@
                 "d" 'message-dont-send
                 )))
   )
+
+(defun sheda-communication/post-init-mu4e-alert ()
+  "Post-initialize the mu4e-alert package."
+  (eval-after-load 'alert #'sheda-communication/setup-alert-style-for-mu4e)
+  (setq mu4e-alert-group-by               :from
+        mu4e-alert-interesting-mail-query "( m:/inbox OR m:/irp ) AND g:unread AND NOT g:trashed AND NOT ( f:mantis OR s:\"Review Request\" )"
+        ))
 
 (defun sheda-communication/post-init-persp-mode ()
   (spacemacs|define-custom-layout "@mu4e"

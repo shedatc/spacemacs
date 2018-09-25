@@ -40,3 +40,14 @@ Returns the chat buffer."
 (defun sheda-communication/add-mu4e-buffer-to-persp-and-switch ()
   (persp-add-buffer (current-buffer) (persp-get-by-name "@mu4e"))
   (persp-switch "@mu4e"))
+
+(defun sheda-communication/setup-alert-style-for-mu4e ()
+  "Define the libnotify-mail style and make it the default for mu4e-alert."
+  (alert-define-style 'libnotify-mail
+                        :title    "Notify about mails using libnotify"
+                        :notifier
+                        (lambda  (info)
+                          "Call alert-libnotify-notify after having added a mail icon to INFO."
+                          (alert-libnotify-notify (plist-put info
+                                                             :icon "/usr/share/icons/Adwaita/32x32/emblems/emblem-mail.png"))))
+  (mu4e-alert-set-default-style 'libnotify-mail))

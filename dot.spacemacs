@@ -405,6 +405,7 @@ you should place your code here."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(alert-default-style (quote libnotify))
  '(exec-path
    (quote
     ("/usr/local/sbin/" "/usr/local/bin/" "/usr/bin/" "/usr/lib/jvm/default/bin/" "/usr/bin/site_perl/" "/usr/bin/vendor_perl/" "/usr/bin/core_perl/" "/usr/lib/emacs/25.2/x86_64-unknown-linux-gnu/" "~/bin")))
