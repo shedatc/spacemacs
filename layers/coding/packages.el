@@ -39,7 +39,7 @@
     helm-perldoc
     magit
     (perl-pod-preview :location local)
-    (perltidy :location local)
+    (perltidy :location (recipe :fetcher github :repo "emacsmirror/emacswiki.org" :branch "master" :files ("perltidy.el")))
     smart-tabs-mode
     )
 )
