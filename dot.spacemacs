@@ -382,16 +382,13 @@ you should place your code here."
   (require 'recentf)
   (add-to-list 'recentf-exclude no-littering-var-directory)
   (add-to-list 'recentf-exclude no-littering-etc-directory)
+  (setq-default bookmark-default-file (expand-file-name "bookmarks" no-littering-etc-directory))
 
+  ;; recentf
   (if (configuration-layer/package-usedp 'org)
       (seq-do (lambda (file-or-directory)
                 (add-to-list 'recentf-exclude file-or-directory))
               org-agenda-files))
-
-  (setq-default
-   bookmark-default-file         (expand-file-name "bookmarks" no-littering-etc-directory)
-   browse-url-browser-function   'browse-url-chromium
-   tab-width                     4)
 
   (cond ((string= system-name "azathoth.labo.int")
          (setq user-mail-address "stephane.rochoy@stormshield.eu"
@@ -399,26 +396,7 @@ you should place your code here."
         ((string= system-name "davinel.mg.rsph.local")
          (setq user-mail-address "sheda@fsfe.org"
                user-full-name    "Sheda")))
-
-  ;; Enable conf-unix-mode for *.conf, *rc and *.cmd.
-  (add-to-list 'auto-mode-alist '("\\.conf\\'" . conf-unix-mode))
-  (add-to-list 'auto-mode-alist '("rc\\'"      . conf-unix-mode))
-  (add-to-list 'auto-mode-alist '("\\.cmd\\'"  . conf-unix-mode))
-
-  ;; Enable conf-unix-mode for file whose content start with a [
-  (add-to-list 'magic-mode-alist '("\\["  . conf-unix-mode))
-
-  ;; Enable cperl-mode for *.t.
-  ;; XXX Move me in the sheda-coding layer.
-  (add-to-list 'auto-mode-alist '("\\.t\\'" . cperl-mode))
-
-  (if (string= system-name "azathoth.labo.int")
-      (add-hook 'after-save-hook 'sheda-core/run-push))
-
-  (spacemacs/toggle-aggressive-indent-on)
-  ;; (spacemacs/toggle-automatic-symbol-highlight-on)
-  (spacemacs/toggle-auto-fill-mode-on)
-  (blink-cursor-mode))
+  )
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.

@@ -1,5 +1,7 @@
-(setq tab-width       4
-      compile-command "push -f"
+
+(setq-default tab-width 4)
+
+(setq compile-command "push -f"
 
       ;; C/C++
       flycheck-clang-include-path
@@ -39,3 +41,5 @@
                           "XXX")
                          eow)
       )
+
+(add-to-list 'auto-mode-alist '("\\.t\\'" . cperl-mode)) ;; Enable cperl-mode for *.t.
