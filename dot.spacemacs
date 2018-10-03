@@ -63,6 +63,7 @@ values."
      (org
       :variables
       org-enable-reveal-js-support t
+      org-reveal-root "http://localhost/reveal"
       )
      php
      ;; search-engine

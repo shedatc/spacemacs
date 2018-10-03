@@ -183,6 +183,16 @@ Each entry is either:
     "ol" 'org-open-at-point-global
     "oi" 'org-id-get-create)
 
+  ;; (add-to-list 'org-entities-user
+  ;;              '("unamusedface" nil nil "&x1F612;" nil nil nil))
+  (setq org-entities-user nil)
+  (add-to-list 'org-entities-user
+               '("unamusedface" nil nil "&#128530;" nil nil nil))
+  (add-to-list 'org-entities-user
+               '("grinningface" nil nil "&#128513;" nil nil nil))
+  (add-to-list 'org-entities-user
+               '("coffee" nil nil "&#9749;" nil nil nil))
+
   ;; (add-hook 'org-mode-hook 'aggressive-indent-mode) ;; XXX Re-enable only when indent in #+BEGIN_SRC blocks is OK.
 
   ;; Ensure new entries get an ID.
