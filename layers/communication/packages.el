@@ -62,37 +62,53 @@
         '(
           jabber-message-libnotify
           )
+
         jabber-alert-message-hooks
         '(
           jabber-message-libnotify
           jabber-message-display
           jabber-message-scroll
           )
-        jabber-post-connect-hooks ;; Default is (jabber-send-current-presence jabber-muc-autojoin jabber-whitespace-ping-start jabber-vcard-avatars-find-current)
+
+        jabber-post-connect-hooks
         '(
           spacemacs/jabber-connect-hook
           jabber-keepalive-start
           jabber-autoaway-start
           ;; jabber-mode-line-mode
           ;; sheda-communication/jabber-update-activity-count
+          (lambda (connection)
+            (sheda-communication/update-jabber-connection-status t))
           )
+
+        jabber-post-disconnect-hook
+        '(
+          (lambda ()
+            (sheda-communication/update-jabber-connection-status nil))
+          )
+
+        jabber-lost-connection-hooks
+        '(
+          (lambda (connection) ;; Manage the /tmp/jabber-lost-connection file by tracking connection changes.
+            (sheda-core/message "hook: jabber-lost-connection")
+            (sheda-communication/update-jabber-connection-status nil))
+          )
+
         jabber-alert-muc-hooks
         '(
           jabber-muc-libnotify
           jabber-muc-display
           jabber-muc-scroll
           )
-        )
-  (add-hook 'jabber-lost-connection-hooks
-            (lambda (connection)
-              "Attempt to reconnect."
-              (sheda-core/message "hook: jabber-lost-connection")))
 
-  (add-hook 'jabber-chat-mode-hook
-            (lambda ()
-              "Install some key bindings under the major mode leader key (,) when in chat mode."
-              (spacemacs/set-leader-keys-for-major-mode 'jabber-chat-mode
-                "l" 'jabber-chat-display-more-backlog)))
+        jabber-chat-mode-hook
+        '(
+          (lambda ()
+            "Install some key bindings under the major mode leader key (,) when in chat mode."
+            (spacemacs/set-leader-keys-for-major-mode 'jabber-chat-mode
+              "l" 'jabber-chat-display-more-backlog))
+          )
+        )
   )
 
 (defun sheda-communication/post-init-jabber ()

@@ -51,3 +51,9 @@ Returns the chat buffer."
                           (alert-libnotify-notify (plist-put info
                                                              :icon "/usr/share/icons/Adwaita/32x32/emblems/emblem-mail.png"))))
   (mu4e-alert-set-default-style 'libnotify-mail))
+
+(defun sheda-communication/update-jabber-connection-status (is-connected)
+  "Manage the /tmp/jabber-lost-connection file to reflect the connection status."
+  (if is-connected
+      (delete-file "/tmp/jabber-lost-connection")
+    (write-region "" nil "/tmp/jabber-lost-connection")))
