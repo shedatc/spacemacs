@@ -129,8 +129,7 @@
     "oj" 'jabber-switch-to-roster-buffer)
   ;; (spacemacs/set-leader-keys-for-major-mode 'jabber-chat-mode
   ;;   (kbd "<ESC>") 'delete-window)
-  (jabber-connect-all)
-  )
+  (when (string= system-name "azathoth.labo.int") (jabber-connect-all)))
 
 (defun sheda-communication/init-jabber-otr ()
   (use-package jabber-otr
