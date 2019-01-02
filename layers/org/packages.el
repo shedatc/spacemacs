@@ -31,6 +31,8 @@
 
 (defconst sheda-org-packages
   '(
+    emacsql
+    emacsql-sqlite
     gnuplot-mode
     helm-org-rifle
     org
@@ -63,6 +65,16 @@ Each entry is either:
 
       - A list beginning with the symbol `recipe' is a melpa
         recipe.  See: https://github.com/milkypostman/melpa#recipe-format")
+
+(defun sheda-org/init-emacsql ()
+  "Intialize the emacsql package."
+  (use-package emacsql
+    ))
+
+(defun sheda-org/init-emacsql-sqlite ()
+  "Intialize the emacsql-sqlite package."
+  (use-package emacsql-sqlite
+    ))
 
 (defun sheda-org/init-gnuplot-mode ()
   "Intialize the gnuplot-mode package."
