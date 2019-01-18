@@ -7,6 +7,11 @@
 ;;   (call-process-shell-command
 ;;    (format "echo \"%s\" > ~/var/tmp/jabber-activity-count" jabber-activity-count-string)))
 
+;; Tell if we want to connect to some Jabber server.
+(defun sheda-communication/jabber-wanted ()
+  "Tell if jabber is currently unwanted."
+  (string= system-name "azathoth.stephaner.labo.int"))
+
 (defun sheda-communication/jabber-chat-with (jc jid &optional other-window)
   "Open an empty chat window for chatting with JID.
 With a prefix argument, open buffer in other window.
@@ -53,7 +58,62 @@ Returns the chat buffer."
   (mu4e-alert-set-default-style 'libnotify-mail))
 
 (defun sheda-communication/update-jabber-connection-status (is-connected)
-  "Manage the /tmp/jabber-lost-connection file to reflect the connection status."
+  "Manage the /tmp/jabber-connected file to reflect the connection status."
   (if is-connected
-      (delete-file "/tmp/jabber-lost-connection")
-    (write-region "" nil "/tmp/jabber-lost-connection")))
+      (write-region "" nil "/tmp/jabber-connected")
+    (delete-file "/tmp/jabber-connected")))
+
+(defun sheda-communication/react-to-jabber-disconnection (&optional connection)
+  "React to a Jabber disconnection."
+  (alert-libnotify-notify
+   (list :title "jabber"
+         :message "Disconnected."
+         :icon "/usr/share/icons/Adwaita/32x32/status/user-busy.png"))
+  (sheda-communication/update-jabber-connection-status nil))
+
+(defun sheda-communication/react-to-jabber-connection (connection)
+  "React to a Jabber connection."
+  (alert-libnotify-notify
+   (list :title "jabber"
+         :message "Connected and authenticated."
+         :icon "/usr/share/icons/Adwaita/32x32/status/user-available.png"))
+  (sheda-communication/update-jabber-connection-status t))
+
+(defun sheda-communication/adjust-mu4e-main-mode-map ()
+  (evilified-state-evilify mu4e-main-mode mu4e-main-mode-map
+    (kbd "/") 'mu4e-headers-search
+    (kbd "q") 'bury-buffer
+    (kbd "Q") 'mu4e-quit
+    (kbd "u") 'mu4e-update-mail-and-index))
+
+(defun sheda-communication/adjust-mu4e-headers-mode-map ()
+  (evilified-state-evilify mu4e-headers-mode mu4e-headers-mode-map
+    (kbd "t") 'mu4e-headers-next
+    (kbd "s") 'mu4e-headers-prev
+    (kbd "j") 'mu4e-headers-mark-thread
+    (kbd "r") 'mu4e-view-mark-for-refile
+    (kbd "/") 'mu4e-headers-search-narrow
+    (kbd "w") 'mu4e-headers-query-prev))
+
+(defun sheda-communication/add-mu4e-custom-headers-markers ()
+  (add-to-list 'mu4e-headers-custom-markers
+               '("Unreads"
+                 (lambda (msg unused)
+                   (memq 'unread (mu4e-message-field msg :flags))))))
+
+(defun sheda-communication/adjust-mu4e-view-mode-map ()
+  (evilified-state-evilify mu4e-view-mode mu4e-view-mode-map
+    (kbd "<backtab>") 'org-previous-link
+    (kbd "TAB")       'org-next-link
+    (kbd "RET")       'browse-url-at-point
+    (kbd "t")         'evil-next-visual-line
+    (kbd "s")         'evil-previous-visual-line
+    (kbd "T")         'mu4e-view-headers-next
+    (kbd "S")         'mu4e-view-headers-prev))
+
+(defun sheda-communication/adjust-mu4e-compose-mode-map ()
+  (spacemacs/set-leader-keys-for-major-mode 'mu4e-compose-mode
+    "a" 'mml-attach-file
+    "c" 'message-send
+    "d" 'message-dont-send
+    "q" 'kill-this-buffer))

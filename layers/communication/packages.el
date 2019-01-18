@@ -33,7 +33,7 @@
   '(
     helm-mu
     jabber
-    ;; jabber-otr
+    (jabber-otr :excluded t)
     mu4e
     mu4e-alert
     persp-mode
@@ -58,57 +58,39 @@
     (helm-add-action-to-source "Jump to containing maildir" 'sheda-communication/jump-to-containing-maildir helm-source-mu)))
 
 (defun sheda-communication/setup-jabber-hooks ()
-  (setq jabber-alert-presence-hooks
-        '(
-          jabber-message-libnotify
-          )
+  ;; jabber-alert-presence-hooks
+  (add-hook 'jabber-alert-presence-hooks 'jabber-message-libnotify)
 
-        jabber-alert-message-hooks
-        '(
-          jabber-message-libnotify
-          jabber-message-display
-          jabber-message-scroll
-          )
+  ;; jabber-alert-message-hooks
+  (add-hook 'jabber-alert-message-hooks 'jabber-message-libnotify)
+  (add-hook 'jabber-alert-message-hooks 'jabber-message-display)
+  (add-hook 'jabber-alert-message-hooks 'jabber-message-scroll)
 
-        jabber-post-connect-hooks
-        '(
-          spacemacs/jabber-connect-hook
-          jabber-keepalive-start
-          jabber-autoaway-start
-          ;; jabber-mode-line-mode
-          ;; sheda-communication/jabber-update-activity-count
-          (lambda (connection)
-            (sheda-communication/update-jabber-connection-status t))
-          )
+  ;; jabber-post-connect-hooks
+  (add-hook 'jabber-post-connect-hooks 'spacemacs/jabber-connect-hook)
+  (add-hook 'jabber-post-connect-hooks 'jabber-keepalive-start)
+  (add-hook 'jabber-post-connect-hooks 'jabber-autoaway-start)
+  (add-hook 'jabber-post-connect-hooks 'sheda-communication/react-to-jabber-connection)
 
-        jabber-post-disconnect-hook
-        '(
-          (lambda ()
-            (sheda-communication/update-jabber-connection-status nil))
-          )
+  ;; jabber-post-disconnect-hook (no 's')
+  (add-hook 'jabber-post-disconnect-hook 'sheda-communication/react-to-jabber-disconnection)
 
-        jabber-lost-connection-hooks
-        '(
-          (lambda (connection) ;; Manage the /tmp/jabber-lost-connection file by tracking connection changes.
-            (sheda-core/message "hook: jabber-lost-connection")
-            (sheda-communication/update-jabber-connection-status nil))
-          )
+  ;; jabber-lost-connection-hooks
+  (add-hook 'jabber-lost-connection-hooks 'sheda-communication/react-to-jabber-disconnection)
+  ;; (add-hook 'jabber-lost-connection-hooks 'jabber-connect-all) ;; XXX Try to reconnect but don't know if conflict with jabber-auto-reconnect.
 
-        jabber-alert-muc-hooks
-        '(
-          jabber-muc-libnotify
-          jabber-muc-display
-          jabber-muc-scroll
-          )
+  ;; jabber-alert-muc-hooks
+  (add-hook 'jabber-alert-muc-hooks 'jabber-muc-libnotify)
+  (add-hook 'jabber-alert-muc-hooks 'jabber-muc-display)
+  (add-hook 'jabber-alert-muc-hooks 'jabber-muc-scroll)
 
-        jabber-chat-mode-hook
-        '(
-          (lambda ()
-            "Install some key bindings under the major mode leader key (,) when in chat mode."
-            (spacemacs/set-leader-keys-for-major-mode 'jabber-chat-mode
-              "l" 'jabber-chat-display-more-backlog))
-          )
-        )
+  ;; jabber-chat-mode-hook
+  (add-hook 'jabber-chat-mode-hook
+            (lambda ()
+              "Install some key bindings under the major mode leader key (,) when in chat mode."
+              (spacemacs/set-leader-keys-for-major-mode 'jabber-chat-mode
+                "l" 'jabber-chat-display-more-backlog))
+            )
   )
 
 (defun sheda-communication/post-init-jabber ()
@@ -139,13 +121,15 @@
   ;;          (left . 80))))
 
   (sheda-communication/setup-jabber-hooks)
+
   (spacemacs/declare-prefix "oj" "jabber")
   (spacemacs/set-leader-keys
     "oc" 'sheda-communication/jabber-chat-with
     "oj" 'jabber-switch-to-roster-buffer)
   ;; (spacemacs/set-leader-keys-for-major-mode 'jabber-chat-mode
   ;;   (kbd "<ESC>") 'delete-window)
-  (jabber-connect-all)
+
+  (when (sheda-communication/jabber-wanted) (jabber-connect-all))
   )
 
 (defun sheda-communication/init-jabber-otr ()
