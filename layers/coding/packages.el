@@ -31,7 +31,6 @@
 
 (defconst sheda-coding-packages
   '(
-    (astyle :location local)
     cc-mode
     cperl-mode
     company-childframe
