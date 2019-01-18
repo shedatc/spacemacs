@@ -385,6 +385,8 @@ you should place your code here."
   (add-to-list 'recentf-exclude no-littering-etc-directory)
   (setq-default bookmark-default-file (expand-file-name "bookmarks" no-littering-etc-directory))
 
+  (setq-default browse-url-browser-function 'browse-url-default-browser)
+
   ;; recentf
   (if (configuration-layer/package-usedp 'org)
       (seq-do (lambda (file-or-directory)
