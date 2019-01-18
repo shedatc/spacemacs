@@ -105,6 +105,12 @@
         jabber-libnotify-icon "/usr/share/icons/Adwaita/32x32/status/user-available.png"
         )
 
+  ;; DEBUG
+  (setq jabber-debug-keep-process-buffers t
+        jabber-debug-log-xml              t
+        gnutls-log-level                  1 ;; Because we use STARTTLS.
+        )
+
   ;; XXX
   ;;
   ;; This variable is obsolete since 24.3;
