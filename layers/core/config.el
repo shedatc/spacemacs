@@ -21,3 +21,9 @@
 ;; (spacemacs/toggle-automatic-symbol-highlight-on)
 ;;(spacemacs/toggle-centered-point-globally-on)
 (blink-cursor-mode)
+
+;; Projectile:
+(setq projectile-enable-caching t)
+
+;; FSM:
+(setq fsm-debug nil) ;; No debug.
