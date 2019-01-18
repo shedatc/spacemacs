@@ -163,9 +163,10 @@ Each entry is either:
         org-default-priority           org-lowest-priority
 
         ;; #+SEQ_TODO: TODO(t) IN-PROGRESS(p) UNDER-REVIEW(r) WAIT-NIGHTLY(n) BLOCKED(b) | DONE(d) CANCELLED(c)
-        org-todo-keywords '((sequence "TODO(t)" "IN-PROGRESS(p)" "UNDER-REVIEW(r)" "WAIT-NIGHTLY(n)" "BLOCKED(b)" "|" "DONE(d)" "CANCELLED(c)"))
+        org-todo-keywords '((sequence "TODO(t)" "IN-PROGRESS(p)" "UNDER-REVIEW(r)" "COMPILING(c)" "WAIT-NIGHTLY(n)" "BLOCKED(b)" "|" "DONE(d)" "CANCELLED(C)"))
 
         org-table-separator-space " " ;; XXX Break tables alignment when set to a propertized value with (space :width 1).
+        org-hide-block-startup    t
         )
 
   (setq sheda-org/per-tag-scores '(("next" . 15.0)
