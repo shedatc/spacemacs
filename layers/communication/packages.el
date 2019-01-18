@@ -50,9 +50,10 @@
     ;; The "om" prefix is declared by sheda-communication/pre-init-mu4e.
     (spacemacs/set-leader-keys
       "omb"  'mu4e-headers-search-bookmark
-      "omc"  'helm-mu-contacts
       "omj"  'mu4e~headers-jump-to-maildir
       "omm"  'helm-mu)
+    (spacemacs/set-leader-keys
+      "oC"  'helm-mu-contacts)
     :config
     (setq helm-mu-default-search-string "(m:/inbox OR m:/sent OR m:/irp) AND d:2w..now")
     (helm-add-action-to-source "Jump to containing maildir" 'sheda-communication/jump-to-containing-maildir helm-source-mu)))
@@ -159,16 +160,15 @@
                 (list "d:7d..now"                                                                "Last 7 days"        ?w)
                 (list "g:attach"                                                                 "With attachment(s)" ?a))))
 
-  (let* ((current-archive-maildir (concat "/archive/" (format-time-string "%Y"))))
-    (setq mu4e-maildir-shortcuts
-          (list (cons current-archive-maildir ?a)
-                (cons "/bugs"                 ?b)
-                (cons "/drafts"               ?d)
-                (cons "/inbox"                ?i)
-                (cons "/irp"                  ?I)
-                (cons "/reviews"              ?r)
-                (cons "/sent"                 ?s)
-                (cons "/trash"                ?t))))
+  (setq mu4e-maildir-shortcuts
+        (list (cons (sheda-communication/mu4e-archive-maildir) ?a)
+              (cons "/bugs"                 ?b)
+              (cons "/drafts"               ?d)
+              (cons "/inbox"                ?i)
+              (cons "/irp"                  ?I)
+              (cons "/reviews"              ?r)
+              (cons "/sent"                 ?s)
+              (cons "/trash"                ?t)))
 
   (setq mu4e-debug               nil
         mu4e-update-interval     120
@@ -287,43 +287,15 @@
 (defun sheda-communication/post-init-mu4e ()
   "Post-initialize the mu4e package."
 
-  (add-hook 'mu4e-main-mode-hook
-            (lambda ()
-              (evilified-state-evilify mu4e-main-mode mu4e-main-mode-map
-                (kbd "/") 'mu4e-headers-search
-                (kbd "q") 'bury-buffer
-                (kbd "Q") 'mu4e-quit
-                (kbd "u") 'mu4e-update-mail-and-index)
-              (mu4e-alert-enable-mode-line-display)))
-  (add-hook 'mu4e-headers-mode-hook
-            (lambda ()
-              (evilified-state-evilify mu4e-headers-mode mu4e-headers-mode-map
-                (kbd "t") 'mu4e-headers-next
-                (kbd "s") 'mu4e-headers-prev
-                (kbd "j") 'mu4e-headers-mark-thread
-                (kbd "/") 'mu4e-headers-search-narrow
-                (kbd "w") 'mu4e-headers-query-prev)
-              (add-to-list 'mu4e-headers-custom-markers
-                           '("Unreads"
-                             (lambda (msg unused)
-                               (memq 'unread (mu4e-message-field msg :flags)))))))
-  (add-hook 'mu4e-view-mode-hook
-            (lambda ()
-              (evilified-state-evilify mu4e-view-mode mu4e-view-mode-map
-                (kbd "<backtab>") 'org-previous-link
-                (kbd "TAB")       'org-next-link
-                (kbd "RET")       'browse-url-at-point
-                (kbd "t")         'evil-next-visual-line
-                (kbd "s")         'evil-previous-visual-line
-                (kbd "T")         'mu4e-view-headers-next
-                (kbd "S")         'mu4e-view-headers-prev)))
-  (add-hook 'mu4e-compose-mode-hook
-            (lambda ()
-              (spacemacs/set-leader-keys-for-major-mode 'mu4e-compose-mode
-                "a" 'mml-attach-file
-                "c" 'message-send
-                "d" 'message-dont-send
-                )))
+  ;;main
+  (add-hook 'mu4e-main-mode-hook    #'sheda-communication/adjust-mu4e-main-mode-map)
+  ;; headers
+  (add-hook 'mu4e-headers-mode-hook #'sheda-communication/adjust-mu4e-headers-mode-map)
+  (add-hook 'mu4e-headers-mode-hook #'sheda-communication/add-mu4e-custom-headers-markers)
+  ;; view
+  (add-hook 'mu4e-view-mode-hook    #'sheda-communication/adjust-mu4e-view-mode-map)
+  ;; compose
+  (add-hook 'mu4e-compose-mode-hook #'sheda-communication/adjust-mu4e-compose-mode-map)
   )
 
 (defun sheda-communication/post-init-mu4e-alert ()

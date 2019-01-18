@@ -27,15 +27,33 @@ Returns the chat buffer."
         (switch-to-buffer-other-window buffer)
       (switch-to-buffer buffer))))
 
+(defun sheda-communication/mu4e-archive-maildir ()
+  "Return the current archive maildir."
+  (concat "/archive/" (format-time-string "%Y")))
+
+(defun sheda-communication/mu4e-filter-by-mail-prefix (prefix sequence)
+  "Filter the given sender/recipient SEQUENCE to only keep the ones having their mail starts with the given PREFIX."
+  (seq-filter (lambda (sr)
+                (s-starts-with-p prefix (cdr sr)))
+              sequence))
+
 (defun sheda-communication/mu4e-refile-folder-func (msg)
   "Select the folder according to MSG's From: and To: headers."
-  (let ((from (cadr (mu4e-message-field msg :from)))
-        (to   (cadr (mu4e-message-field msg :to))))
-    (cond
-     ((or (s-starts-with-p from "dp")    (s-starts-with-p to "dp"))    "/irp")
-     ((or (s-starts-with-p from "ce")    (s-starts-with-p to "ce"))    "/irp")
-     ((or (s-starts-with-p from "chsct") (s-starts-with-p to "chsct")) "/irp")
-     (t "/archive"))))
+  (let* ((recipients          (append (mu4e-message-field msg :to) (mu4e-message-field msg :cc)))
+         (archive-maildir     (sheda-communication/mu4e-archive-maildir))
+         (irp-archive-maildir (concat archive-maildir "/irp")))
+      (cond
+       ;; IRP-related:
+       ((not (null (sheda-communication/mu4e-filter-by-mail-prefix "dp"    recipients))) irp-archive-maildir)
+       ((not (null (sheda-communication/mu4e-filter-by-mail-prefix "ce"    recipients))) irp-archive-maildir)
+       ((not (null (sheda-communication/mu4e-filter-by-mail-prefix "chsct" recipients))) irp-archive-maildir)
+       ;; Default:
+       (t archive-maildir))))
+
+(defun sheda-communication/jump-to-containing-maildir (msg)
+  "Jump to the maildir containing MSG."
+  (let ((maildir (mu4e-message-field msg :maildir)))
+    (mu4e~headers-jump-to-maildir maildir)))
 
 (defun sheda-communication/jump-to-containing-maildir (msg)
   "Jump to the maildir containing MSG."
