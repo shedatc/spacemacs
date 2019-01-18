@@ -190,7 +190,7 @@
   "Post-initialize the magit package."
   (setq magit-blame-heading-format       "%s | %a | %C"
         magit-diff-refine-hunk           'all
-        magit-prefer-remote-upstream     '("master" "devel" "devel.v2")
+        magit-prefer-remote-upstream     '("master" "devel" "devel.v2" "devel.v3") ;; XXX Don't seems to work :/
         magit-popup-show-common-commands t
         )
 
