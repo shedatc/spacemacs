@@ -161,12 +161,12 @@
 
   ;; Decide on the maildir using the hostname (system-name).
   (setq mu4e-maildir (expand-file-name (concat ".mails/"
-                                               (cond ((string= system-name "azathoth.labo.int") "stormshield")
-                                                     (t                                         user-login-name)))
+                                               (cond ((string= system-name "azathoth.stephaner.labo.int") "stormshield")
+                                                     (t                                                   user-login-name)))
                                        user-home-directory))
 
-  (let* ((me (cond ((string= system-name "azathoth.labo.int") "stephane.rochoy")
-                   (t                                         user-login-name))))
+  (let* ((me (cond ((string= system-name "azathoth.stephaner.labo.int") "stephane.rochoy")
+                   (t                                                   user-login-name))))
     (setq mu4e-bookmarks
           (list (list (concat "( m:/inbox OR m:/irp ) AND g:unread AND NOT g:trashed AND t:" me) "My unreads"         ?i)
                 (list "( m:/inbox OR m:/irp ) AND g:unread AND NOT g:trashed"                    "All unreads"        ?I)
@@ -290,7 +290,7 @@
         ;; 				   :name "Work"
         ;; 				   :enter-func (lambda () (mu4e-message "Entering Work context"))
         ;; 				   :leave-func (lambda () (mu4e-message "Leaving Work context"))
-        ;; 				   :match-func (lambda (msg) (string= system-name "azathoth.labo.int"))
+        ;; 				   :match-func (lambda (msg) (string= system-name "azathoth.stephaner.labo.int"))
         ;; 				   :vars '( ( user-mail-address  . "stephane.rochoy@stormshield.eu"  )
         ;; 							( user-full-name     . "Stéphane Rochoy" )
         ;; 							( mu4e-sent-folder   . "/stormshield/sent" )

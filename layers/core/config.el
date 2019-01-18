@@ -4,7 +4,7 @@
   "rp"   'point-to-register)
 
 ;; Push:
-(if (string= system-name "azathoth.labo.int")
+(if (string= system-name "azathoth.stephaner.labo.int")
     (add-hook 'after-save-hook 'sheda-core/run-push))
 
 (setq-default browse-url-browser-function 'browse-url-chromium)
