@@ -165,13 +165,10 @@
     ;; :config
     ;; (beacon-mode)
     )
-
-
   )
 
 (defun sheda-core/post-init-info+ ()
   "Post-initialize the info+ package."
-  (sheda-core/message "post-init: info+")
   (add-hook 'Info-mode-hook
             (lambda ()
               (define-key Info-mode-map (kbd "t") 'evil-next-line)

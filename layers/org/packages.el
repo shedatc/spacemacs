@@ -200,7 +200,7 @@ Each entry is either:
 
   ;; Use org structures and tables in message mode.
   (add-hook 'message-mode-hook 'turn-on-orgtbl)
-  (add-hook 'message-mode-hook 'turn-on-orgstruct++)
+  ;; (add-hook 'message-mode-hook 'turn-on-orgstruct++)
   )
 
 (defun sheda-org/init-org-brain ()

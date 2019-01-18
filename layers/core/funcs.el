@@ -11,6 +11,7 @@
 
 (defun sheda-core/run-push ()
   "Run the push command."
+  (interactive)
   (start-process "push" "*Push Log*" (expand-file-name "bin/push" user-home-directory)))
 
 (defun sheda-core/adjust-keys-for-helm (map)
