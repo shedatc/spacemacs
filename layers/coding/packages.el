@@ -40,6 +40,7 @@
     (perl-pod-preview :location local)
     (perltidy :location (recipe :fetcher github :repo "emacsmirror/emacswiki.org" :branch "master" :files ("perltidy.el")))
     smart-tabs-mode
+    (uncrustify :location (recipe :fetcher github :repo "glima/Emacs-uncrustify" :branch "master" :files ("uncrustify.el")))
     )
 )
 
@@ -213,12 +214,14 @@
   "Initialize the perltidy package."
   (use-package perltidy
     :if (configuration-layer/package-usedp 'cperl-mode)
-    :commands 'perltidy-region
+    :commands (perltidy-buffer perltidy-region)
     :init
     (spacemacs/set-leader-keys-for-major-mode 'perl-mode ;; XXX Why perl-mode instead of cperl-mode?
-      "t" 'perltidy-region)
+      "t" 'perltidy-region
+      "T" 'perltidy-buffer)
     (spacemacs/set-leader-keys-for-major-mode 'cperl-mode
-      "t" 'perltidy-region)))
+      "t" 'perltidy-region
+      "T" 'perltidy-buffer)))
 
 (defun sheda-coding/init-smart-tabs-mode ()
   "Initialize and configure the smart-tabs-mode package."
@@ -226,3 +229,14 @@
     ;; :if (configuration-layer/package-usedp 'cperl-mode)
     :init
     (smart-tabs-insinuate 'cperl 'c)))
+
+(defun sheda-coding/init-uncrustify ()
+  "Initialize the uncrustify package."
+  (sheda-core/message "sheda-coding/init-uncrustify")
+  (use-package uncrustify
+    :commands (uncrustify uncrustify-buffer)
+    :init
+    (sheda-core/message "sheda-coding/init-uncrustify -> :init")
+    (spacemacs/set-leader-keys-for-major-mode 'c-mode
+      "t" 'uncrustify
+      "T" 'uncrustify-buffer)))
