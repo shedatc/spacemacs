@@ -149,9 +149,11 @@ Each entry is either:
               (cons "freebsd-pr"                    "https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=")
               (cons "pix"                           (concat "file://" (expand-file-name "ens/pix/%s" user-home-directory)))
               ;; Work-related:
-              (cons "bug"    "https://mantis.stormshield.eu/view.php?id=%s")
-              (cons "review" "https://review-sns.stormshield.eu/D%s")
-              (cons "wiki"   "https://wiki.stormshield.eu/pmwiki_labo/index.php?n=%s")
+              (cons "bug"       "https://mantis.stormshield.eu/view.php?id=%s")
+              (cons "commit"    "https://review-sns.stormshield.eu/%s")
+              ;; (cons "fw-branch" 'sheda-org/branch-url)
+              (cons "review"    "https://review-sns.stormshield.eu/D%s")
+              (cons "wiki"      "https://wiki.stormshield.eu/pmwiki_labo/index.php?n=%s")
               )
         ;; org-use-speed-commands      t
         org-export-initial-scope       'buffer
