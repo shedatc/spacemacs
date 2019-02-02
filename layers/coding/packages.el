@@ -31,6 +31,7 @@
 
 (defconst sheda-coding-packages
   '(
+    arduino-mode
     (astyle :location local)
     cc-mode
     cperl-mode
@@ -43,6 +44,10 @@
     smart-tabs-mode
     )
 )
+
+(defun sheda-coding/init-arduino-mode ()
+  "Initialize the arduino-mode package."
+  (use-package arduino-mode))
 
 (defun sheda-coding/init-astyle ()
   "Initialize the astyle package."
