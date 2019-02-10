@@ -63,9 +63,9 @@ values."
      (org
       :variables
       org-enable-reveal-js-support t
+      org-reveal-root "http://localhost/reveal"
       )
      php
-     ;; search-engine
      semantic
      (shell
       :variables
@@ -392,7 +392,7 @@ you should place your code here."
                 (add-to-list 'recentf-exclude file-or-directory))
               org-agenda-files))
 
-  (cond ((string= system-name "azathoth.labo.int")
+  (cond ((string= system-name "azathoth.stephaner.labo.int")
          (setq user-mail-address "stephane.rochoy@stormshield.eu"
                user-full-name    "Stéphane Rochoy"))
         ((string= system-name "davinel.mg.rsph.local")
@@ -463,8 +463,7 @@ you should place your code here."
       (quote delete-trailing-whitespace)
       nil t))))
  '(safe-local-variable-values nil)
- '(select-enable-primary t)
- '(send-mail-function (quote sendmail-send-it)))
+ '(select-enable-primary t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

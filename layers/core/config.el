@@ -4,7 +4,7 @@
   "rp"   'point-to-register)
 
 ;; Push:
-(if (string= system-name "azathoth.labo.int")
+(if (string= system-name "azathoth.stephaner.labo.int")
     (add-hook 'after-save-hook 'sheda-core/run-push))
 
 (setq-default browse-url-browser-function 'browse-url-chromium)
@@ -21,3 +21,9 @@
 ;; (spacemacs/toggle-automatic-symbol-highlight-on)
 ;;(spacemacs/toggle-centered-point-globally-on)
 (blink-cursor-mode)
+
+;; Projectile:
+(setq projectile-enable-caching t)
+
+;; FSM:
+(setq fsm-debug nil) ;; No debug.

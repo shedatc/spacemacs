@@ -161,9 +161,11 @@ Each entry is either:
               (cons "freebsd-pr"                    "https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=")
               (cons "pix"                           (concat "file://" (expand-file-name "ens/pix/%s" user-home-directory)))
               ;; Work-related:
-              (cons "bug"    "https://mantis.stormshield.eu/view.php?id=%s")
-              (cons "review" "https://review-sns.stormshield.eu/D%s")
-              (cons "wiki"   "https://wiki.stormshield.eu/pmwiki_labo/index.php?n=%s")
+              (cons "bug"       "https://mantis.stormshield.eu/view.php?id=%s")
+              (cons "commit"    "https://review-sns.stormshield.eu/%s")
+              ;; (cons "fw-branch" 'sheda-org/branch-url)
+              (cons "review"    "https://review-sns.stormshield.eu/D%s")
+              (cons "wiki"      "https://wiki.stormshield.eu/pmwiki_labo/index.php?n=%s")
               )
         ;; org-use-speed-commands      t
         org-export-initial-scope       'buffer
@@ -173,9 +175,10 @@ Each entry is either:
         org-default-priority           org-lowest-priority
 
         ;; #+SEQ_TODO: TODO(t) IN-PROGRESS(p) UNDER-REVIEW(r) WAIT-NIGHTLY(n) BLOCKED(b) | DONE(d) CANCELLED(c)
-        org-todo-keywords '((sequence "TODO(t)" "IN-PROGRESS(p)" "UNDER-REVIEW(r)" "WAIT-NIGHTLY(n)" "BLOCKED(b)" "|" "DONE(d)" "CANCELLED(c)"))
+        org-todo-keywords '((sequence "TODO(t)" "IN-PROGRESS(p)" "UNDER-REVIEW(r)" "COMPILING(c)" "WAIT-NIGHTLY(n)" "BLOCKED(b)" "|" "DONE(d)" "CANCELLED(C)"))
 
         org-table-separator-space " " ;; XXX Break tables alignment when set to a propertized value with (space :width 1).
+        org-hide-block-startup    t
         )
 
   (setq sheda-org/per-tag-scores '(("next" . 15.0)
@@ -195,6 +198,16 @@ Each entry is either:
     "ol" 'org-open-at-point-global
     "oi" 'org-id-get-create)
 
+  ;; (add-to-list 'org-entities-user
+  ;;              '("unamusedface" nil nil "&x1F612;" nil nil nil))
+  (setq org-entities-user nil)
+  (add-to-list 'org-entities-user
+               '("unamusedface" nil nil "&#128530;" nil nil nil))
+  (add-to-list 'org-entities-user
+               '("grinningface" nil nil "&#128513;" nil nil nil))
+  (add-to-list 'org-entities-user
+               '("coffee" nil nil "&#9749;" nil nil nil))
+
   ;; (add-hook 'org-mode-hook 'aggressive-indent-mode) ;; XXX Re-enable only when indent in #+BEGIN_SRC blocks is OK.
 
   ;; Ensure new entries get an ID.
@@ -202,7 +215,7 @@ Each entry is either:
 
   ;; Use org structures and tables in message mode.
   (add-hook 'message-mode-hook 'turn-on-orgtbl)
-  (add-hook 'message-mode-hook 'turn-on-orgstruct++)
+  ;; (add-hook 'message-mode-hook 'turn-on-orgstruct++)
   )
 
 (defun sheda-org/init-org-brain ()

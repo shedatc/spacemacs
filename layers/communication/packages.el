@@ -33,7 +33,7 @@
   '(
     helm-mu
     jabber
-    ;; jabber-otr
+    (jabber-otr :excluded t)
     mu4e
     mu4e-alert
     persp-mode
@@ -50,49 +50,48 @@
     ;; The "om" prefix is declared by sheda-communication/pre-init-mu4e.
     (spacemacs/set-leader-keys
       "omb"  'mu4e-headers-search-bookmark
-      "omc"  'helm-mu-contacts
       "omj"  'mu4e~headers-jump-to-maildir
       "omm"  'helm-mu)
+    (spacemacs/set-leader-keys
+      "oC"  'helm-mu-contacts)
     :config
     (setq helm-mu-default-search-string "(m:/inbox OR m:/sent OR m:/irp) AND d:2w..now")
     (helm-add-action-to-source "Jump to containing maildir" 'sheda-communication/jump-to-containing-maildir helm-source-mu)))
 
 (defun sheda-communication/setup-jabber-hooks ()
-  (setq jabber-alert-presence-hooks
-        '(
-          jabber-message-libnotify
-          )
-        jabber-alert-message-hooks
-        '(
-          jabber-message-libnotify
-          jabber-message-display
-          jabber-message-scroll
-          )
-        jabber-post-connect-hooks ;; Default is (jabber-send-current-presence jabber-muc-autojoin jabber-whitespace-ping-start jabber-vcard-avatars-find-current)
-        '(
-          spacemacs/jabber-connect-hook
-          jabber-keepalive-start
-          jabber-autoaway-start
-          ;; jabber-mode-line-mode
-          ;; sheda-communication/jabber-update-activity-count
-          )
-        jabber-alert-muc-hooks
-        '(
-          jabber-muc-libnotify
-          jabber-muc-display
-          jabber-muc-scroll
-          )
-        )
-  (add-hook 'jabber-lost-connection-hooks
-            (lambda (connection)
-              "Attempt to reconnect."
-              (sheda-core/message "hook: jabber-lost-connection")))
+  ;; jabber-alert-presence-hooks
+  (add-hook 'jabber-alert-presence-hooks 'jabber-message-libnotify)
 
+  ;; jabber-alert-message-hooks
+  (add-hook 'jabber-alert-message-hooks 'jabber-message-libnotify)
+  (add-hook 'jabber-alert-message-hooks 'jabber-message-display)
+  (add-hook 'jabber-alert-message-hooks 'jabber-message-scroll)
+
+  ;; jabber-post-connect-hooks
+  (add-hook 'jabber-post-connect-hooks 'spacemacs/jabber-connect-hook)
+  (add-hook 'jabber-post-connect-hooks 'jabber-keepalive-start)
+  (add-hook 'jabber-post-connect-hooks 'jabber-autoaway-start)
+  (add-hook 'jabber-post-connect-hooks 'sheda-communication/react-to-jabber-connection)
+
+  ;; jabber-post-disconnect-hook (no 's')
+  (add-hook 'jabber-post-disconnect-hook 'sheda-communication/react-to-jabber-disconnection)
+
+  ;; jabber-lost-connection-hooks
+  (add-hook 'jabber-lost-connection-hooks 'sheda-communication/react-to-jabber-disconnection)
+  ;; (add-hook 'jabber-lost-connection-hooks 'jabber-connect-all) ;; XXX Try to reconnect but don't know if conflict with jabber-auto-reconnect.
+
+  ;; jabber-alert-muc-hooks
+  (add-hook 'jabber-alert-muc-hooks 'jabber-muc-libnotify)
+  (add-hook 'jabber-alert-muc-hooks 'jabber-muc-display)
+  (add-hook 'jabber-alert-muc-hooks 'jabber-muc-scroll)
+
+  ;; jabber-chat-mode-hook
   (add-hook 'jabber-chat-mode-hook
             (lambda ()
               "Install some key bindings under the major mode leader key (,) when in chat mode."
               (spacemacs/set-leader-keys-for-major-mode 'jabber-chat-mode
-                "l" 'jabber-chat-display-more-backlog)))
+                "l" 'jabber-chat-display-more-backlog))
+            )
   )
 
 (defun sheda-communication/post-init-jabber ()
@@ -104,6 +103,12 @@
         ;; jabber-events-confirm-composing nil
         ;; jabber-chatstates-confirm       nil
         jabber-libnotify-icon "/usr/share/icons/Adwaita/32x32/status/user-available.png"
+        )
+
+  ;; DEBUG
+  (setq jabber-debug-keep-process-buffers t
+        jabber-debug-log-xml              t
+        gnutls-log-level                  1 ;; Because we use STARTTLS.
         )
 
   ;; XXX
@@ -123,13 +128,16 @@
   ;;          (left . 80))))
 
   (sheda-communication/setup-jabber-hooks)
+
   (spacemacs/declare-prefix "oj" "jabber")
   (spacemacs/set-leader-keys
     "oc" 'sheda-communication/jabber-chat-with
     "oj" 'jabber-switch-to-roster-buffer)
   ;; (spacemacs/set-leader-keys-for-major-mode 'jabber-chat-mode
   ;;   (kbd "<ESC>") 'delete-window)
-  (when (string= system-name "azathoth.labo.int") (jabber-connect-all)))
+  (when (sheda-communication/jabber-wanted) (jabber-connect-all))
+  )
+>>>>>>> origin/master
 
 (defun sheda-communication/init-jabber-otr ()
   (use-package jabber-otr
@@ -144,12 +152,12 @@
 
   ;; Decide on the maildir using the hostname (system-name).
   (setq mu4e-maildir (expand-file-name (concat ".mails/"
-                                               (cond ((string= system-name "azathoth.labo.int") "stormshield")
-                                                     (t                                         user-login-name)))
+                                               (cond ((string= system-name "azathoth.stephaner.labo.int") "stormshield")
+                                                     (t                                                   user-login-name)))
                                        user-home-directory))
 
-  (let* ((me (cond ((string= system-name "azathoth.labo.int") "stephane.rochoy")
-                   (t                                         user-login-name))))
+  (let* ((me (cond ((string= system-name "azathoth.stephaner.labo.int") "stephane.rochoy")
+                   (t                                                   user-login-name))))
     (setq mu4e-bookmarks
           (list (list (concat "( m:/inbox OR m:/irp ) AND g:unread AND NOT g:trashed AND t:" me) "My unreads"         ?i)
                 (list "( m:/inbox OR m:/irp ) AND g:unread AND NOT g:trashed"                    "All unreads"        ?I)
@@ -158,16 +166,15 @@
                 (list "d:7d..now"                                                                "Last 7 days"        ?w)
                 (list "g:attach"                                                                 "With attachment(s)" ?a))))
 
-  (let* ((current-archive-maildir (concat "/archive/" (format-time-string "%Y"))))
-    (setq mu4e-maildir-shortcuts
-          (list (cons current-archive-maildir ?a)
-                (cons "/bugs"                 ?b)
-                (cons "/drafts"               ?d)
-                (cons "/inbox"                ?i)
-                (cons "/irp"                  ?I)
-                (cons "/reviews"              ?r)
-                (cons "/sent"                 ?s)
-                (cons "/trash"                ?t))))
+  (setq mu4e-maildir-shortcuts
+        (list (cons (sheda-communication/mu4e-archive-maildir) ?a)
+              (cons "/bugs"                 ?b)
+              (cons "/drafts"               ?d)
+              (cons "/inbox"                ?i)
+              (cons "/irp"                  ?I)
+              (cons "/reviews"              ?r)
+              (cons "/sent"                 ?s)
+              (cons "/trash"                ?t)))
 
   (setq mu4e-debug               nil
         mu4e-update-interval     120
@@ -273,7 +280,7 @@
         ;; 				   :name "Work"
         ;; 				   :enter-func (lambda () (mu4e-message "Entering Work context"))
         ;; 				   :leave-func (lambda () (mu4e-message "Leaving Work context"))
-        ;; 				   :match-func (lambda (msg) (string= system-name "azathoth.labo.int"))
+        ;; 				   :match-func (lambda (msg) (string= system-name "azathoth.stephaner.labo.int"))
         ;; 				   :vars '( ( user-mail-address  . "stephane.rochoy@stormshield.eu"  )
         ;; 							( user-full-name     . "Stéphane Rochoy" )
         ;; 							( mu4e-sent-folder   . "/stormshield/sent" )
@@ -286,43 +293,15 @@
 (defun sheda-communication/post-init-mu4e ()
   "Post-initialize the mu4e package."
 
-  (add-hook 'mu4e-main-mode-hook
-            (lambda ()
-              (evilified-state-evilify mu4e-main-mode mu4e-main-mode-map
-                (kbd "/") 'mu4e-headers-search
-                (kbd "q") 'bury-buffer
-                (kbd "Q") 'mu4e-quit
-                (kbd "u") 'mu4e-update-mail-and-index)
-              (mu4e-alert-enable-mode-line-display)))
-  (add-hook 'mu4e-headers-mode-hook
-            (lambda ()
-              (evilified-state-evilify mu4e-headers-mode mu4e-headers-mode-map
-                (kbd "t") 'mu4e-headers-next
-                (kbd "s") 'mu4e-headers-prev
-                (kbd "j") 'mu4e-headers-mark-thread
-                (kbd "/") 'mu4e-headers-search-narrow
-                (kbd "w") 'mu4e-headers-query-prev)
-              (add-to-list 'mu4e-headers-custom-markers
-                           '("Unreads"
-                             (lambda (msg unused)
-                               (memq 'unread (mu4e-message-field msg :flags)))))))
-  (add-hook 'mu4e-view-mode-hook
-            (lambda ()
-              (evilified-state-evilify mu4e-view-mode mu4e-view-mode-map
-                (kbd "<backtab>") 'org-previous-link
-                (kbd "TAB")       'org-next-link
-                (kbd "RET")       'browse-url-at-point
-                (kbd "t")         'evil-next-visual-line
-                (kbd "s")         'evil-previous-visual-line
-                (kbd "T")         'mu4e-view-headers-next
-                (kbd "S")         'mu4e-view-headers-prev)))
-  (add-hook 'mu4e-compose-mode-hook
-            (lambda ()
-              (spacemacs/set-leader-keys-for-major-mode 'mu4e-compose-mode
-                "a" 'mml-attach-file
-                "c" 'message-send
-                "d" 'message-dont-send
-                )))
+  ;;main
+  (add-hook 'mu4e-main-mode-hook    #'sheda-communication/adjust-mu4e-main-mode-map)
+  ;; headers
+  (add-hook 'mu4e-headers-mode-hook #'sheda-communication/adjust-mu4e-headers-mode-map)
+  (add-hook 'mu4e-headers-mode-hook #'sheda-communication/add-mu4e-custom-headers-markers)
+  ;; view
+  (add-hook 'mu4e-view-mode-hook    #'sheda-communication/adjust-mu4e-view-mode-map)
+  ;; compose
+  (add-hook 'mu4e-compose-mode-hook #'sheda-communication/adjust-mu4e-compose-mode-map)
   )
 
 (defun sheda-communication/post-init-mu4e-alert ()

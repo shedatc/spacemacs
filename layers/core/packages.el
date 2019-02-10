@@ -38,6 +38,7 @@
     ;; (flycheck-grammalecte :location local)
     helm
     ;; (i3 :location local)
+    info+
     nyan-mode
     ))
 
@@ -164,8 +165,25 @@
     ;; :config
     ;; (beacon-mode)
     )
+  )
 
-
+(defun sheda-core/post-init-info+ ()
+  "Post-initialize the info+ package."
+  (add-hook 'Info-mode-hook
+            (lambda ()
+              (define-key Info-mode-map (kbd "t") 'evil-next-line)
+              (define-key Info-mode-map (kbd "s") 'evil-previous-line)))
+  ;; XXX Unable to make it work :/
+  ;; (kl|config info+
+  ;;   :description
+  ;;   "Remap `info+' (a.k.a., Info-mode) bindings."
+  ;;   :loader
+  ;;   (spacemacs|use-package-add-hook Info-mode :post-config BODY)
+  ;;   :common
+  ;;   (sheda-core/message "post-init: info+ / kl/correct-keys")
+  ;;   (kl/correct-keys Info-mode-map
+  ;;     "j"
+  ;;     "k"))
   )
 
 (defun sheda-core/init-nyan-mode ()

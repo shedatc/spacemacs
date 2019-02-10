@@ -3,6 +3,12 @@
   (interactive)
   (switch-to-buffer "*Org Agenda*"))
 
+(defvar org-urgency/per-priority-scores
+  '(("A" . 6.0)
+    ("B" . 3.9)
+    ("C" . 1.8))
+  "The scores for each priority.")
+
 (defvar org-urgency/deadline-coefficient 12.0
   "The coefficient for the deadline property.")
 
@@ -25,15 +31,26 @@
   '(("next" . 15.0))
   "The scores for specific tags attached to a task.")
 
+(defvar org-urgency/parents-property-name
+  "PARENTS"
+  "The name of the property used to list the parents of the entry.")
+
+(defvar org-urgency/children-property-name
+  "CHILDREN"
+  "The name of the property used to list the children of the entry.")
+
 (defun org-urgency/priority-score (position)
   "Extract the priority of the TODO entry at the given POSITION and return its corresponding score."
   (let* ((priority (org-entry-get position "PRIORITY"))
-         (score (cond
-                 ((string= "A" priority) 6.0)
-                 ((string= "B" priority) 3.9)
-                 ((string= "C" priority) 1.8)
-                 (t                      0.0))))
-    score))
+         (kv       (assoc priority org-urgency/per-priority-scores)))
+    (if (null kv)
+        0.0
+      (cdr kv))))
+
+(defun org-urgency/details-priority-score (position)
+  "Details how the priority score is computed for the TODO entry at the given POSITION."
+  (let* ((priority (org-entry-get position "PRIORITY")))
+    (message "priority       %12f * %2.4f (%s) = %10f" 1 (org-urgency/priority-score position) priority (org-urgency/priority-score position))))
 
 (defun org-urgency/scaled-deadline (position)
   "Extract the deadline of the TODO entry at the given POSITION and scale it.
@@ -64,9 +81,13 @@ References:
 
 (defun org-urgency/deadline-score (position)
   "Extract the deadline of the TODO entry at the given POSITION and return its corresponding score."
-  (let* ((scaled-deadline (org-urgency/scaled-deadline position))
-         (score (* org-urgency/deadline-coefficient scaled-deadline)))
-    score))
+  (let* ((scaled-deadline (org-urgency/scaled-deadline position)))
+    (* org-urgency/deadline-coefficient scaled-deadline)))
+
+(defun org-urgency/details-deadline-score (position)
+  "Details how the deadline score is computed for the TODO entry at the given POSITION."
+  (let* ((scaled-deadline (org-urgency/scaled-deadline position)))
+    (message "deadline       %12f * %10f = %10f" org-urgency/deadline-coefficient scaled-deadline (org-urgency/deadline-score position))))
 
 ;; XXX Need to find the first keyword of the TODO sequence of type.
 (defun org-urgency/activity-score (position)
@@ -112,10 +133,16 @@ References:
          )
     score))
 
-(defun org-urgency/parent-ids (pom &optional parents-property)
-  "Return the IDs of the parents of the entry at the given POM (position or marker). The PARENTS-PROPERTY default to 'BRAIN_PARENTS'."
-  (let* ((prop (if (null parents-property) "BRAIN_PARENTS" parents-property))
-         (ids (org-entry-get pom prop)))
+(defun org-urgency/parents-ids (pom)
+  "Return the IDs of the parents of the entry at the given POM (position or marker)."
+  (let* ((ids (org-entry-get pom org-urgency/parents-property-name)))
+    (if (null ids)
+        (list)
+      (split-string ids " "))))
+
+(defun org-urgency/children-ids (pom)
+  "Return the IDs of the children of the entry at the given POM (position or marker)."
+  (let* ((ids (org-entry-get pom org-urgency/children-property-name)))
     (if (null ids)
         (list)
       (split-string ids " "))))
@@ -129,13 +156,32 @@ References:
 
 (defun org-urgency/blocking-score (position)
   "List the TODO entries blocked by the one at the given POSITION and return the corresponding score."
-  (let* ((parents (org-urgency/parent-ids position))
+  (let* ((parents (org-urgency/parents-ids position))
          (score (apply '+ (mapcar (lambda (id)
                                     (if (org-urgency/is-not-done-p id)
                                         org-urgency/blocking-coefficient
                                       0.0))
                                   parents))))
     score))
+
+;; (let* ((scaled-deadline (org-urgency/scaled-deadline position)))
+;;   (* org-urgency/deadline-coefficient scaled-deadline)))
+
+(defun org-urgency/detail-urgency-computation ()
+  "Describe how the urgency of the TODO entry at the current point position is computed."
+  (interactive)
+  (let* ((pom             (point-marker))
+         (priority        (org-entry-get pom "PRIORITY"))
+         (scaled-deadline (org-urgency/scaled-deadline pom))
+         (urgency         (org-urgency/urgency pom))
+         )
+    ;;                                                 Coefficient                       Value                                       Score
+    (message "               %12s   %10s   %10s" "Coefficient" "Value" "Score")
+    (org-urgency/details-priority-score pom)
+    (org-urgency/details-deadline-score pom)
+    (message "                                         ------------")
+    (message "urgency                                  = %10f" urgency)
+    ))
 
 (defun org-urgency/urgency (&optional pom)
   "Return the urgency of the TODO entry at the given POM (position or marker). Default to the current point position."
