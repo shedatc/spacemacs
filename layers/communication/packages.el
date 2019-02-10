@@ -137,7 +137,6 @@
   ;;   (kbd "<ESC>") 'delete-window)
   (when (sheda-communication/jabber-wanted) (jabber-connect-all))
   )
->>>>>>> origin/master
 
 (defun sheda-communication/init-jabber-otr ()
   (use-package jabber-otr
