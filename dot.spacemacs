@@ -440,7 +440,7 @@ you should place your code here."
      ("XXXX" . "#cc9393")
      ("???" . "#cc9393"))))
  '(jabber-version-show nil)
- '(magit-log-arguments (quote ("--graph" "--color" "--decorate" "-n256")))
+ '(magit-log-arguments (quote ("--graph" "--color" "--decorate" "-n30")))
  '(magit-prefer-remote-upstream t)
  '(org-agenda-text-search-extra-files (quote (agenda-archives)))
  '(package-selected-packages
