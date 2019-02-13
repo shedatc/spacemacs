@@ -106,10 +106,9 @@
         )
 
   ;; DEBUG
-  (setq jabber-debug-keep-process-buffers t
-        jabber-debug-log-xml              t
-        gnutls-log-level                  1 ;; Because we use STARTTLS.
-        )
+  ;; (setq jabber-debug-keep-process-buffers t
+  ;;       jabber-debug-log-xml              t
+  ;;       )
 
   ;; XXX
   ;;

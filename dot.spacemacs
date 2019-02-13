@@ -414,6 +414,9 @@ you should place your code here."
  '(fill-column 120)
  '(flycheck-clang-blocks t)
  '(flyspell-default-dictionary "fr")
+ '(gnutls-trustfiles
+   (quote
+    ("/etc/ssl/certs/ca-certificates.crt" "/etc/pki/tls/certs/ca-bundle.crt" "/etc/ssl/ca-bundle.pem" "/usr/ssl/certs/ca-bundle.crt" "/usr/local/share/certs/ca-root-nss.crt" "/etc/ssl/cert.pem" "/home/stephaner/.ssl/trusted.pem")))
  '(hl-todo-keyword-faces
    (quote
     (("HOLD" . "#d0bf8f")
