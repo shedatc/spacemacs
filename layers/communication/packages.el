@@ -96,7 +96,8 @@
 
 (defun sheda-communication/post-init-jabber ()
   ;; Passwords taken from ~/.netrc.
-  (setq jabber-account-list    '(("stephane.rochoy@itvucom02" (:connection-type . starttls)))
+  (setq jabber-account-list    '(("stephane.rochoy@frliljab01.one.local" (:connection-type . starttls))
+                                 )
         jabber-history-enabled t
         jabber-history-dir     "~/.emacs.d/private/jabber-history"
         jabber-auto-reconnect  t
