@@ -33,21 +33,6 @@
   (interactive)
   (sheda-core/switch-to-file-buffer "dot.reminders" "~/ens/conf"))
 
-(defun sheda-core/switch-to-work-org-buffer ()
-  "Switch to the work.org buffer."
-  (interactive)
-  (sheda-core/switch-to-file-buffer "work.org" "~/ens/org"))
-
-(defun sheda-core/switch-to-tac-org-buffer ()
-  "Switch to the tac.org buffer."
-  (interactive)
-  (sheda-core/switch-to-file-buffer "tac.org" "~/ens/org"))
-
-(defun sheda-core/switch-to-qa-org-buffer ()
-  "Switch to the qa.org buffer."
-  (interactive)
-  (sheda-core/switch-to-file-buffer "qa.org" "~/ens/org"))
-
 (defun sheda-core/shell-command-on-region (start end command)
   "Passes the content of the region as the standard input to the shell command and replace it with the resulting output."
   (interactive "r\nsCommand: ")
