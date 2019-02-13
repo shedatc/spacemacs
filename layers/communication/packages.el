@@ -135,7 +135,6 @@
     "oj" 'jabber-switch-to-roster-buffer)
   ;; (spacemacs/set-leader-keys-for-major-mode 'jabber-chat-mode
   ;;   (kbd "<ESC>") 'delete-window)
-  (when (sheda-communication/jabber-wanted) (jabber-connect-all))
   )
 
 (defun sheda-communication/init-jabber-otr ()

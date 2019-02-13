@@ -7,11 +7,6 @@
 ;;   (call-process-shell-command
 ;;    (format "echo \"%s\" > ~/var/tmp/jabber-activity-count" jabber-activity-count-string)))
 
-;; Tell if we want to connect to some Jabber server.
-(defun sheda-communication/jabber-wanted ()
-  "Tell if jabber is currently unwanted."
-  (string= system-name "azathoth.stephaner.labo.int"))
-
 (defun sheda-communication/jabber-chat-with (jc jid &optional other-window)
   "Open an empty chat window for chatting with JID.
 With a prefix argument, open buffer in other window.
