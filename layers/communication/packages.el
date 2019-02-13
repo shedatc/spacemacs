@@ -180,10 +180,10 @@
         mu4e-hide-index-messages t
         mu4e-view-show-addresses t
         mu4e-get-mail-command    "~/bin/fetch-mails"
-        mu4e-attachment-dir      "~/dl/"
+        mu4e-attachment-dir      "~/t/"
         mu4e-refile-folder       'sheda-communication/mu4e-refile-folder-func
 
-        mu4e-headers-results-limit 100
+        mu4e-headers-results-limit 500
 
         mm-attachment-override-types
            '("text/x-vcard" "application/pkcs7-mime" "application/x-pkcs7-mime" "application/pkcs7-signature" "application/x-pkcs7-signature" "image/.*")
