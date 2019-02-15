@@ -102,20 +102,10 @@ Each entry is either:
         org-directory              my-org-directory
         org-agenda-span            15
         org-capture-templates
-        '(
-          ("c" "Contact" entry
-           (file+datetree "contacts.org") (file "contact.org-template"))
-          ("m" "Maybe Task" entry
-           (file+olp+datetree "maybe.org" "Maybe") (file "maybe-task.org-template"))
-          ("o" "Mockup Task" entry
-           (file+olp+datetree "qa.org" "Reducing Chaos") (file "mockup-task.org-template"))
-          ("r" "Reference" entry
-           (file+olp+datetree "references.org" "References") (file "reference.org-template"))
-          ("s" "Secret" entry
-           (file+datetree "secrets.org") (file "secret.org-template"))
-          ("t" "QA Task" entry
-           (file+olp+datetree "qa.org" "QA") (file "qa-task.org-template"))
-          )
+        '(("c" "Contact"    entry (file+datetree "contacts.org")                    (file "tpl/contact.org"))
+          ("m" "Maybe Task" entry (file+olp+datetree "maybe.org" "Maybe")           (file "tpl/maybe-task.org"))
+          ("r" "Reference"  entry (file+olp+datetree "references.org" "References") (file "tpl/reference.org"))
+          ("s" "Secret"     entry (file+datetree "secrets.org")                     (file "tpl/secret.org")))
         org-refile-targets
         '((nil              :maxlevel . 3)
           (org-agenda-files :maxlevel . 3))
