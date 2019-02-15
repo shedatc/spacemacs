@@ -191,14 +191,28 @@ Each entry is either:
   ;; (add-to-list 'org-entities-user
   ;;              '("unamusedface" nil nil "&x1F612;" nil nil nil))
   (setq org-entities-user nil)
-  (add-to-list 'org-entities-user
-               '("unamusedface" nil nil "&#128530;" nil nil nil))
-  (add-to-list 'org-entities-user
-               '("grinningface" nil nil "&#128513;" nil nil nil))
-  (add-to-list 'org-entities-user
-               '("coffee" nil nil "&#9749;" nil nil nil))
+  (add-to-list 'org-entities-user '("unamusedface" nil nil "&#128530;" nil nil nil))
+  (add-to-list 'org-entities-user '("grinningface" nil nil "&#128513;" nil nil nil))
+  (add-to-list 'org-entities-user '("coffee"       nil nil "&#9749;"   nil nil nil))
 
   ;; (add-hook 'org-mode-hook 'aggressive-indent-mode) ;; XXX Re-enable only when indent in #+BEGIN_SRC blocks is OK.
+  (add-hook 'org-mode-hook 'auto-fill-mode)
+  (add-hook 'persp-mode-hook
+            (lambda ()
+              "Add any new Org buffer to the @Org layout."
+              (add-hook 'org-mode-hook
+                        (lambda ()
+                          "Add current buffer to the @Org layout."
+                          (persp-add-buffer (current-buffer) (persp-get-by-name "@Org"))))))
+
+  (add-hook 'persp-mode-hook
+            (lambda ()
+              "Look for any Org buffer and add it to the @Org layout."
+              (mapcar (lambda (b)
+                        "If buffer is an Org buffer, add it to the @Org layout."
+                        (with-current-buffer b
+                          (when (string= major-mode "org-mode") (persp-add-buffer b (persp-get-by-name "@Org")))))
+                      (buffer-list))))
 
   ;; Ensure new entries get an ID.
   (add-hook 'org-capture-prepare-finalize-hook 'org-id-get-create)
