@@ -69,8 +69,8 @@
 
 (defun sheda-core/post-init-evil ()
   "Post-initialize the evil package."
-  (define-key evil-motion-state-map "'" 'evil-goto-mark)
-  (define-key evil-motion-state-map "`" 'evil-goto-mark-line)
+  (define-key evil-motion-state-map (kbd "'" ) 'evil-goto-mark)
+  (define-key evil-motion-state-map (kbd "`" ) 'evil-goto-mark-line)
   (evil-leader/set-key "rv" 'evil-show-marks)) ;; POTENTIAL KEY OVERRIDE
 
 (defun sheda-core/init-flycheck-grammalecte ()
