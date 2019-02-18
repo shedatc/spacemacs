@@ -34,7 +34,7 @@
     arduino-mode
     cc-mode
     cperl-mode
-    company-childframe
+    ;; company-childframe
     flycheck-clang-analyzer
     helm-perldoc
     magit
