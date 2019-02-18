@@ -187,6 +187,9 @@ Each entry is either:
     "ol" 'org-open-at-point-global
     "oi" 'org-id-get-create)
 
+  (evil-define-key 'normal evil-org-mode-map
+    "T" 'evil-join) ;; XXX Instead of org-todo or org-insert-todo-heading.
+
   ;; (add-to-list 'org-entities-user
   ;;              '("unamusedface" nil nil "&x1F612;" nil nil nil))
   (setq org-entities-user nil)
