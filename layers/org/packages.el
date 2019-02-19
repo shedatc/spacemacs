@@ -93,7 +93,7 @@ Each entry is either:
     :commands 'helm-org-rifle
     :init
     (spacemacs/set-leader-keys
-      "oo" 'helm-org-rifle-agenda-files)))
+      "oo" 'helm-org-rifle)))
 
 (defun sheda-org/pre-init-org ()
   "Pre-initialize the org package (org-mode)."
