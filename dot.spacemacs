@@ -57,8 +57,7 @@ values."
       helm-gtags-pulse-at-cursor     t
       )
      haskell
-     ;; helm
-     ivy
+     helm
      jabber
      markdown
      (org
