@@ -117,7 +117,7 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(no-littering)
+   dotspacemacs-additional-packages '()
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -372,22 +372,13 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
-  ;; no-littering
-  (setq no-littering-etc-directory (expand-file-name "private/etc/" user-emacs-directory)
-        no-littering-var-directory spacemacs-cache-directory)
-  (require 'no-littering)
-  (require 'recentf)
-  (add-to-list 'recentf-exclude no-littering-var-directory)
-  (add-to-list 'recentf-exclude no-littering-etc-directory)
-  (setq-default bookmark-default-file (expand-file-name "bookmarks" no-littering-etc-directory))
-
   (setq-default browse-url-browser-function 'browse-url-default-browser)
 
   ;; recentf
-  (if (configuration-layer/package-usedp 'org)
-      (seq-do (lambda (file-or-directory)
-                (add-to-list 'recentf-exclude file-or-directory))
-              org-agenda-files))
+;;   (if (configuration-layer/package-usedp 'org)
+;;       (seq-do (lambda (file-or-directory)
+;;                 (add-to-list 'recentf-exclude file-or-directory))
+;;               org-agenda-files))
 
   (cond ((string= system-name "azathoth.stephaner.labo.int")
          (setq user-mail-address "stephane.rochoy@stormshield.eu"
