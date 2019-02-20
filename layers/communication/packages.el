@@ -148,31 +148,32 @@
 
   (spacemacs/declare-prefix "om" "mu4e")
 
-  ;; Decide on the maildir using the hostname (system-name).
-  (setq mu4e-maildir (expand-file-name (concat ".mails/"
-                                               (cond ((string= system-name "azathoth.stephaner.labo.int") "stormshield")
-                                                     (t                                                   user-login-name)))
-                                       user-home-directory))
-
-  (let* ((me (cond ((string= system-name "azathoth.stephaner.labo.int") "stephane.rochoy")
-                   (t                                                   user-login-name))))
-    (setq mu4e-bookmarks
-          (list (list (concat "( m:/inbox OR m:/irp ) AND g:unread AND NOT g:trashed AND t:" me) "My unreads"         ?i)
-                (list "( m:/inbox OR m:/irp ) AND g:unread AND NOT g:trashed"                    "All unreads"        ?I)
-                (list "g:flagged AND NOT g:trashed"                                              "Flagged"            ?f)
-                (list "d:today..now"                                                             "Today's"            ?t)
-                (list "d:7d..now"                                                                "Last 7 days"        ?w)
-                (list "g:attach"                                                                 "With attachment(s)" ?a))))
-
-  (setq mu4e-maildir-shortcuts
-        (list (cons (sheda-communication/mu4e-archive-maildir) ?a)
-              (cons "/bugs"                 ?b)
-              (cons "/drafts"               ?d)
-              (cons "/inbox"                ?i)
-              (cons "/irp"                  ?I)
-              (cons "/reviews"              ?r)
-              (cons "/sent"                 ?s)
-              (cons "/trash"                ?t)))
+  ;; Decide on the base maildir (used to prefix all the queries and path) using
+  ;; the hostname (system-name).
+  ;; Also decide on my email address.
+  (let* ((me   (sheda-communication/mu4e-me))
+         (base (sheda-communication/mu4e-base-maildir)))
+    (setq mu4e-maildir (expand-file-name ".mails" user-home-directory)
+          mu4e-bookmarks
+          (list (list (format "( m:%s/inbox OR m:%s/irp ) AND g:unread AND NOT g:trashed AND t:%s" base base me) "My unreads"         ?i)
+                (list (format "( m:%s/inbox OR m:%s/irp ) AND g:unread AND NOT g:trashed" base base)             "All unreads"        ?I)
+                (list "g:flagged AND NOT g:trashed"                                                              "Flagged"            ?f)
+                (list "d:today..now"                                                                             "Today's"            ?t)
+                (list "d:7d..now"                                                                                "Last 7 days"        ?w)
+                (list "g:attach"                                                                                 "With attachment(s)" ?a))
+          mu4e-maildir-shortcuts
+          (list (cons (sheda-communication/mu4e-archive-maildir) ?a)
+                (cons (format "%s/bugs"    base)                 ?b)
+                (cons (format "%s/drafts"  base)                 ?d)
+                (cons (format "%s/inbox"   base)                 ?i)
+                (cons (format "%s/irp"     base)                 ?I)
+                (cons (format "%s/reviews" base)                 ?r)
+                (cons (format "%s/sent"    base)                 ?s)
+                (cons (format "%s/trash"   base)                 ?t))
+          mu4e-sent-folder   (format "%s/sent"     base)
+          mu4e-trash-folder  (format "%s/trash"    base)
+          mu4e-drafts-folder (format "%s/drafts"   base)
+          mu4e-refile-folder (format "%s/archives" base)))
 
   (setq mu4e-debug               nil
         mu4e-update-interval     120

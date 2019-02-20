@@ -22,9 +22,20 @@ Returns the chat buffer."
         (switch-to-buffer-other-window buffer)
       (switch-to-buffer buffer))))
 
+(defun sheda-communication/mu4e-me ()
+  "Return the recipient (to:) corresponding to me."
+  (cond ((string= system-name "azathoth.stephaner.labo.int") "stephane.rochoy")
+        (t                                                   user-login-name)))
+
+(defun sheda-communication/mu4e-base-maildir ()
+  "Return the base maildir."
+  (expand-file-name (concat "/" (cond ((string= system-name "azathoth.stephaner.labo.int") "stormshield")
+                                      (t                                                   user-login-name)))
+                    user-home-directory))
+
 (defun sheda-communication/mu4e-archive-maildir ()
   "Return the current archive maildir."
-  (concat "/archive/" (format-time-string "%Y")))
+  (format "%s/archive/%s" (sheda-communication/mu4e-base-maildir) (format-time-string "%Y")))
 
 (defun sheda-communication/mu4e-filter-by-mail-prefix (prefix sequence)
   "Filter the given sender/recipient SEQUENCE to only keep the ones having their mail starts with the given PREFIX."
