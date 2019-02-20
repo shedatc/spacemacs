@@ -7,7 +7,8 @@
 (if (string= system-name "azathoth.stephaner.labo.int")
     (add-hook 'after-save-hook 'sheda-core/run-push))
 
-(setq-default browse-url-browser-function 'browse-url-chromium)
+(setq-default browse-url-browser-function 'browse-url-chromium
+              password-cache-expiry       nil)
 
 ;; Enable conf-unix-mode for *.conf, *rc and *.cmd.
 (add-to-list 'auto-mode-alist '("\\.conf\\'" . conf-unix-mode))
