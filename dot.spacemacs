@@ -55,7 +55,6 @@ values."
       helm-gtags-use-input-at-cursor t
       helm-gtags-pulse-at-cursor     t
       )
-     haskell
      helm
      jabber
      markdown
@@ -64,7 +63,6 @@ values."
       org-enable-reveal-js-support t
       org-reveal-root "http://localhost/reveal"
       )
-     php
      semantic
      (shell
       :variables
