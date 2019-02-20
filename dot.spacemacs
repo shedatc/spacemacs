@@ -48,7 +48,6 @@ values."
       :variables
       git-gutter-use-fringe t
       )
-     go
      (gtags
       :variables
       helm-gtags-ignore-case         t
