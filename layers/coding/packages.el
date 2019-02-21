@@ -126,22 +126,9 @@
                                         ; (c-echo-syntactic-information-p . t)
       )
     "Work C/C++ indentation style")
-
-  (defun sheda-coding/cc-mode-hook ()
-    (c-set-style "work")
-
-    ;; Labels are flush to the left
-    (c-set-offset 'label [0])
-
-    (setq fill-column            120
-          c-backslash-max-column 120     ; max column for backslash in macros
-          c-basic-offset         4
-          tab-width              4
-          indent-tabs-mode       t)
-    )
   ;; (c-add-style "work" work-c-style)
-  ;; (add-hook 'c++-mode-hook #'my-cc-mode-hook)
-  ;; (add-hook 'c-mode-hook   #'my-cc-mode-hook)
+  ;; (add-hook 'c++-mode-hook #'sheda-coding/cc-mode-hook)
+  ;; (add-hook 'c-mode-hook   #'sheda-coding/cc-mode-hook)
   )
 
 (defun sheda-coding/init-cperl-mode ()
