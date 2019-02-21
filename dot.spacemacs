@@ -440,4 +440,7 @@ you should place your code here."
  ;; If there is more than one, they won't work right.
  '(org-agenda-current-time ((t (:inherit org-time-grid :foreground "#6c71c4" :weight bold))))
  '(org-agenda-date ((t (:background "#fdf6e3" :foreground "#268bd2" :inverse-video nil :box (:line-width 2 :color "#fdf6e3") :overline nil :underline t :slant normal :weight normal :height 1.0))))
- '(org-verbatim ((t (:inherit org-tag)))))
+ '(org-verbatim ((t (:inherit org-tag))))
+ '(semantic-decoration-on-unknown-includes ((t (:underline (:color "#d33682" :style wave)))))
+ '(semantic-decoration-on-unparsed-includes ((t (:background "#d33682" :foreground "#eee8d5" :weight bold))))
+ '(semantic-tag-boundary-face ((t (:overline "#268bd2")))))
