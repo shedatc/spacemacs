@@ -199,7 +199,7 @@ Each entry is either:
     "oi" 'org-id-get-create)
 
   (evil-define-key 'normal evil-org-mode-map
-    "T" 'evil-join) ;; XXX Instead of org-todo or org-insert-todo-heading.
+    "T" 'evil-join) ;; Instead of org-todo or org-insert-todo-heading.
 
   ;; (add-to-list 'org-entities-user
   ;;              '("unamusedface" nil nil "&x1F612;" nil nil nil))
