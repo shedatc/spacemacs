@@ -102,8 +102,16 @@ Each entry is either:
         org-directory              my-org-directory
         org-agenda-span            15
         org-capture-templates
-        '(("c" "Contact"    entry (file+olp+datetree "contacts.org")                (file "tpl/contact.org"))
+        '(;; Projects:
+          ("C" "Code Sonar")
+          ("Ct" "Code Sonar Task"      entry (file+headline     "proj/codesonar/TODO.org" "Code Sonar")       (file "tpl/task.org"))
+          ("Cr" "Code Sonar Reference" entry (file+olp+datetree "proj/codesonar/references.org" "Code Sonar") (file "tpl/reference.org"))
+          ("F" "FWLimit")
+          ("Ft" "FWLimit Task"         entry (file+headline     "proj/fwlimit/TODO.org" "FWLimit")            (file "tpl/task.org"))
+          ("Fr" "FWLimit Reference"    entry (file+olp+datetree "proj/fwlimit/references.org" "FWLimit")      (file "tpl/reference.org"))
+          ;; Other:
           ("m" "Maybe Task" entry (file+olp+datetree "maybe.org" "Maybe")           (file "tpl/maybe-task.org"))
+          ("c" "Contact"    entry (file+olp+datetree "contacts.org")                (file "tpl/contact.org"))
           ("r" "Reference"  entry (file+olp+datetree "references.org" "References") (file "tpl/reference.org"))
           ("s" "Secret"     entry (file+olp+datetree "secrets.org")                 (file "tpl/secret.org")))
         org-refile-targets
