@@ -97,9 +97,12 @@ Each entry is either:
 
 (defun sheda-org/pre-init-org ()
   "Pre-initialize the org package (org-mode)."
-
-  (setq org-agenda-files           (list my-org-directory my-org-agenda-directory)
-        org-directory              my-org-directory
+  (setq org-directory              my-org-directory
+        org-agenda-files           (list my-org-directory
+                                         (format "%s/agenda/"         my-org-directory)
+                                         (format "%s/proj/codesonar/" my-org-directory)
+                                         (format "%s/proj/fwlimit/"   my-org-directory)
+                                    )
         org-agenda-span            15
         org-capture-templates
         '(;; Projects:
