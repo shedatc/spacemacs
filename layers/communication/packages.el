@@ -55,7 +55,8 @@
     (spacemacs/set-leader-keys
       "oC"  'helm-mu-contacts)
     :config
-    (setq helm-mu-default-search-string "(m:/inbox OR m:/sent OR m:/irp) AND d:2w..now")
+    (let* ((base (sheda-communication/mu4e-base-maildir)))
+      (setq helm-mu-default-search-string (format "(m:%s/inbox OR m:%s/sent OR m:%s/irp) AND d:2w..now" base base base)))
     (helm-add-action-to-source "Jump to containing maildir" 'sheda-communication/jump-to-containing-maildir helm-source-mu)))
 
 (defun sheda-communication/setup-jabber-hooks ()
@@ -306,9 +307,9 @@
 (defun sheda-communication/post-init-mu4e-alert ()
   "Post-initialize the mu4e-alert package."
   (eval-after-load 'alert #'sheda-communication/setup-alert-style-for-mu4e)
-  (setq mu4e-alert-group-by               :from
-        mu4e-alert-interesting-mail-query "( m:/inbox OR m:/irp ) AND g:unread AND NOT g:trashed AND NOT ( f:mantis OR s:\"Review Request\" )"
-        ))
+  (let* ((base (sheda-communication/mu4e-base-maildir)))
+    (setq mu4e-alert-group-by               :from
+          mu4e-alert-interesting-mail-query (format "( m:%s/inbox OR m:%s/irp ) AND g:unread AND NOT g:trashed" base base))))
 
 (defun sheda-communication/post-init-persp-mode ()
   (spacemacs|define-custom-layout "@mu4e"
