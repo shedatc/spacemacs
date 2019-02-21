@@ -102,21 +102,50 @@ Each entry is either:
                                          (format "%s/agenda/"         my-org-directory)
                                          (format "%s/proj/codesonar/" my-org-directory)
                                          (format "%s/proj/fwlimit/"   my-org-directory)
+                                         (format "%s/proj/irp/"       my-org-directory)
                                     )
         org-agenda-span            15
         org-capture-templates
         '(;; Projects:
           ("C" "Code Sonar")
-          ("Ct" "Code Sonar Task"      entry (file+headline     "proj/codesonar/TODO.org" "Code Sonar")       (file "tpl/task.org"))
+          ("Ct" "Code Sonar Task"      entry (file+headline     "proj/codesonar/TODO.org"       "Code Sonar") (file "tpl/task.org"))
           ("Cr" "Code Sonar Reference" entry (file+olp+datetree "proj/codesonar/references.org" "Code Sonar") (file "tpl/reference.org"))
           ("F" "FWLimit")
-          ("Ft" "FWLimit Task"         entry (file+headline     "proj/fwlimit/TODO.org" "FWLimit")            (file "tpl/task.org"))
-          ("Fr" "FWLimit Reference"    entry (file+olp+datetree "proj/fwlimit/references.org" "FWLimit")      (file "tpl/reference.org"))
+          ("Ft" "FWLimit Task"      entry (file+headline     "proj/fwlimit/TODO.org"       "FWLimit") (file "tpl/task.org"))
+          ("Fr" "FWLimit Reference" entry (file+olp+datetree "proj/fwlimit/references.org" "FWLimit") (file "tpl/reference.org"))
+          ("I" "IRP")
+          ("It" "IRP Task"      entry (file+headline     "proj/irp/TODO.org"       "IRP") (file "tpl/task.org"))
+          ("Ir" "IRP Reference" entry (file+olp+datetree "proj/irp/references.org" "IRP") (file "tpl/reference.org"))
           ;; Other:
           ("m" "Maybe Task" entry (file+olp+datetree "maybe.org" "Maybe")           (file "tpl/maybe-task.org"))
-          ("c" "Contact"    entry (file+olp+datetree "contacts.org")                (file "tpl/contact.org"))
+          ("c" "Contact"    entry (file+olp+datetree "contacts.org" "Contacts")     (file "tpl/contact.org"))
           ("r" "Reference"  entry (file+olp+datetree "references.org" "References") (file "tpl/reference.org"))
           ("s" "Secret"     entry (file+olp+datetree "secrets.org")                 (file "tpl/secret.org")))
+        org-tag-alist
+        '((:startgrouptag)
+          ("Context")
+          (:grouptags)
+          (:startgroup)
+          ("@freetime" . ?f)
+          ("@home"     . ?h)
+          ("@project"  . ?p)
+          ("@work"     . ?w)
+          (:endgroup)
+          (:endgrouptag)
+
+          (:startgrouptag)
+          ("When @project")
+          (:grouptags)
+          (:startgroup)
+          ("CodeSonar" . ?C)
+          ("FWLimit"   . ?F)
+          ("IRP"       . ?I)
+          (:endgroup)
+          (:endgrouptag)
+
+          ;; Often used:
+          ("Emacs" . ?m)
+          ("Org"   . ?o))
         org-refile-targets
         '((nil              :maxlevel . 3)
           (org-agenda-files :maxlevel . 3))
@@ -124,49 +153,14 @@ Each entry is either:
         org-export-backends          '(ascii html icalendar latex md org)
         org-archive-location         "attic/%s_archive::"
         org-id-search-archives       nil
-        org-tag-alist                '((:startgrouptag)
-                                       ("Context")
-                                       (:grouptags)
-                                       (:startgroup)
-                                       ("@freetime" . ?f)
-                                       ("@home"     . ?h)
-                                       ("@project"  . ?p)
-                                       ("@work"     . ?w)
-                                       (:endgroup)
-                                       (:endgrouptag)
-
-                                       (:startgrouptag)
-                                       ("When @work")
-                                       (:grouptags)
-                                       (:startgroup)
-                                       ("dev"      . ?d)
-                                       ("irp"      . ?i)
-                                       ("packager" . ?P)
-                                       ("qa"       . ?q)
-                                       ("tac"      . ?t)
-                                       (:endgroup)
-                                       (:endgrouptag)
-
-                                       ;; Often used:
-                                       ("emacs"     . ?m)
-                                       )
         org-link-abbrev-alist
-        (list (cons "wikipedia"                     "https://en.wikipedia.org/wiki/%s")
-              (cons "man"                           "http://www.freebsd.org/cgi/man.cgi?query=%s")
-              (cons "file"                          "file:///home/stephaner/ens/files/%s") ;; XXX How should I invoke concat and expand-file-name to build it from user-home-directory?
-              (cons "freebsd-architecture-handbook" "https://www.freebsd.org/doc/en_US.ISO8859-1/books/arch-handbook/$1.html")
-              (cons "freebsd-handbook"              "https://www.freebsd.org/doc/en_US.ISO8859-1/books/handbook/$1.html")
-              (cons "freebsd-wiki"                  "https://wiki.freebsd.org/")
-              (cons "fxr"                           "http://fxr.watson.org/fxr/source/")
-              (cons "freebsd-pr"                    "https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=")
-              (cons "pix"                           (concat "file://" (expand-file-name "ens/pix/%s" user-home-directory)))
+        (list (cons "wikipedia" "https://en.wikipedia.org/wiki/%s")
+              (cons "man"       "http://www.freebsd.org/cgi/man.cgi?query=%s")
               ;; Work-related:
-              (cons "bug"       "https://mantis.stormshield.eu/view.php?id=%s")
-              (cons "commit"    "https://review-sns.stormshield.eu/%s")
-              ;; (cons "fw-branch" 'sheda-org/branch-url)
-              (cons "review"    "https://review-sns.stormshield.eu/D%s")
-              (cons "wiki"      "https://wiki.stormshield.eu/pmwiki_labo/index.php?n=%s")
-              )
+              (cons "bug"       "https://mantis/view.php?id=%s")
+              (cons "commit"    "https://review-sns/%s")
+              (cons "review"    "https://review-sns/D%s")
+              (cons "wiki"      "https://wiki/pmwiki_labo/index.php?n=%s"))
         ;; org-use-speed-commands      t
         org-export-initial-scope       'buffer
         org-enforce-todo-dependencies  t
