@@ -47,8 +47,8 @@
         0.0
       (cdr kv))))
 
-(defun org-urgency/details-priority-score (position)
-  "Details how the priority score is computed for the TODO entry at the given POSITION."
+(defun org-urgency/detail-priority-score (position)
+  "Detail how the priority score is computed for the TODO entry at the given POSITION."
   (let* ((priority (org-entry-get position "PRIORITY")))
     (message "priority       %12f * %2.4f (%s) = %10f" 1 (org-urgency/priority-score position) priority (org-urgency/priority-score position))))
 
@@ -84,21 +84,33 @@ References:
   (let* ((scaled-deadline (org-urgency/scaled-deadline position)))
     (* org-urgency/deadline-coefficient scaled-deadline)))
 
-(defun org-urgency/details-deadline-score (position)
-  "Details how the deadline score is computed for the TODO entry at the given POSITION."
+(defun org-urgency/detail-deadline-score (position)
+  "Detail how the deadline score is computed for the TODO entry at the given POSITION."
   (let* ((scaled-deadline (org-urgency/scaled-deadline position)))
     (message "deadline       %12f * %10f = %10f" org-urgency/deadline-coefficient scaled-deadline (org-urgency/deadline-score position))))
 
-;; XXX Need to find the first keyword of the TODO sequence of type.
+;; XXX Need to find the first keyword of the TODO sequence in case it's not
+;; TODO.
+(defun org-urgency/is-active (position)
+  "Tell if the TODO entry at the given POSITION is active."
+  (let* ((state (org-entry-get position "TODO")))
+    (and (not (string= "TODO" state)))))
+
 (defun org-urgency/activity-score (position)
   "Extract the current state of the TODO entry at the given POSITION and return its corresponding score."
-  (let* ((state (org-entry-get position "TODO"))
-         (is-active (and (not (string= "TODO" state))
-                         (not (member state org-not-done-keywords))))
+  (let* ((is-active (org-urgency/is-active position))
          (score (if is-active
                     org-urgency/activity-coefficient
                   0.0)))
     score))
+
+(defun org-urgency/detail-activity-score (position)
+  "Detail how the activity score is computed for the TODO entry at the given POSITION."
+  (let* ((is-active (org-urgency/is-active position)))
+    (message "activity       %12f * %10f = %10f"
+             org-urgency/activity-coefficient
+             (if is-active 1.0 0.0)
+             (org-urgency/activity-score position))))
 
 (defun org-urgency/age-score (position)
   "Extract the age of the TODO entry at the given POSITION and return its corresponding score."
@@ -177,8 +189,9 @@ References:
          )
     ;;                                                 Coefficient                       Value                                       Score
     (message "               %12s   %10s   %10s" "Coefficient" "Value" "Score")
-    (org-urgency/details-priority-score pom)
-    (org-urgency/details-deadline-score pom)
+    (org-urgency/detail-priority-score pom)
+    (org-urgency/detail-deadline-score pom)
+    (org-urgency/detail-activity-score pom)
     (message "                                         ------------")
     (message "urgency                                  = %10f" urgency)
     ))
