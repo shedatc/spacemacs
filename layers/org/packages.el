@@ -97,14 +97,15 @@ Each entry is either:
 
 (defun sheda-org/pre-init-org ()
   "Pre-initialize the org package (org-mode)."
-  (setq org-directory              my-org-directory
+  (setq org-directory my-org-directory
         org-agenda-files
         (list my-org-directory
-              (format "%s/agenda/"         my-org-directory)
-              (format "%s/proj/broodwar/"  my-org-directory)
-              (format "%s/proj/codesonar/" my-org-directory)
-              (format "%s/proj/fwlimit/"   my-org-directory)
-              (format "%s/proj/irp/"       my-org-directory))
+              (format "%s/agenda/"           my-org-directory)
+              (format "%s/proj/broodwar/"    my-org-directory)
+              (format "%s/proj/codesonar/"   my-org-directory)
+              (format "%s/proj/fwlimit/"     my-org-directory)
+              (format "%s/proj/irp/"         my-org-directory)
+              (format "%s/proj/org-urgency/" my-org-directory))
         org-capture-templates
         '(;; Projects:
           ("B" "Brood War")
@@ -119,6 +120,9 @@ Each entry is either:
           ("I" "IRP")
           ("It" "IRP Task"      entry (file+headline     "proj/irp/TODO.org"       "IRP") (file "tpl/task.org"))
           ("Ir" "IRP Reference" entry (file+olp+datetree "proj/irp/references.org" "IRP") (file "tpl/reference.org"))
+          ("U" "Org Urgency")
+          ("Ut" "Org Urgency Task"      entry (file+headline     "proj/org-urgency/TODO.org"       "Org Urgency") (file "tpl/task.org"))
+          ("Ur" "Org Urgency Reference" entry (file+olp+datetree "proj/org-urgency/references.org" "Org Urgency") (file "tpl/reference.org"))
           ;; Other:
           ("m" "Maybe Task" entry (file+olp+datetree "maybe.org" "Maybe")           (file "tpl/maybe-task.org"))
           ("c" "Contact"    entry (file+olp+datetree "contacts.org" "Contacts")     (file "tpl/contact.org"))
@@ -140,10 +144,11 @@ Each entry is either:
           ("When @project")
           (:grouptags)
           (:startgroup)
-          ("BroodWar"  . ?B)
-          ("CodeSonar" . ?C)
-          ("FWLimit"   . ?F)
-          ("IRP"       . ?I)
+          ("BroodWar"   . ?B)
+          ("CodeSonar"  . ?C)
+          ("FWLimit"    . ?F)
+          ("IRP"        . ?I)
+          ("OrgUrgency" . ?U)
           (:endgroup)
           (:endgrouptag)
 
