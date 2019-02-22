@@ -98,15 +98,18 @@ Each entry is either:
 (defun sheda-org/pre-init-org ()
   "Pre-initialize the org package (org-mode)."
   (setq org-directory              my-org-directory
-        org-agenda-files           (list my-org-directory
-                                         (format "%s/agenda/"         my-org-directory)
-                                         (format "%s/proj/codesonar/" my-org-directory)
-                                         (format "%s/proj/fwlimit/"   my-org-directory)
-                                         (format "%s/proj/irp/"       my-org-directory)
-                                    )
-        org-agenda-span            15
+        org-agenda-files
+        (list my-org-directory
+              (format "%s/agenda/"         my-org-directory)
+              (format "%s/proj/broodwar/"  my-org-directory)
+              (format "%s/proj/codesonar/" my-org-directory)
+              (format "%s/proj/fwlimit/"   my-org-directory)
+              (format "%s/proj/irp/"       my-org-directory))
         org-capture-templates
         '(;; Projects:
+          ("B" "Brood War")
+          ("Bt" "Brood War Task"      entry (file+headline     "proj/broodwar/TODO.org"       "Brood War") (file "tpl/task.org"))
+          ("Br" "Brood War Reference" entry (file+olp+datetree "proj/broodwar/references.org" "Brood War") (file "tpl/reference.org"))
           ("C" "Code Sonar")
           ("Ct" "Code Sonar Task"      entry (file+headline     "proj/codesonar/TODO.org"       "Code Sonar") (file "tpl/task.org"))
           ("Cr" "Code Sonar Reference" entry (file+olp+datetree "proj/codesonar/references.org" "Code Sonar") (file "tpl/reference.org"))
@@ -137,6 +140,7 @@ Each entry is either:
           ("When @project")
           (:grouptags)
           (:startgroup)
+          ("BroodWar"  . ?B)
           ("CodeSonar" . ?C)
           ("FWLimit"   . ?F)
           ("IRP"       . ?I)
@@ -146,6 +150,7 @@ Each entry is either:
           ;; Often used:
           ("Emacs" . ?m)
           ("Org"   . ?o))
+        org-agenda-span 15
         org-refile-targets
         '((nil              :maxlevel . 3)
           (org-agenda-files :maxlevel . 3))
@@ -175,10 +180,9 @@ Each entry is either:
         org-hide-block-startup    t
         )
 
-  (setq sheda-org/per-tag-scores '(("next" . 15.0)
-                                   ("emacs" . 0.1))
-   )
-
+  (setq sheda-org/per-tag-scores '(("Emacs" . 0.1)
+                                   ("next" . 15.0)
+                                   ("Org" . 0.1)))
   )
 
 (defun sheda-org/post-init-org ()
