@@ -18,11 +18,11 @@
 (defvar org-urgency/age-coefficient 2.0
   "The coefficient for the age of tasks.")
 
-(defvar org-urgency/blocking-coefficient 2.0
-  "The coefficient for blocking tasks.")
-
 (defvar org-urgency/max-age 365
   "The maximum age of a task in days.")
+
+(defvar org-urgency/blocking-coefficient 2.0
+  "The coefficient for blocking tasks.")
 
 (defvar org-urgency/default-tag-score 1.0
   "The default score for a tag attached to a task.")
@@ -50,7 +50,7 @@
 (defun org-urgency/detail-priority-score (position)
   "Detail how the priority score is computed for the TODO entry at the given POSITION."
   (let* ((priority (org-entry-get position "PRIORITY")))
-    (message "priority       %12f * %2.4f (%s) = %10f" 1 (org-urgency/priority-score position) priority (org-urgency/priority-score position))))
+    (message "priority       %12f * %2.6f (%s) = %10f" 1 (org-urgency/priority-score position) priority (org-urgency/priority-score position))))
 
 (defun org-urgency/scaled-deadline (position)
   "Extract the deadline of the TODO entry at the given POSITION and scale it.
@@ -87,7 +87,7 @@ References:
 (defun org-urgency/detail-deadline-score (position)
   "Detail how the deadline score is computed for the TODO entry at the given POSITION."
   (let* ((scaled-deadline (org-urgency/scaled-deadline position)))
-    (message "deadline       %12f * %10f = %10f" org-urgency/deadline-coefficient scaled-deadline (org-urgency/deadline-score position))))
+    (message "deadline       %12f * %12f = %10f" org-urgency/deadline-coefficient scaled-deadline (org-urgency/deadline-score position))))
 
 ;; XXX Need to find the first keyword of the TODO sequence in case it's not
 ;; TODO.
@@ -107,7 +107,7 @@ References:
 (defun org-urgency/detail-activity-score (position)
   "Detail how the activity score is computed for the TODO entry at the given POSITION."
   (let* ((is-active (org-urgency/is-active position)))
-    (message "activity       %12f * %10f = %10f"
+    (message "activity       %12f * %12f = %10f"
              org-urgency/activity-coefficient
              (if is-active 1.0 0.0)
              (org-urgency/activity-score position))))
@@ -122,6 +122,21 @@ References:
                         org-urgency/age-coefficient
                       (* org-urgency/age-coefficient (/ age org-urgency/max-age) ))))
         score))))
+
+(defun org-urgency/detail-age-score (position)
+  "Detail how the age score is computed for the TODO entry at the given POSITION."
+  (let* ((timestamp  (org-entry-get position "TIMESTAMP"))
+         (age        (if (null timestamp)
+                         0.0
+                       (* -1.0 (org-time-stamp-to-now timestamp))))
+         (scaled-age (if (> age org-urgency/max-age)
+                         1.0
+                       (/ age org-urgency/max-age))))
+    (message "age            %12f * %.3f (%dd) = %10f"
+             org-urgency/age-coefficient
+             scaled-age
+             age
+             (org-urgency/age-score position))))
 
 (defun org-urgency/tag-score (tag)
   "Return the score of the given TAG."
@@ -192,6 +207,7 @@ References:
     (org-urgency/detail-priority-score pom)
     (org-urgency/detail-deadline-score pom)
     (org-urgency/detail-activity-score pom)
+    (org-urgency/detail-age-score      pom)
     (message "                                         ------------")
     (message "urgency                                  = %10f" urgency)
     ))
