@@ -136,9 +136,10 @@
 
 
   ;; Use the childframe if available.
-  ;; (setq helm-display-function             'helm-display-buffer-in-own-frame
-  ;;       helm-display-buffer-reuse-frame   t
-  ;;       helm-use-undecorated-frame-option t)
+  ;; The frame spawn near the point. Helm-swoop don't seems to use childframe.
+  (setq helm-display-function             'helm-display-buffer-in-own-frame
+        helm-display-buffer-reuse-frame   t
+        helm-use-undecorated-frame-option t)
 
   ;; Use ctsr bindings to navigate lines and sources.
   (add-hook 'helm-mode-hook
