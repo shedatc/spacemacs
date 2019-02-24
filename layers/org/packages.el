@@ -124,9 +124,9 @@ Each entry is either:
           ("Ut" "Org Urgency Task"      entry (file+headline     "proj/org-urgency/TODO.org"       "Org Urgency") (file "tpl/task.org"))
           ("Ur" "Org Urgency Reference" entry (file+olp+datetree "proj/org-urgency/references.org" "Org Urgency") (file "tpl/reference.org"))
           ;; Other:
-          ("m" "Maybe Task" entry (file+olp+datetree "maybe.org" "Maybe")           (file "tpl/maybe-task.org"))
-          ("c" "Contact"    entry (file+olp+datetree "contacts.org" "Contacts")     (file "tpl/contact.org"))
+          ("t" "Maybe Task" entry (file+olp+datetree "TODO.org" "Tasks" "Maybe")            (file "tpl/maybe-task.org"))
           ("r" "Reference"  entry (file+olp+datetree "references.org" "References") (file "tpl/reference.org"))
+          ("c" "Contact"    entry (file+olp+datetree "contacts.org" "Contacts")     (file "tpl/contact.org"))
           ("s" "Secret"     entry (file+olp+datetree "secrets.org")                 (file "tpl/secret.org")))
         org-tag-alist
         '((:startgrouptag)
