@@ -7,8 +7,13 @@
 (if (string= system-name "azathoth.stephaner.labo.int")
     (add-hook 'after-save-hook 'sheda-core/run-push))
 
-(setq-default browse-url-browser-function 'browse-url-chromium
+(setq-default browse-url-browser-function 'browse-url-default-browser
               password-cache-expiry       nil)
+
+(setq projectile-enable-caching t
+      fsm-debug                 nil ;; No debug.
+      vc-follow-symlinks        t   ;; VC follows the link and visits the real file, telling you about it in the echo area.
+      )
 
 ;; Enable conf-unix-mode for *.conf, *rc and *.cmd.
 (add-to-list 'auto-mode-alist '("\\.conf\\'" . conf-unix-mode))
@@ -22,15 +27,4 @@
 ;; (spacemacs/toggle-automatic-symbol-highlight-on)
 ;;(spacemacs/toggle-centered-point-globally-on)
 (blink-cursor-mode)
-
-;; Projectile:
-(setq projectile-enable-caching t)
-
-;; FSM:
-(setq fsm-debug nil) ;; No debug.
-
-;; VC follows the link and visits the real file, telling you about it in the
-;; echo area.
-(setq vc-follow-symlinks t)
-
 (global-prettify-symbols-mode)
