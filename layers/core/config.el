@@ -32,3 +32,5 @@
 ;; VC follows the link and visits the real file, telling you about it in the
 ;; echo area.
 (setq vc-follow-symlinks t)
+
+(global-prettify-symbols-mode)
