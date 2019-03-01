@@ -35,6 +35,7 @@
     beacon
     doc-view
     evil
+    evil-search
     ;; (flycheck-grammalecte :location local)
     helm
     ;; (i3 :location local)
@@ -72,6 +73,10 @@
   (define-key evil-motion-state-map (kbd "'" ) 'evil-goto-mark)
   (define-key evil-motion-state-map (kbd "`" ) 'evil-goto-mark-line)
   (evil-leader/set-key "rv" 'evil-show-marks)) ;; POTENTIAL KEY OVERRIDE
+
+(defun sheda-core/post-init-evil-search ()
+  "Configure the evil-search package."
+  (setq evil-search-module 'evil-search))
 
 (defun sheda-core/init-flycheck-grammalecte ()
   "Initialize the flycheck-grammalecte package."
