@@ -104,6 +104,7 @@ Each entry is either:
               (format "%s/proj/broodwar/"    my-org-directory)
               (format "%s/proj/codesonar/"   my-org-directory)
               (format "%s/proj/fwlimit/"     my-org-directory)
+              (format "%s/proj/hacking/"     my-org-directory)
               (format "%s/proj/irp/"         my-org-directory)
               (format "%s/proj/org-urgency/" my-org-directory))
         org-capture-templates
@@ -117,6 +118,9 @@ Each entry is either:
           ("F" "FWLimit")
           ("Ft" "FWLimit Task"      entry (file+headline     "proj/fwlimit/TODO.org"       "FWLimit Tasks") (file "tpl/task.org"))
           ("Fr" "FWLimit Reference" entry (file+olp+datetree "proj/fwlimit/references.org" "FWLimit References") (file "tpl/reference.org"))
+          ("H" "Hacking")
+          ("Ht" "Hacking Task"      entry (file+olp          "proj/hacking/TODO.org"       "Hacking" "Misc") (file "tpl/task.org"))
+          ("Hr" "Hacking Reference" entry (file+olp+datetree "proj/hacking/references.org" "Hacking") (file "tpl/reference.org"))
           ("I" "IRP")
           ("It" "IRP Task"      entry (file+headline     "proj/irp/TODO.org"       "IRP Tasks") (file "tpl/task.org"))
           ("Ir" "IRP Reference" entry (file+olp+datetree "proj/irp/references.org" "IRP References") (file "tpl/reference.org"))
@@ -148,14 +152,16 @@ Each entry is either:
           ("BroodWar"   . ?B)
           ("CodeSonar"  . ?C)
           ("FWLimit"    . ?F)
+          ("Hacking"    . ?H)
           ("IRP"        . ?I)
           ("OrgUrgency" . ?U)
           (:endgroup)
           (:endgrouptag)
 
           ;; Often used:
-          ("Emacs" . ?m)
-          ("Org"   . ?o))
+          ("Emacs"   . ?m)
+          ("FreeBSD" . ?b)
+          ("Org"     . ?o))
         org-agenda-span 15
         org-refile-targets
         '((nil              :maxlevel . 3)
