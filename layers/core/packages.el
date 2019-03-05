@@ -33,6 +33,7 @@
   '(
     atomic-chrome
     beacon
+    (dired :location built-in)
     doc-view
     evil
     evil-search
@@ -57,6 +58,14 @@
     :config
     (setq beacon-color "#268bd2")
     (beacon-mode)))
+
+(defun sheda-core/post-init-dired ()
+  "Configure the dired package."
+  (add-hook 'dired-mode-hook
+            (lambda () "Evilify Dired."
+              (evilified-state-evilify dired-mode dired-mode-map
+                (kbd "t") 'dired-next-line
+                (kbd "s") 'dired-previous-line))))
 
 (defun sheda-core/post-init-doc-view ()
   "Initialize and configure the doc-view package."
