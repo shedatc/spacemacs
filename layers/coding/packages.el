@@ -37,6 +37,7 @@
     ;; company-childframe
     flycheck-clang-analyzer
     helm-perldoc
+    json-mode
     magit
     (perl-pod-preview :location local)
     (perltidy :location (recipe :fetcher github :repo "emacsmirror/emacswiki.org" :branch "master" :files ("perltidy.el")))
@@ -178,6 +179,12 @@
       "hd" 'helm-perldoc)
     :config
     (helm-perldoc:setup)))
+
+(defun sheda-coding/init-json-mode ()
+  "Configure the json-mode package."
+  (use-package json-mode
+    :commands 'json-mode
+    ))
 
 (defun sheda-coding/post-init-magit ()
   "Post-initialize the magit package."
