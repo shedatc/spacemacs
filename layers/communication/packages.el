@@ -154,7 +154,7 @@
   ;; Also decide on my email address.
   (let* ((me   (sheda-communication/mu4e-me))
          (base (sheda-communication/mu4e-base-maildir))
-         (in-inboxes  (format "( m:%s/inbox OR m:%s/irp OR m:%s/list )" base base base)))
+         (in-inboxes  (format "( m:%s/inbox OR m:%s/irp )" base base)))
     (setq mu4e-maildir (expand-file-name ".mails" user-home-directory)
           mu4e-bookmarks
           (list (list (format "%s AND g:unread AND NOT g:trashed AND t:%s" in-inboxes me) "My unreads"         ?i)
