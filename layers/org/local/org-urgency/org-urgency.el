@@ -50,7 +50,7 @@
 (defun org-urgency/detail-priority-score (position)
   "Detail how the priority score is computed for the TODO entry at the given POSITION."
   (let* ((priority (org-entry-get position "PRIORITY")))
-    (message "priority       %12f * %2.6f (%s) = %10f" 1 (org-urgency/priority-score position) priority (org-urgency/priority-score position))))
+    (message "| priority     | %12f | %2.6f (%s) | %10f |" 1 (org-urgency/priority-score position) priority (org-urgency/priority-score position))))
 
 (defun org-urgency/scaled-deadline (position)
   "Extract the deadline of the TODO entry at the given POSITION and scale it.
@@ -87,7 +87,7 @@ References:
 (defun org-urgency/detail-deadline-score (position)
   "Detail how the deadline score is computed for the TODO entry at the given POSITION."
   (let* ((scaled-deadline (org-urgency/scaled-deadline position)))
-    (message "deadline       %12f * %12f = %10f" org-urgency/deadline-coefficient scaled-deadline (org-urgency/deadline-score position))))
+    (message "| deadline     | %12f | %12f | %10f |" org-urgency/deadline-coefficient scaled-deadline (org-urgency/deadline-score position))))
 
 ;; XXX Need to find the first keyword of the TODO sequence in case it's not
 ;; TODO.
@@ -107,7 +107,7 @@ References:
 (defun org-urgency/detail-activity-score (position)
   "Detail how the activity score is computed for the TODO entry at the given POSITION."
   (let* ((is-active (org-urgency/is-active position)))
-    (message "activity       %12f * %12f = %10f"
+    (message "| activity     | %12f | %12f | %10f |"
              org-urgency/activity-coefficient
              (if is-active 1.0 0.0)
              (org-urgency/activity-score position))))
@@ -132,7 +132,7 @@ References:
          (scaled-age (if (> age org-urgency/max-age)
                          1.0
                        (/ age org-urgency/max-age))))
-    (message "age            %12f * %.3f (%dd) = %10f"
+    (message "| age          | %12f | %7.3f (%dd) | %10f |"
              org-urgency/age-coefficient
              scaled-age
              age
@@ -198,18 +198,20 @@ References:
   "Describe how the urgency of the TODO entry at the current point position is computed."
   (interactive)
   (let* ((pom             (point-marker))
-         (priority        (org-entry-get pom "PRIORITY"))
-         (scaled-deadline (org-urgency/scaled-deadline pom))
+         ;; (priority        (org-entry-get pom "PRIORITY"))
+         ;; (scaled-deadline (org-urgency/scaled-deadline pom))
          (urgency         (org-urgency/urgency pom))
          )
     ;;                                                 Coefficient                       Value                                       Score
-    (message "               %12s   %10s   %10s" "Coefficient" "Value" "Score")
+    (message "| %12s | %12s | %12s | %10s |" "Property" "Coefficient" "Value" "Score")
+    (message "|--------------+--------------+--------------+------------|")
     (org-urgency/detail-priority-score pom)
     (org-urgency/detail-deadline-score pom)
     (org-urgency/detail-activity-score pom)
     (org-urgency/detail-age-score      pom)
-    (message "                                         ------------")
-    (message "urgency                                  = %10f" urgency)
+    ;; (org-urgency/detail-tags-score     pom)
+    (message "|--------------+--------------+--------------+------------|")
+    (message "| urgency      |              |              | %10f |" urgency)
     ))
 
 (defun org-urgency/urgency (&optional pom)
