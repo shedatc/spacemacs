@@ -173,6 +173,7 @@ Each entry is either:
         org-link-abbrev-alist
         (list (cons "wikipedia" "https://en.wikipedia.org/wiki/%s")
               (cons "man"       "http://www.freebsd.org/cgi/man.cgi?query=%s")
+              (cons "f"         "file://~/ens/f/%s")
               ;; Work-related:
               (cons "bug"       "https://mantis.stormshield.eu/view.php?id=%s")
               (cons "commit"    "https://review-sns.stormshield.eu/%s")
