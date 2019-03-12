@@ -174,8 +174,7 @@
                 (cons (format "%s/trash"   base)                 ?t))
           mu4e-sent-folder   (format "%s/sent"     base)
           mu4e-trash-folder  (format "%s/trash"    base)
-          mu4e-drafts-folder (format "%s/drafts"   base)
-          mu4e-refile-folder (format "%s/archives" base)))
+          mu4e-drafts-folder (format "%s/drafts"   base)))
 
   (setq mu4e-debug               nil
         mu4e-update-interval     120
