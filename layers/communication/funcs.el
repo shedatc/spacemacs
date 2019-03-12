@@ -148,4 +148,7 @@ Returns the chat buffer."
     "a" 'mml-attach-file
     "c" 'message-send
     "d" 'message-dont-send
-    "q" 'kill-this-buffer))
+    "e" 'mml-secure-message-sign-encrypt
+    "s" 'mml-secure-message-sign
+    "q" 'kill-this-buffer)
+  )
