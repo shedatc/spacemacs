@@ -46,15 +46,23 @@ Returns the chat buffer."
 (defun sheda-communication/mu4e-refile-folder-func (msg)
   "Select the folder according to MSG's From: and To: headers."
   (let* ((recipients          (append (mu4e-message-field msg :to) (mu4e-message-field msg :cc)))
+         (current-maildir     (mu4e-message-field msg :maildir))
          (archive-maildir     (sheda-communication/mu4e-archive-maildir))
          (irp-archive-maildir (concat archive-maildir "/irp")))
-      (cond
-       ;; IRP-related:
-       ((not (null (sheda-communication/mu4e-filter-by-mail-prefix "dp"    recipients))) irp-archive-maildir)
-       ((not (null (sheda-communication/mu4e-filter-by-mail-prefix "ce"    recipients))) irp-archive-maildir)
-       ((not (null (sheda-communication/mu4e-filter-by-mail-prefix "chsct" recipients))) irp-archive-maildir)
-       ;; Default:
-       (t archive-maildir))))
+    (sheda-core/message (format "Current maildir: %s" current-maildir))
+    (cond
+     ;; IRP-related:
+     ((not (null (sheda-communication/mu4e-filter-by-mail-prefix "dp"    recipients))) irp-archive-maildir)
+     ((not (null (sheda-communication/mu4e-filter-by-mail-prefix "ce"    recipients))) irp-archive-maildir)
+     ((not (null (sheda-communication/mu4e-filter-by-mail-prefix "chsct" recipients))) irp-archive-maildir)
+     ;; If refiling from /archive:
+     ;; ((s-starts-with-p (format "%s/archive/" (sheda-communication/mu4e-base-maildir)) current-maildir)
+     ;;  (progn
+     ;;    (sheda-core/message "Message already in /archive.")
+     ;;    (mu4e-ask-maildir "Maildir: ")
+     ;;    ))
+     ;; Default:
+     (t archive-maildir))))
 
 (defun sheda-communication/jump-to-containing-maildir (msg)
   "Jump to the maildir containing MSG."
