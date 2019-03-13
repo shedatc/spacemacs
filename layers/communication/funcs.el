@@ -141,7 +141,8 @@ Returns the chat buffer."
     (kbd "t")         'evil-next-visual-line
     (kbd "s")         'evil-previous-visual-line
     (kbd "T")         'mu4e-view-headers-next
-    (kbd "S")         'mu4e-view-headers-prev))
+    (kbd "S")         'mu4e-view-headers-prev
+    (kbd "v")         'mu4e-view-verify-msg-popup))
 
 (defun sheda-communication/adjust-mu4e-compose-mode-map ()
   (spacemacs/set-leader-keys-for-major-mode 'mu4e-compose-mode
