@@ -106,7 +106,8 @@ Each entry is either:
               (format "%s/proj/fwlimit/"     my-org-directory)
               (format "%s/proj/hacking/"     my-org-directory)
               (format "%s/proj/irp/"         my-org-directory)
-              (format "%s/proj/org-urgency/" my-org-directory))
+              (format "%s/proj/org-urgency/" my-org-directory)
+              (format "%s/proj/packager/"    my-org-directory))
         org-capture-templates
         '(;; Projects:
           ("B" "Brood War")
@@ -124,6 +125,9 @@ Each entry is either:
           ("I" "IRP")
           ("It" "IRP Task"      entry (file+headline     "proj/irp/TODO.org"       "IRP Tasks") (file "tpl/task.org"))
           ("Ir" "IRP Reference" entry (file+olp+datetree "proj/irp/references.org" "IRP References") (file "tpl/reference.org"))
+          ("P" "Packager")
+          ("Pt" "Packager Task"      entry (file+headline     "proj/packager/TODO.org"       "Packager Tasks")      (file "tpl/task.org"))
+          ("Pr" "Packager Reference" entry (file+olp+datetree "proj/packager/references.org" "Packager References") (file "tpl/reference.org"))
           ("U" "Org Urgency")
           ("Ut" "Org Urgency Task"      entry (file+headline     "proj/org-urgency/TODO.org"       "Org Urgency Tasks") (file "tpl/task.org"))
           ("Ur" "Org Urgency Reference" entry (file+olp+datetree "proj/org-urgency/references.org" "Org Urgency References") (file "tpl/reference.org"))
@@ -155,6 +159,7 @@ Each entry is either:
           ("Hacking"    . ?H)
           ("IRP"        . ?I)
           ("OrgUrgency" . ?U)
+          ("Packager"   . ?P)
           (:endgroup)
           (:endgrouptag)
 
