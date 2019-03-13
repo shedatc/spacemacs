@@ -39,6 +39,7 @@
     evil-search
     ;; (flycheck-grammalecte :location local)
     helm
+    helm-pass
     ;; (i3 :location local)
     info+
     nyan-mode
@@ -168,6 +169,10 @@
                 (sheda-core/adjust-keys-for-helm helm-bookmark-find-files-map))
               (with-eval-after-load 'helm-org-rifle
                 (sheda-core/adjust-keys-for-helm helm-org-rifle-map)))))
+
+(defun sheda-core/init-helm-pass ()
+  "Initialize the helm-pass package."
+  (use-package helm-pass))
 
 (defun sheda-core/init-i3 ()
   "Initialize and configure the i3 package."
