@@ -3,10 +3,6 @@
 ;;   (interactive)
 ;;   (switch-to-buffer-other-window "*Group*"))
 
-;; (defun sheda/jabber-update-activity-count ()
-;;   (call-process-shell-command
-;;    (format "echo \"%s\" > ~/var/tmp/jabber-activity-count" jabber-activity-count-string)))
-
 (defun sheda-communication/jabber-chat-with (jc jid &optional other-window)
   "Open an empty chat window for chatting with JID.
 With a prefix argument, open buffer in other window.
@@ -21,6 +17,10 @@ Returns the chat buffer."
     (if other-window
         (switch-to-buffer-other-window buffer)
       (switch-to-buffer buffer))))
+
+(defun sheda-communication/jabber-connected ()
+  "Tell if at least one jabber connection is established."
+  (not (null jabber-connections)))
 
 (defun sheda-communication/mu4e-me ()
   "Return the recipient (to:) corresponding to me."
@@ -89,27 +89,19 @@ Returns the chat buffer."
                                                              :icon "/usr/share/icons/Adwaita/32x32/emblems/emblem-mail.png"))))
   (mu4e-alert-set-default-style 'libnotify-mail))
 
-(defun sheda-communication/update-jabber-connection-status (is-connected)
-  "Manage the /tmp/jabber-connected file to reflect the connection status."
-  (if is-connected
-      (write-region "" nil "/tmp/jabber-connected")
-    (delete-file "/tmp/jabber-connected")))
-
 (defun sheda-communication/react-to-jabber-disconnection (&optional connection)
   "React to a Jabber disconnection."
   (alert-libnotify-notify
    (list :title "jabber"
          :message "Disconnected."
-         :icon "/usr/share/icons/Adwaita/32x32/status/user-busy.png"))
-  (sheda-communication/update-jabber-connection-status nil))
+         :icon "/usr/share/icons/Adwaita/32x32/status/user-busy.png")))
 
 (defun sheda-communication/react-to-jabber-connection (connection)
   "React to a Jabber connection."
   (alert-libnotify-notify
    (list :title "jabber"
          :message "Connected and authenticated."
-         :icon "/usr/share/icons/Adwaita/32x32/status/user-available.png"))
-  (sheda-communication/update-jabber-connection-status t))
+         :icon "/usr/share/icons/Adwaita/32x32/status/user-available.png")))
 
 (defun sheda-communication/adjust-mu4e-main-mode-map ()
   (evilified-state-evilify mu4e-main-mode mu4e-main-mode-map
