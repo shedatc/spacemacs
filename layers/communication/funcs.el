@@ -27,6 +27,11 @@ Returns the chat buffer."
   (cond ((string= system-name "azathoth.stephaner.labo.int") "stephane.rochoy")
         (t                                                   user-login-name)))
 
+(defun sheda-communication/openpgp-signer ()
+  "Return the fingerprint of the OpenPGP key corresponding to me."
+  (cond ((string= system-name "azathoth.stephaner.labo.int") "2BD1A8B4F6C565A7CB10EE92EF889210135D89E8")   ;; Stéphane Rochoy
+        (t                                                   "4B6CC1E70088B7010004F9976DA733C80B15560D"))) ;; Sheda
+
 (defun sheda-communication/mu4e-base-maildir ()
   "Return the base maildir."
   (expand-file-name (concat "/" (cond ((string= system-name "azathoth.stephaner.labo.int") "stormshield")
