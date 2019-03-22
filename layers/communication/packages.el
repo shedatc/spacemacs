@@ -293,13 +293,25 @@
 
   ;;main
   (add-hook 'mu4e-main-mode-hook    #'sheda-communication/adjust-mu4e-main-mode-map)
+  (add-hook 'mu4e-main-mode-hook    #'sheda-communication/add-mu4e-buffer-to-persp-and-switch) ;; XXX Require perp-mode.
   ;; headers
   (add-hook 'mu4e-headers-mode-hook #'sheda-communication/adjust-mu4e-headers-mode-map)
   (add-hook 'mu4e-headers-mode-hook #'sheda-communication/add-mu4e-custom-headers-markers)
+  (add-hook 'mu4e-headers-mode-hook #'sheda-communication/add-mu4e-buffer-to-persp-and-switch) ;; XXX Require perp-mode.
   ;; view
   (add-hook 'mu4e-view-mode-hook    #'sheda-communication/adjust-mu4e-view-mode-map)
+  (add-hook 'mu4e-view-mode-hook    #'sheda-communication/add-mu4e-buffer-to-persp-and-switch) ;; XXX Require perp-mode.
   ;; compose
   (add-hook 'mu4e-compose-mode-hook #'sheda-communication/adjust-mu4e-compose-mode-map)
+  (add-hook 'mu4e-compose-mode-hook #'sheda-communication/add-mu4e-buffer-to-persp-and-switch) ;; XXX Require perp-mode.
+
+  ;; Hooks when used in conjunction with persp-mode:
+  ;; (eval-after-load "persp-mode"
+  ;;   (progn
+  ;;     (add-hook 'mu4e-compose-mode-hook #'sheda-communication/add-mu4e-buffer-to-persp-and-switch)
+  ;;     (add-hook 'mu4e-headers-mode-hook #'sheda-communication/add-mu4e-buffer-to-persp-and-switch)
+  ;;     (add-hook 'mu4e-main-mode-hook    #'sheda-communication/add-mu4e-buffer-to-persp-and-switch)
+  ;;     (add-hook 'mu4e-view-mode-hook    #'sheda-communication/add-mu4e-buffer-to-persp-and-switch)))
   )
 
 (defun sheda-communication/post-init-mu4e-alert ()
@@ -313,14 +325,4 @@
   (spacemacs|define-custom-layout "@mu4e"
     :binding "m"
     :body
-    (progn
-      (add-hook 'mu4e-compose-mode-hook #'sheda-communication/add-mu4e-buffer-to-persp-and-switch)
-      (add-hook 'mu4e-headers-mode-hook #'sheda-communication/add-mu4e-buffer-to-persp-and-switch)
-      (add-hook 'mu4e-main-mode-hook    #'sheda-communication/add-mu4e-buffer-to-persp-and-switch)
-      (add-hook 'mu4e-view-mode-hook    #'sheda-communication/add-mu4e-buffer-to-persp-and-switch)
-      (call-interactively 'mu4e))
-    ;; (let ((agenda-files (org-agenda-files)))
-    ;;   (if agenda-files
-    ;;       (find-file (first agenda-files))
-    ;;     (user-error "Error: No agenda files configured, nothing to display.")))
-    ))
+    (call-interactively 'mu4e)))
