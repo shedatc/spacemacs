@@ -44,6 +44,7 @@ values."
       )
      c-c++
      emacs-lisp
+     erc
      (git
       :variables
       git-gutter-use-fringe t
