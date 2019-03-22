@@ -205,6 +205,7 @@ Each entry is either:
 
 (defun sheda-org/post-init-org ()
   "Post-initialize the org package (org-mode)."
+  (require 'org-tempo) ;; See https://orgmode.org/manual/Structure-Templates.html.
   (spacemacs/set-leader-keys-for-major-mode 'org-mode
     "f"  'org-fill-paragraph ;; KEY OVERRIDE
     "St" 'org-move-subtree-down
