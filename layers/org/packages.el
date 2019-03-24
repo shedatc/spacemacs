@@ -101,6 +101,7 @@ Each entry is either:
         org-agenda-files
         (list my-org-directory
               (format "%s/agenda/"           my-org-directory)
+              (format "%s/proj/art/"         my-org-directory)
               (format "%s/proj/broodwar/"    my-org-directory)
               (format "%s/proj/codesonar/"   my-org-directory)
               (format "%s/proj/fwlimit/"     my-org-directory)
@@ -110,6 +111,9 @@ Each entry is either:
               (format "%s/proj/packager/"    my-org-directory))
         org-capture-templates
         '(;; Projects:
+          ("A" "Art")
+          ("At" "Art Task"      entry (file+headline     "proj/art/TODO.org"       "Art Tasks") (file "tpl/task.org"))
+          ("Ar" "Art Reference" entry (file+olp+datetree "proj/art/references.org" "Art References") (file "tpl/reference.org"))
           ("B" "Brood War")
           ("Bt" "Brood War Task"      entry (file+headline     "proj/broodwar/TODO.org"       "Brood War Tasks") (file "tpl/task.org"))
           ("Br" "Brood War Reference" entry (file+olp+datetree "proj/broodwar/references.org" "Brood War References") (file "tpl/reference.org"))
@@ -153,6 +157,7 @@ Each entry is either:
           ("When @project")
           (:grouptags)
           (:startgroup)
+          ("Art"        . ?A)
           ("BroodWar"   . ?B)
           ("CodeSonar"  . ?C)
           ("FWLimit"    . ?F)
