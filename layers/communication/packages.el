@@ -319,7 +319,9 @@
   (eval-after-load 'alert #'sheda-communication/setup-alert-style-for-mu4e)
   (let* ((base (sheda-communication/mu4e-base-maildir)))
     (setq mu4e-alert-group-by               :from
-          mu4e-alert-interesting-mail-query (format "( m:%s/inbox OR m:%s/irp ) AND g:unread AND NOT g:trashed" base base))))
+          mu4e-alert-interesting-mail-query (format "( m:%s/inbox OR m:%s/irp ) AND g:unread AND NOT g:trashed" base base)
+          mu4e-alert-set-window-urgency     nil
+          )))
 
 (defun sheda-communication/post-init-persp-mode ()
   (spacemacs|define-custom-layout "@mu4e"
