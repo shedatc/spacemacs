@@ -18,42 +18,42 @@
 (defun sheda-org/switch-to-art-TODO-org-buffer ()
   "Switch to the TODO.org buffer of the Art project."
   (interactive)
-  (sheda-core/switch-to-project-TODO-org-buffer "art"))
+  (sheda-org/switch-to-project-TODO-org-buffer "art"))
 
 (defun sheda-org/switch-to-broodwar-TODO-org-buffer ()
   "Switch to the TODO.org buffer of the Brood War project."
   (interactive)
-  (sheda-core/switch-to-project-TODO-org-buffer "broodwar"))
+  (sheda-org/switch-to-project-TODO-org-buffer "broodwar"))
 
 (defun sheda-org/switch-to-codesonar-TODO-org-buffer ()
   "Switch to the TODO.org buffer of the Code Sonar project."
   (interactive)
-  (sheda-core/switch-to-project-TODO-org-buffer "codesonar"))
+  (sheda-org/switch-to-project-TODO-org-buffer "codesonar"))
 
 (defun sheda-org/switch-to-fwlimit-TODO-org-buffer ()
   "Switch to the TODO.org buffer of the FWLimit project."
   (interactive)
-  (sheda-core/switch-to-project-TODO-org-buffer "fwlimit"))
+  (sheda-org/switch-to-project-TODO-org-buffer "fwlimit"))
 
 (defun sheda-org/switch-to-hacking-TODO-org-buffer ()
   "Switch to the TODO.org buffer of the Hacking project."
   (interactive)
-  (sheda-core/switch-to-project-TODO-org-buffer "hacking"))
+  (sheda-org/switch-to-project-TODO-org-buffer "hacking"))
 
 (defun sheda-org/switch-to-irp-TODO-org-buffer ()
   "Switch to the TODO.org buffer of the IRP project."
   (interactive)
-  (sheda-core/switch-to-project-TODO-org-buffer "irp"))
+  (sheda-org/switch-to-project-TODO-org-buffer "irp"))
 
 (defun sheda-org/switch-to-packager-TODO-org-buffer ()
   "Switch to the TODO.org buffer of the Packager project."
   (interactive)
-  (sheda-core/switch-to-project-TODO-org-buffer "packager"))
+  (sheda-org/switch-to-project-TODO-org-buffer "packager"))
 
 (defun sheda-org/switch-to-org-urgency-TODO-org-buffer ()
   "Switch to the TODO.org buffer of the Org Urgency project."
   (interactive)
-  (sheda-core/switch-to-project-TODO-org-buffer "org-urgency"))
+  (sheda-org/switch-to-project-TODO-org-buffer "org-urgency"))
 
 (defun sheda-org/switch-to-brain-buffer ()
   "Switch to the *org-brain* buffer."
