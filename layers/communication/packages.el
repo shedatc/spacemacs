@@ -32,8 +32,8 @@
 (defconst sheda-communication-packages
   '(
     helm-mu
-    jabber
-    (jabber-otr :excluded t)
+    ;; jabber
+    ;; (jabber-otr :excluded t)
     mu4e
     mu4e-alert
     persp-mode
