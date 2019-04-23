@@ -30,10 +30,10 @@
   (interactive)
   (sheda-org/switch-to-project-TODO-org-buffer "codesonar"))
 
-(defun sheda-org/switch-to-fwlimit-TODO-org-buffer ()
-  "Switch to the TODO.org buffer of the FWLimit project."
+(defun sheda-org/switch-to-fw-TODO-org-buffer ()
+  "Switch to the TODO.org buffer of the Firmware project."
   (interactive)
-  (sheda-org/switch-to-project-TODO-org-buffer "fwlimit"))
+  (sheda-org/switch-to-project-TODO-org-buffer "fw"))
 
 (defun sheda-org/switch-to-hacking-TODO-org-buffer ()
   "Switch to the TODO.org buffer of the Hacking project."
@@ -44,6 +44,11 @@
   "Switch to the TODO.org buffer of the IRP project."
   (interactive)
   (sheda-org/switch-to-project-TODO-org-buffer "irp"))
+
+(defun sheda-org/switch-to-fwlimit-TODO-org-buffer ()
+  "Switch to the TODO.org buffer of the FWLimit project."
+  (interactive)
+  (sheda-org/switch-to-project-TODO-org-buffer "fwlimit"))
 
 (defun sheda-org/switch-to-packager-TODO-org-buffer ()
   "Switch to the TODO.org buffer of the Packager project."
