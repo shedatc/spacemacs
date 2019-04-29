@@ -47,14 +47,26 @@
     ;; :commands (list 'helm-mu 'helm-mu-contacts)
     :commands 'helm-mu
     :init
-    ;; The "om" prefix is declared by sheda-communication/pre-init-mu4e.
     (spacemacs/set-leader-keys
-      "omb"  'mu4e-headers-search-bookmark
-      "omj"  'mu4e~headers-jump-to-maildir
-      "omm"  'helm-mu)
-    (spacemacs/set-leader-keys
-      "oC"  'helm-mu-contacts)
+      "oc"  'sheda-communication/helm-mu4e-contacts
+      ;; The "om" prefix is declared by sheda-communication/pre-init-mu4e.
+      "omb" 'mu4e-headers-search-bookmark
+      "omj" 'mu4e~headers-jump-to-maildir
+      "omm" 'helm-mu)
     :config
+    (advice-add 'mu4e~fill-contacts :before
+                (lambda ()
+                  "Clear sheda-communication/mu4e-contacts first."
+                  (sheda-core/message "Clear sheda-communication/mu4e-contacts first.")
+                  (setq sheda-communication~mu4e-contacts (list))))
+    (defvar helm-source-mu4e-contacts
+      (helm-build-in-buffer-source "Search mu4e contacts"
+        :data #'sheda-communication/mu4e-contacts
+        ;; :filtered-candidate-transformer #'helm-mu-contacts-transformer ;; XXX Need to adjust the format.
+        :action '(("Compose email addressed to selected contacts." . helm-mu-compose-mail)
+                  ("Get the emails from/to the selected contacts." . helm-mu-action-get-contact-emails)
+                  ("Insert contacts at point."                     . helm-mu-action-insert-contacts)
+                  ("Copy contacts to clipboard."                   . helm-mu-action-copy-contacts-to-clipboard))))
     (let* ((base (sheda-communication/mu4e-base-maildir)))
       (setq helm-mu-default-search-string (format "(m:%s/inbox OR m:%s/sent OR m:%s/irp) AND d:2w..now" base base base)))
     (helm-add-action-to-source "Jump to containing maildir" 'sheda-communication/jump-to-containing-maildir helm-source-mu)))
@@ -189,6 +201,7 @@
            '("text/x-vcard" "application/pkcs7-mime" "application/x-pkcs7-mime" "application/pkcs7-signature" "application/x-pkcs7-signature" "image/.*")
         mm-decrypt-option 'always
         mm-verify-option  'always
+        mu4e-contact-rewrite-function 'sheda-communication/mu4e-rewrite-function
         mu4e-marks
         '((refile
            :char ("r" . "▶")
@@ -304,6 +317,9 @@
   ;; compose
   (add-hook 'mu4e-compose-mode-hook #'sheda-communication/adjust-mu4e-compose-mode-map)
   (add-hook 'mu4e-compose-mode-hook #'sheda-communication/add-mu4e-buffer-to-persp-and-switch) ;; XXX Require perp-mode.
+  (add-hook 'mu4e-compose-mode-hook (lambda ()
+                                      (set-fill-column 72)
+                                      (flyspell-mode)))
 
   ;; Hooks when used in conjunction with persp-mode:
   ;; (eval-after-load "persp-mode"

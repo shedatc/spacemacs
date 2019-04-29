@@ -150,3 +150,46 @@ Returns the chat buffer."
     "s" 'mml-secure-message-sign
     "q" 'kill-this-buffer)
   )
+
+(defun sheda-communication/mu4e-log-drop-contact (contact)
+  (let ((mail (plist-get contact :mail)))
+    (sheda-core/message (format "mu4e-rewrite-function: %s -> drop" mail))
+    nil))
+
+(defun sheda-communication/mu4e-log-keep-contact (contact)
+  (let ((mail (plist-get contact :mail)))
+    (sheda-core/message (format "mu4e-rewrite-function: %s -> keep" mail))
+    contact))
+
+(defvar sheda-communication~mu4e-contacts (list))
+
+(defun sheda-communication/mu4e-rewrite-function (contact)
+  "Rewrite/Drop contacts."
+  (let ((name (or (plist-get contact :name) ""))
+        (mail (plist-get contact :mail)))
+    (cond
+     ;; Common Typo:
+     ((string-suffix-p "@stomshield.eu" mail)     nil)
+     ((string-suffix-p "@stormshield.e" mail)     nil)
+     ;; Deprecated Domains:
+     ((string-suffix-p "@arkoon-netasq.com" mail) nil)
+     ((string-suffix-p "@netasq.com" mail)        nil)
+     ((string-suffix-p "@netasq.old" mail)        nil)
+     ;; Keep everything else.
+     (t (progn
+          (add-to-list 'sheda-communication~mu4e-contacts (format "%s\t%s\t" mail name))
+          contact)))))
+
+(defun sheda-communication/mu4e-contacts ()
+  "Retrieves contacts from mu4e, not mu to benefit from mu4e-rewrite-function."
+  sheda-communication~mu4e-contacts
+  ;; (let* ((contacts (list)))
+  ;;   (maphash (lambda (k v) (setq contacts (append (list k) contacts) )) mu4e~contacts)
+  ;;   contacts)
+  )
+
+(defun sheda-communication/helm-mu4e-contacts ()
+  "Search for contacts."
+  (interactive)
+  (helm :sources 'helm-source-mu4e-contacts
+        :buffer "*helm mu4e contacts*"))
