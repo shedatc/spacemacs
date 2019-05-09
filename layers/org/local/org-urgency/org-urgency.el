@@ -50,7 +50,9 @@
 (defun org-urgency/detail-priority-score (position)
   "Detail how the priority score is computed for the TODO entry at the given POSITION."
   (let* ((priority (org-entry-get position "PRIORITY")))
-    (message "| priority     | %12f | %2.6f (%s) | %10f |" 1 (org-urgency/priority-score position) priority (org-urgency/priority-score position))))
+    (if (null priority)
+        (message "| priority     | %12f | %2.9f | %10f |" 1 (org-urgency/priority-score position) priority (org-urgency/priority-score position))
+      (message "| priority     | %12f | %2.6f (%s) | %10f |" 1 (org-urgency/priority-score position) priority (org-urgency/priority-score position)))))
 
 (defun org-urgency/scaled-deadline (position)
   "Extract the deadline of the TODO entry at the given POSITION and scale it.
@@ -203,6 +205,7 @@ References:
          (urgency         (org-urgency/urgency pom))
          )
     ;;                                                 Coefficient                       Value                                       Score
+    (message "Urgency at %s:" pom)
     (message "| %12s | %12s | %12s | %10s |" "Property" "Coefficient" "Value" "Score")
     (message "|--------------+--------------+--------------+------------|")
     (org-urgency/detail-priority-score pom)

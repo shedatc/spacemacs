@@ -302,6 +302,9 @@ Each entry is either:
                                         alltodo ""
                                         ((org-agenda-cmp-user-defined 'org-urgency/cmp-urgencies)
                                          (org-agenda-sorting-strategy '(user-defined-up))))))
-    (spacemacs/set-leader-keys "ou" 'org-urgency/show-tasks-by-urgency)))
+    (spacemacs/set-leader-keys
+      "ou" 'org-urgency/show-tasks-by-urgency
+      "oU" 'org-urgency/detail-urgency-computation
+      )))
 
 ;;; packages.el ends here
