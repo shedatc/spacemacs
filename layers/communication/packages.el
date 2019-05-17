@@ -55,9 +55,8 @@
       "omm" 'helm-mu)
     :config
     (advice-add 'mu4e~fill-contacts :before
-                (lambda ()
+                (lambda (contact-data)
                   "Clear sheda-communication/mu4e-contacts first."
-                  (sheda-core/message "Clear sheda-communication/mu4e-contacts first.")
                   (setq sheda-communication~mu4e-contacts (list))))
     (defvar helm-source-mu4e-contacts
       (helm-build-in-buffer-source "Search mu4e contacts"
