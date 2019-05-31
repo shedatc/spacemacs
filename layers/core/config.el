@@ -20,6 +20,9 @@
 (add-to-list 'auto-mode-alist '("rc\\'"      . conf-unix-mode))
 (add-to-list 'auto-mode-alist '("\\.cmd\\'"  . conf-unix-mode))
 
+;; Enable yaml-mode for .push/rc.
+(add-to-list 'auto-mode-alist '("\\.push/rc\\'"  . yaml-mode))
+
 ;; Enable conf-unix-mode for file whose content start with a [.
 (add-to-list 'magic-mode-alist '("\\["  . conf-unix-mode))
 
