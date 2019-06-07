@@ -196,7 +196,8 @@ Each entry is either:
               (cons "f"         "file://~/ens/f/%s")
               ;; Work-related:
               (cons "bug"       "https://mantis.stormshield.eu/view.php?id=%s")
-              (cons "commit"    "https://review-sns.stormshield.eu/%s")
+              (cons "fw-commit" "https://review-sns.stormshield.eu/rFIRMWARE%s")
+              (cons "qa-commit" "https://review-sns.stormshield.eu/rQUALIF%s")
               (cons "review"    "https://review-sns.stormshield.eu/D%s")
               (cons "wiki"      "https://wiki.stormshield.eu/pmwiki_labo/index.php?n=%s"))
         ;; org-use-speed-commands      t
