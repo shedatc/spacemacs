@@ -162,6 +162,17 @@ References:
          )
     score))
 
+(defun org-urgency/detail-tag-score (tag)
+  "Detail the score of the given TAG."
+  (let* ((score (org-urgency/tag-score tag)))
+    (message "|    %-9s | %12f | %12f | %10f |" tag score 1.0 score)))
+
+(defun org-urgency/detail-tags-score (position)
+  "Detail how the tags score is computed for the TODO entry at the given POSITION."
+  (let* ((tags (org-urgency/get-entry-tags pom)))
+    (message "| tags         |              |              |            |")
+    (mapcar 'org-urgency/detail-tag-score tags)))
+
 (defun org-urgency/parents-ids (pom)
   "Return the IDs of the parents of the entry at the given POM (position or marker)."
   (let* ((ids (org-entry-get pom org-urgency/parents-property-name)))
@@ -193,9 +204,6 @@ References:
                                   parents))))
     score))
 
-;; (let* ((scaled-deadline (org-urgency/scaled-deadline position)))
-;;   (* org-urgency/deadline-coefficient scaled-deadline)))
-
 (defun org-urgency/detail-urgency-computation ()
   "Describe how the urgency of the TODO entry at the current point position is computed."
   (interactive)
@@ -212,7 +220,7 @@ References:
     (org-urgency/detail-deadline-score pom)
     (org-urgency/detail-activity-score pom)
     (org-urgency/detail-age-score      pom)
-    ;; (org-urgency/detail-tags-score     pom)
+    (org-urgency/detail-tags-score     pom)
     (message "|--------------+--------------+--------------+------------|")
     (message "| urgency      |              |              | %10f |" urgency)
     ))
