@@ -50,9 +50,8 @@
 (defun org-urgency/detail-priority-score (position)
   "Detail how the priority score is computed for the TODO entry at the given POSITION."
   (let* ((priority (org-entry-get position "PRIORITY")))
-    (if (null priority)
-        (message "| priority     | %12f | %2.9f | %10f |" 1 (org-urgency/priority-score position) priority (org-urgency/priority-score position))
-      (message "| priority     | %12f | %2.6f (%s) | %10f |" 1 (org-urgency/priority-score position) priority (org-urgency/priority-score position)))))
+    (when (not (null priority) )
+      (insert (format-message "| priority | 1.0 | %.2f (%s) | %.2f |\n" (org-urgency/priority-score position) priority (org-urgency/priority-score position))))))
 
 (defun org-urgency/scaled-deadline (position)
   "Extract the deadline of the TODO entry at the given POSITION and scale it.
@@ -72,14 +71,14 @@ References:
 "
   (let* ((deadline (org-entry-get position "DEADLINE")))
     (if (or (null deadline)
-          (string-empty-p deadline))
+            (string-empty-p deadline))
         0.0
       (let* ((distance (* -1.0 (org-time-stamp-to-now deadline))))
         ;; Distance is positive if deadline is in the past (i.e., the task is overdue).
         (cond
-         ((>= distance 7.0)   1.0)                                           ;; Is overdue for more than one week so highest urgency.
+         ((>= distance 7.0)   1.0)      ;; Is overdue for more than one week so highest urgency.
          ((>= distance -14.0) (+ (/ (* (+ distance 14.0) 0.8) 21.0) 0.2))
-         (t                   0.2)))) ))                                       ;; Still have more than 14 days to complete the task so lowest urgency.
+         (t                   0.2)))))) ;; Still have more than 14 days to complete the task so lowest urgency.
 
 (defun org-urgency/deadline-score (position)
   "Extract the deadline of the TODO entry at the given POSITION and return its corresponding score."
@@ -88,8 +87,14 @@ References:
 
 (defun org-urgency/detail-deadline-score (position)
   "Detail how the deadline score is computed for the TODO entry at the given POSITION."
-  (let* ((scaled-deadline (org-urgency/scaled-deadline position)))
-    (message "| deadline     | %12f | %12f | %10f |" org-urgency/deadline-coefficient scaled-deadline (org-urgency/deadline-score position))))
+  (let* ((deadline        (org-entry-get position "DEADLINE"))
+         (scaled-deadline (org-urgency/scaled-deadline position)))
+    (when (not (null deadline))
+      (insert (format-message "| deadline | %.2f | %.2f %s | %.2f |\n"
+                              org-urgency/deadline-coefficient
+                              scaled-deadline
+                              deadline
+                              (org-urgency/deadline-score position))))))
 
 ;; XXX Need to find the first keyword of the TODO sequence in case it's not
 ;; TODO.
@@ -100,19 +105,19 @@ References:
 
 (defun org-urgency/activity-score (position)
   "Extract the current state of the TODO entry at the given POSITION and return its corresponding score."
-  (let* ((is-active (org-urgency/is-active position))
-         (score (if is-active
-                    org-urgency/activity-coefficient
-                  0.0)))
-    score))
+  (let* ((is-active (org-urgency/is-active position)))
+    (if is-active
+        org-urgency/activity-coefficient
+      0.0)))
 
 (defun org-urgency/detail-activity-score (position)
   "Detail how the activity score is computed for the TODO entry at the given POSITION."
   (let* ((is-active (org-urgency/is-active position)))
-    (message "| activity     | %12f | %12f | %10f |"
-             org-urgency/activity-coefficient
-             (if is-active 1.0 0.0)
-             (org-urgency/activity-score position))))
+    (insert (format-message "| activity | %.2f | %.2f (%s) | %.2f |\n"
+                            org-urgency/activity-coefficient
+                            (if is-active 1.0 0.0)
+                            (if is-active "active" "inactive")
+                            (org-urgency/activity-score position)))))
 
 (defun org-urgency/age-score (position)
   "Extract the age of the TODO entry at the given POSITION and return its corresponding score."
@@ -134,11 +139,11 @@ References:
          (scaled-age (if (> age org-urgency/max-age)
                          1.0
                        (/ age org-urgency/max-age))))
-    (message "| age          | %12f | %7.3f (%dd) | %10f |"
-             org-urgency/age-coefficient
-             scaled-age
-             age
-             (org-urgency/age-score position))))
+    (insert (format-message "| age | %.2f | %.2f (%dd) | %.2f |\n"
+                            org-urgency/age-coefficient
+                            scaled-age
+                            age
+                            (org-urgency/age-score position)))))
 
 (defun org-urgency/tag-score (tag)
   "Return the score of the given TAG."
@@ -165,12 +170,11 @@ References:
 (defun org-urgency/detail-tag-score (tag)
   "Detail the score of the given TAG."
   (let* ((score (org-urgency/tag-score tag)))
-    (message "|    %-9s | %12f | %12f | %10f |" tag score 1.0 score)))
+    (insert (format-message "| tag %s | %.2f | 1.0 | %.2f |\n" tag score score))))
 
 (defun org-urgency/detail-tags-score (position)
   "Detail how the tags score is computed for the TODO entry at the given POSITION."
   (let* ((tags (org-urgency/get-entry-tags pom)))
-    (message "| tags         |              |              |            |")
     (mapcar 'org-urgency/detail-tag-score tags)))
 
 (defun org-urgency/parents-ids (pom)
@@ -196,34 +200,44 @@ References:
 
 (defun org-urgency/blocking-score (position)
   "List the TODO entries blocked by the one at the given POSITION and return the corresponding score."
-  (let* ((parents (org-urgency/parents-ids position))
-         (score (apply '+ (mapcar (lambda (id)
-                                    (if (org-urgency/is-not-done-p id)
+  (let* ((parents (org-urgency/parents-ids position)))
+    (apply '+ (mapcar (lambda (id)
+                        (if (org-urgency/is-not-done-p id)
+                            org-urgency/blocking-coefficient
+                          0.0))
+                      parents))))
+
+(defun org-urgency/detail-blocking-score (position)
+  "Detail how the blocking score is computed for the TODO entry at the given POSITION."
+  (let* ((parents (org-urgency/parents-ids position)))
+    (mapcar (lambda (id)
+              (when (org-urgency/is-not-done-p id)
+                (insert (format-message "| blocking %s | %.2f | 1.0 | %.2f |\n"
+                                        id
                                         org-urgency/blocking-coefficient
-                                      0.0))
-                                  parents))))
-    score))
+                                        org-urgency/blocking-coefficient))))
+            parents)))
 
 (defun org-urgency/detail-urgency-computation ()
   "Describe how the urgency of the TODO entry at the current point position is computed."
   (interactive)
   (let* ((pom             (point-marker))
-         ;; (priority        (org-entry-get pom "PRIORITY"))
-         ;; (scaled-deadline (org-urgency/scaled-deadline pom))
-         (urgency         (org-urgency/urgency pom))
-         )
-    ;;                                                 Coefficient                       Value                                       Score
-    (message "Urgency at %s:" pom)
-    (message "| %12s | %12s | %12s | %10s |" "Property" "Coefficient" "Value" "Score")
-    (message "|--------------+--------------+--------------+------------|")
-    (org-urgency/detail-priority-score pom)
-    (org-urgency/detail-deadline-score pom)
-    (org-urgency/detail-activity-score pom)
-    (org-urgency/detail-age-score      pom)
-    (org-urgency/detail-tags-score     pom)
-    (message "|--------------+--------------+--------------+------------|")
-    (message "| urgency      |              |              | %10f |" urgency)
-    ))
+         (urgency         (org-urgency/urgency pom)))
+    (with-current-buffer (get-buffer-create "*Org Urgency*")
+      (read-only-mode -1) ;; Disable read-only mode.
+      (erase-buffer)
+      (insert "| Property | Coefficient | Value | Score |\n")
+      (insert "|----\n")
+      (org-urgency/detail-priority-score pom)
+      (org-urgency/detail-deadline-score pom)
+      (org-urgency/detail-activity-score pom)
+      (org-urgency/detail-age-score      pom)
+      (org-urgency/detail-tags-score     pom)
+      (org-urgency/detail-blocking-score pom)
+      (insert "|----\n")
+      (insert (format-message "| urgency | | | %.2f |\n" urgency))
+      (org-table-align)
+      (read-only-mode))))
 
 (defun org-urgency/urgency (&optional pom)
   "Return the urgency of the TODO entry at the given POM (position or marker). Default to the current point position."
