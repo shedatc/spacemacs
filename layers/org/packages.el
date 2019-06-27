@@ -194,6 +194,7 @@ Each entry is either:
         (list (cons "wikipedia" "https://en.wikipedia.org/wiki/%s")
               (cons "man"       "http://www.freebsd.org/cgi/man.cgi?query=%s")
               (cons "f"         "file://~/ens/f/%s")
+              (cons "lp"        "https://liquipedia.net/starcraft/%s")
               ;; Work-related:
               (cons "bug"       "https://mantis.stormshield.eu/view.php?id=%s")
               (cons "fw-commit" "https://review-sns.stormshield.eu/rFIRMWARE%s")
