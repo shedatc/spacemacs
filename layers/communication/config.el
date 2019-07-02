@@ -1,7 +1,8 @@
-(setq smtpmail-smtp-server       "smtp.stormshield.eu"
-      smtpmail-smtp-service      25
-      message-send-mail-function 'message-send-mail-with-sendmail
-      send-mail-function         'sendmail-send-it
+(setq smtpmail-smtp-server        "smtp.stormshield.eu"
+      smtpmail-smtp-service       25
+      message-send-mail-function  'message-send-mail-with-sendmail
+      message-kill-buffer-on-exit t
+      send-mail-function          'sendmail-send-it
 
       ;; XXX OpenPGP
       mml-secure-openpgp-encrypt-to-self  t
