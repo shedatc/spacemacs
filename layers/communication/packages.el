@@ -187,6 +187,9 @@
           mu4e-trash-folder  (format "%s/trash"    base)
           mu4e-drafts-folder (format "%s/drafts"   base)))
 
+  ;; XXX Playing with mu4e-compose-keep-self-cc.
+  (add-to-list 'mu4e-user-mail-address-list user-mail-address)
+
   (setq mu4e-debug               nil
         mu4e-update-interval     120
         mu4e-use-fancy-chars     t
