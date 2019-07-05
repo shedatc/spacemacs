@@ -187,9 +187,6 @@
           mu4e-trash-folder  (format "%s/trash"    base)
           mu4e-drafts-folder (format "%s/drafts"   base)))
 
-  ;; XXX Playing with mu4e-compose-keep-self-cc.
-  (add-to-list 'mu4e-user-mail-address-list user-mail-address)
-
   (setq mu4e-debug               nil
         mu4e-update-interval     120
         mu4e-use-fancy-chars     t
@@ -309,6 +306,12 @@
   ;;main
   (add-hook 'mu4e-main-mode-hook    #'sheda-communication/adjust-mu4e-main-mode-map)
   (add-hook 'mu4e-main-mode-hook    #'sheda-communication/add-mu4e-buffer-to-persp-and-switch) ;; XXX Require perp-mode.
+
+  ;; XXX Playing with mu4e-compose-keep-self-cc.
+  (add-hook 'mu4e-main-mode-hook
+            (lambda ()
+              (add-to-list 'mu4e-user-mail-address-list user-mail-address)))
+
   ;; headers
   (add-hook 'mu4e-headers-mode-hook #'sheda-communication/adjust-mu4e-headers-mode-map)
   (add-hook 'mu4e-headers-mode-hook #'sheda-communication/add-mu4e-custom-headers-markers)
