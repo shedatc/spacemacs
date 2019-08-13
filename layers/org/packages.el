@@ -127,7 +127,7 @@ Each entry is either:
           ("Fr" "Firmware Reference" entry (file+olp+datetree "proj/fw/references.org" "Firmware References") (file "tpl/reference.org"))
           ("H" "Hacking")
           ("Ht" "Hacking Task"      entry (file+olp          "proj/hacking/TODO.org"       "Hacking" "Misc") (file "tpl/task.org"))
-          ("Hr" "Hacking Reference" entry (file+olp+datetree "proj/hacking/references.org" "Hacking") (file "tpl/reference.org"))
+          ("Hr" "Hacking Reference" entry (file+olp+datetree "proj/hacking/references.org" "Hacking References") (file "tpl/reference.org"))
           ("I" "IRP")
           ("It" "IRP Task"      entry (file+headline     "proj/irp/TODO.org"       "IRP Tasks") (file "tpl/task.org"))
           ("Ir" "IRP Reference" entry (file+olp+datetree "proj/irp/references.org" "IRP References") (file "tpl/reference.org"))
