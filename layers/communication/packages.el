@@ -180,7 +180,7 @@
                 (cons (format "%s/drafts"  base)                 ?d)
                 (cons (format "%s/list/freebsd" base)            ?f)
                 (cons (format "%s/inbox"   base)                 ?i)
-                (cons (format "%s/irp"     base)                 ?I)
+                (cons (format "%s/notifications" base)           ?n)
                 (cons (format "%s/sent"    base)                 ?s)
                 (cons (format "%s/trash"   base)                 ?t))
           mu4e-sent-folder   (format "%s/sent"     base)
