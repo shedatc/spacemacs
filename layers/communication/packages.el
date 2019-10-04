@@ -192,7 +192,7 @@
         mu4e-use-fancy-chars     t
         mu4e-hide-index-messages t
         mu4e-view-show-addresses t
-        mu4e-get-mail-command    "fetchmail"
+        mu4e-get-mail-command    "fetch-mails"
         mu4e-attachment-dir      "~/t/"
         mu4e-refile-folder       'sheda-communication/mu4e-refile-folder-func
         mu4e-headers-results-limit 500
