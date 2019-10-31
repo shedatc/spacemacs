@@ -65,7 +65,6 @@ values."
       org-reveal-root "http://localhost/reveal"
       )
      php
-     semantic
      (shell
       :variables
       shell-enable-smart-eshell t
