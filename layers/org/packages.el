@@ -191,10 +191,11 @@ Each entry is either:
         org-archive-location         "attic/%s_archive::"
         org-id-search-archives       nil
         org-link-abbrev-alist
-        (list (cons "wikipedia" "https://en.wikipedia.org/wiki/%s")
-              (cons "man"       "http://www.freebsd.org/cgi/man.cgi?query=%s")
-              (cons "f"         "file://~/ens/f/%s")
+        (list (cons "f"         "file://~/ens/f/%s")
               (cons "lp"        "https://liquipedia.net/starcraft/%s")
+              (cons "man"       "http://www.freebsd.org/cgi/man.cgi?query=%s")
+              (cons "pr"        "https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=%s")
+              (cons "wikipedia" "https://en.wikipedia.org/wiki/%s")
               ;; Work-related:
               (cons "bug"       "https://mantis.stormshield.eu/view.php?id=%s")
               (cons "fw-commit" "https://review-sns.stormshield.eu/rFIRMWARE%s")
@@ -209,7 +210,9 @@ Each entry is either:
         org-default-priority           org-lowest-priority
 
         ;; #+SEQ_TODO: TODO(t) IN-PROGRESS(p) UNDER-REVIEW(r) WAIT-NIGHTLY(n) BLOCKED(b) | DONE(d) CANCELLED(c)
-        org-todo-keywords '((sequence "TODO(t)" "IN-PROGRESS(p)" "UNDER-REVIEW(r)" "COMPILING(c)" "BLOCKED(b)" "|" "DONE(d)" "CANCELLED(C)"))
+        org-todo-keywords                 '((sequence "TODO(t)" "IN-PROGRESS(p)" "UNDER-REVIEW(r)" "COMPILING(c)" "BLOCKED(b)" "|" "DONE(d)" "CANCELLED(C)"))
+        org-agenda-skip-scheduled-if-done t
+        org-agenda-skip-deadline-if-done  t
 
         org-table-separator-space " " ;; XXX Break tables alignment when set to a propertized value with (space :width 1).
         org-hide-block-startup    t
