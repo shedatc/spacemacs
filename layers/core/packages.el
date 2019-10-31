@@ -22,7 +22,7 @@
 ;;
 ;; - If PACKAGE is not referenced by any other Spacemacs layer, define a
 ;;   function `sheda-core/init-PACKAGE' to load and initialize the package.
-
+;;
 ;; - Otherwise, PACKAGE is already referenced by another Spacemacs layer, so
 ;;   define the functions `sheda-core/pre-init-PACKAGE' and/or
 ;;   `sheda-core/post-init-PACKAGE' to customize the package as it is loaded.

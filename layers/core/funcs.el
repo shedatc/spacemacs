@@ -37,3 +37,12 @@
   "Passes the content of the region as the standard input to the shell command and replace it with the resulting output."
   (interactive "r\nsCommand: ")
   (shell-command-on-region start end command nil t))
+
+(defun sheda-core/make-backup-file-name (file)
+  "Function for `make-backup-file-name'.
+Normally this just returns FILE's name with `.orig' appended.
+It searches for a match for FILE in `backup-directory-alist'.
+If the directory for the backup doesn't exist, it is created.
+
+This function should mirror make-backup-file-name--default-function."
+  (concat (make-backup-file-name-1 file) ".orig"))

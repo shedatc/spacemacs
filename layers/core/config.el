@@ -7,8 +7,9 @@
 (if (string= system-name "azathoth.stephaner.labo.int")
     (add-hook 'after-save-hook 'sheda-core/run-push))
 
-(setq-default browse-url-browser-function 'browse-url-default-browser
-              password-cache-expiry       nil)
+(setq-default browse-url-browser-function   'browse-url-default-browser
+              make-backup-file-name-function 'sheda-core/make-backup-file-name
+              password-cache-expiry          nil)
 
 (setq projectile-enable-caching t
       fsm-debug                 nil ;; No debug.
