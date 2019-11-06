@@ -42,7 +42,7 @@
     (perl-pod-preview :location local)
     (perltidy :location (recipe :fetcher github :repo "emacsmirror/emacswiki.org" :branch "master" :files ("perltidy.el")))
     semantic
-    smart-tabs-mode
+    ;; smart-tabs-mode
     (uncrustify :location (recipe :fetcher github :repo "glima/Emacs-uncrustify" :branch "master" :files ("uncrustify.el")))
     )
 )
