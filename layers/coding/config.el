@@ -5,9 +5,11 @@
 
       ;; C/C++
       flycheck-clang-include-path
-      (list (expand-file-name "lab/sns/fw/crossplatform/lib/"    user-home-directory)
-            (expand-file-name "lab/sns/fw/crossplatform/src/ASQ" user-home-directory)
-            (expand-file-name "lab/sns/fw/lib/"                  user-home-directory))
+      (list (expand-file-name "lab/sns/fw/crossplatform/lib/"               user-home-directory)
+            (expand-file-name "lab/sns/fw/crossplatform/lib/libnbase"       user-home-directory)
+            (expand-file-name "lab/sns/fw/crossplatform/lib/libnbase/POSIX" user-home-directory)
+            (expand-file-name "lab/sns/fw/crossplatform/src/ASQ"            user-home-directory)
+            (expand-file-name "lab/sns/fw/lib/"                             user-home-directory))
 
       ;; Perl
       flycheck-perl-perlcritic-executable "/usr/bin/vendor_perl/perlcritic"
