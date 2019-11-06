@@ -225,12 +225,12 @@
 
 (defun sheda-coding/post-init-semantic ()
   "Configure the semantic package."
-  (setq semantic-default-submodes
-        '(global-semantic-idle-summary-mode
-          global-semantic-decoration-mode
-          global-semantic-stickyfunc-mode
-          global-semantic-idle-scheduler-mode
-          global-semanticdb-minor-mode)))
+  (add-hook 'c-mode-hook
+            (lambda ()
+              "Enable some semantic submodes."
+              (semantic-idle-summary-mode t)
+              (semantic-decoration-mode   t)
+              (semantic-stickyfunc-mode   t))))
 
 (defun sheda-coding/init-smart-tabs-mode ()
   "Initialize and configure the smart-tabs-mode package."
