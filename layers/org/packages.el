@@ -248,6 +248,7 @@ Each entry is either:
   ;; (add-hook 'org-mode-hook 'aggressive-indent-mode) ;; XXX Re-enable only when indent in #+BEGIN_SRC blocks is OK.
   (add-hook 'org-mode-hook 'auto-fill-mode)
 
+  (add-hook 'org-archive-hook 'auto-save-visited-mode)
   ;; Ensure new entries get an ID.
   (add-hook 'org-capture-prepare-finalize-hook 'org-id-get-create)
 
