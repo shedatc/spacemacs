@@ -34,6 +34,7 @@
     emacsql
     emacsql-sqlite
     gnuplot-mode
+    helm-org
     helm-org-rifle
     org
     org-brain
@@ -86,6 +87,11 @@ Each entry is either:
      'org-babel-load-languages
      '((gnuplot . t)))
     ))
+
+(defun sheda-org/init-helm-org ()
+  "Intialize the helm-org-rifle package."
+  (use-package helm-org
+    :commands 'helm-org-in-buffer-headings))
 
 (defun sheda-org/init-helm-org-rifle ()
   "Intialize the helm-org-rifle package."
