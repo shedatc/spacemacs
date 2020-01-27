@@ -9,5 +9,6 @@
   "otI" 'sheda-org/switch-to-irp-TODO-org-buffer
   "otL" 'sheda-org/switch-to-fwlimit-TODO-org-buffer
   "otP" 'sheda-org/switch-to-packager-TODO-org-buffer
+  "otT" 'sheda-org/switch-to-tac-TODO-org-buffer
   "otU" 'sheda-org/switch-to-org-urgency-TODO-org-buffer
   )

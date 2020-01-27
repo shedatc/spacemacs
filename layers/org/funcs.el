@@ -35,6 +35,11 @@
   (interactive)
   (sheda-org/switch-to-project-TODO-org-buffer "fw"))
 
+(defun sheda-org/switch-to-tac-TODO-org-buffer ()
+  "Switch to the TODO.org buffer of the TAC project."
+  (interactive)
+  (sheda-org/switch-to-project-TODO-org-buffer "tac"))
+
 (defun sheda-org/switch-to-hacking-TODO-org-buffer ()
   "Switch to the TODO.org buffer of the Hacking project."
   (interactive)

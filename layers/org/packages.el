@@ -116,6 +116,7 @@ Each entry is either:
               (format "%s/proj/irp/"         my-org-directory)
               (format "%s/proj/org-urgency/" my-org-directory)
               (format "%s/proj/packager/"    my-org-directory)
+              (format "%s/proj/tac/"         my-org-directory)
               (format "%s/proj/wf/"          my-org-directory))
         org-capture-templates
         '(;; Projects:
@@ -143,6 +144,9 @@ Each entry is either:
           ("P" "Packager")
           ("Pt" "Packager Task"      entry (file+headline     "proj/packager/TODO.org"       "Packager Tasks")      (file "tpl/task.org"))
           ("Pr" "Packager Reference" entry (file+olp+datetree "proj/packager/references.org" "Packager References") (file "tpl/reference.org"))
+          ("T" "TAC")
+          ("Tt" "TAC Task"      entry (file+headline     "proj/tac/TODO.org"       "TAC Tasks") (file "tpl/task.org"))
+          ("Tr" "TAC Reference" entry (file+olp+datetree "proj/tac/references.org" "TAC References") (file "tpl/reference.org"))
           ("U" "Org Urgency")
           ("Ut" "Org Urgency Task"      entry (file+headline     "proj/org-urgency/TODO.org"       "Org Urgency Tasks") (file "tpl/task.org"))
           ("Ur" "Org Urgency Reference" entry (file+olp+datetree "proj/org-urgency/references.org" "Org Urgency References") (file "tpl/reference.org"))
@@ -150,8 +154,8 @@ Each entry is either:
           ("Wt" "Weapon Factory Task"      entry (file+headline     "proj/wf/TODO.org"       "Weapon Factory Tasks") (file "tpl/task.org"))
           ("Wr" "Weapon Factory Reference" entry (file+olp+datetree "proj/wf/references.org" "Weapon Factory References") (file "tpl/reference.org"))
           ;; Other:
-          ("T" "Task"       entry (file+headline "TODO.org" "Tasks")                (file "tpl/task.org"))
-          ("t" "Maybe Task" entry (file+headline "TODO.org" "Maybe")                (file "tpl/maybe-task.org"))
+          ("O" "Task"       entry (file+headline "TODO.org" "Tasks")                (file "tpl/task.org"))
+          ("m" "Maybe Task" entry (file+headline "TODO.org" "Maybe")                (file "tpl/maybe-task.org"))
           ("r" "Reference"  entry (file+olp+datetree "references.org" "References") (file "tpl/reference.org"))
           ("c" "Contact"    entry (file+olp+datetree "contacts.org" "Contacts")     (file "tpl/contact.org"))
           ("s" "Secret"     entry (file+olp+datetree "secrets.org")                 (file "tpl/secret.org")))
@@ -179,6 +183,7 @@ Each entry is either:
           ("IRP"            . ?I)
           ("OrgUrgency"     . ?U)
           ("Packager"       . ?P)
+          ("TAC"            . ?T)
           ("Weapon Factory" . ?W)
           (:endgroup)
           (:endgrouptag)
