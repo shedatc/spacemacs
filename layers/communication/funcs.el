@@ -80,8 +80,8 @@ Returns the chat buffer."
     (mu4e~headers-jump-to-maildir maildir)))
 
 (defun sheda-communication/add-mu4e-buffer-to-persp-and-switch ()
-  (persp-add-buffer (current-buffer) (persp-get-by-name "@mu4e"))
-  (persp-switch "@mu4e"))
+  (persp-add-buffer (current-buffer) (persp-get-by-name "@Mu4e"))
+  (persp-switch "@Mu4e"))
 
 (defun sheda-communication/setup-alert-style-for-mu4e ()
   "Define the libnotify-mail style and make it the default for mu4e-alert."

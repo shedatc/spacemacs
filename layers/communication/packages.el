@@ -36,39 +36,67 @@
     ;; (jabber-otr :excluded t)
     mu4e
     mu4e-alert
-    persp-mode
+    ;; persp-mode
     )
 )
 
-(defun sheda-communication/init-helm-mu ()
-  "Initialize the helm-mu package if the mu4e one is installed."
-  (use-package helm-mu
-    :if (configuration-layer/package-usedp 'mu4e)
-    ;; :commands (list 'helm-mu 'helm-mu-contacts)
-    :commands 'helm-mu
-    :init
-    (spacemacs/set-leader-keys
-      "oc"  'sheda-communication/helm-mu4e-contacts
-      ;; The "om" prefix is declared by sheda-communication/pre-init-mu4e.
-      "omb" 'mu4e-headers-search-bookmark
-      "omj" 'mu4e~headers-jump-to-maildir
-      "omm" 'helm-mu)
-    :config
-    (advice-add 'mu4e~fill-contacts :before
-                (lambda (contact-data)
-                  "Clear sheda-communication/mu4e-contacts first."
-                  (setq sheda-communication~mu4e-contacts (list))))
-    (defvar helm-source-mu4e-contacts
-      (helm-build-in-buffer-source "Search mu4e contacts"
-        :data #'sheda-communication/mu4e-contacts
-        ;; :filtered-candidate-transformer #'helm-mu-contacts-transformer ;; XXX Need to adjust the format.
-        :action '(("Compose email addressed to selected contacts." . helm-mu-compose-mail)
-                  ("Get the emails from/to the selected contacts." . helm-mu-action-get-contact-emails)
-                  ("Insert contacts at point."                     . helm-mu-action-insert-contacts)
-                  ("Copy contacts to clipboard."                   . helm-mu-action-copy-contacts-to-clipboard))))
-    (let* ((base (sheda-communication/mu4e-base-maildir)))
-      (setq helm-mu-default-search-string (format "(m:%s/inbox OR m:%s/sent OR m:%s/irp) AND d:2w..now" base base base)))
-    (helm-add-action-to-source "Jump to containing maildir" 'sheda-communication/jump-to-containing-maildir helm-source-mu)))
+;; (defun sheda-communication/init-helm-mu ()
+;;   "Initialize the helm-mu package if the mu4e one is installed."
+;;   (use-package helm-mu
+;;     :if (configuration-layer/package-usedp 'mu4e)
+;;     ;; :commands (list 'helm-mu 'helm-mu-contacts)
+;;     :commands 'helm-mu
+;;     :init
+;;     (spacemacs/set-leader-keys
+;;       "oc"  'sheda-communication/helm-mu4e-contacts
+;;       ;; The "om" prefix is declared by sheda-communication/pre-init-mu4e.
+;;       "omb" 'mu4e-headers-search-bookmark
+;;       "omj" 'mu4e~headers-jump-to-maildir
+;;       "omm" 'helm-mu)
+;;     :config
+;;     (advice-add 'mu4e~fill-contacts :before
+;;                 (lambda (contact-data)
+;;                   "Clear sheda-communication/mu4e-contacts first."
+;;                   (setq sheda-communication~mu4e-contacts (list))))
+;;     (defvar helm-source-mu4e-contacts
+;;       (helm-build-in-buffer-source "Search mu4e contacts"
+;;         :data #'sheda-communication/mu4e-contacts
+;;         ;; :filtered-candidate-transformer #'helm-mu-contacts-transformer ;; XXX Need to adjust the format.
+;;         :action '(("Compose email addressed to selected contacts." . helm-mu-compose-mail)
+;;                   ("Get the emails from/to the selected contacts." . helm-mu-action-get-contact-emails)
+;;                   ("Insert contacts at point."                     . helm-mu-action-insert-contacts)
+;;                   ("Copy contacts to clipboard."                   . helm-mu-action-copy-contacts-to-clipboard))))
+;;     (let* ((base (sheda-communication/mu4e-base-maildir)))
+;;       (setq helm-mu-default-search-string (format "(m:%s/inbox OR m:%s/sent OR m:%s/irp) AND d:2w..now" base base base)))
+;;     (helm-add-action-to-source "Jump to containing maildir" 'sheda-communication/jump-to-containing-maildir helm-source-mu)))
+
+(defun sheda-communication/post-init-helm-mu ()
+  "Configure the helm-mu package if the mu4e one is installed."
+  (spacemacs/set-leader-keys
+    "oc"  'sheda-communication/helm-mu4e-contacts
+    ;; The "om" prefix is declared by sheda-communication/pre-init-mu4e.
+    "omb" 'mu4e-headers-search-bookmark
+    "omj" 'mu4e~headers-jump-to-maildir
+    "omm" 'helm-mu)
+
+  ;; XXX
+  ;; (advice-add 'mu4e~fill-contacts :before
+  ;;             (lambda (contact-data)
+  ;;               "Clear sheda-communication/mu4e-contacts first."
+  ;;               (setq sheda-communication~mu4e-contacts (list))))
+
+  (defvar helm-source-mu4e-contacts
+    (helm-build-in-buffer-source "Search mu4e contacts"
+      :data #'sheda-communication/mu4e-contacts
+      ;; :filtered-candidate-transformer #'helm-mu-contacts-transformer ;; XXX Need to adjust the format.
+      :action '(("Compose email addressed to selected contacts." . helm-mu-compose-mail)
+                ("Get the emails from/to the selected contacts." . helm-mu-action-get-contact-emails)
+                ("Insert contacts at point."                     . helm-mu-action-insert-contacts)
+                ("Copy contacts to clipboard."                   . helm-mu-action-copy-contacts-to-clipboard))))
+  (let* ((base (sheda-communication/mu4e-base-maildir)))
+    (setq helm-mu-default-search-string (format "(m:%s/inbox OR m:%s/sent OR m:%s/irp) AND d:2w..now" base base base)))
+  ;; (helm-add-action-to-source "Jump to containing maildir" 'sheda-communication/jump-to-containing-maildir helm-source-mu)
+  )
 
 (defun sheda-communication/setup-jabber-hooks ()
   ;; jabber-alert-presence-hooks
@@ -187,17 +215,29 @@
           mu4e-trash-folder  (format "%s/trash"    base)
           mu4e-drafts-folder (format "%s/drafts"   base)))
 
-  (setq mu4e-debug               nil
-        mu4e-update-interval     120
-        mu4e-use-fancy-chars     t
-        mu4e-hide-index-messages t
-        mu4e-view-show-addresses t
-        mu4e-get-mail-command    "fetch-mails"
-        mu4e-attachment-dir      "~/t/"
-        mu4e-refile-folder       'sheda-communication/mu4e-refile-folder-func
-        mu4e-headers-results-limit 500
-        mm-attachment-override-types
-           '("text/x-vcard" "application/pkcs7-mime" "application/x-pkcs7-mime" "application/pkcs7-signature" "application/x-pkcs7-signature" "image/.*")
+  ;; XXX
+  ;; (setq message-send-hook      nil
+  ;;       mu4e-compose-mode-hook nil
+  ;;       )
+
+  (setq mu4e-debug                 t
+        mu4e-compose-format-flowed t
+        mu4e-update-interval       120
+        mu4e-use-fancy-chars       t
+        mu4e-hide-index-messages   t
+        mu4e-view-show-addresses   t
+        mu4e-get-mail-command      "fetch-mails"
+        mu4e-attachment-dir        "~/t/"
+        mu4e-refile-folder         'sheda-communication/mu4e-refile-folder-func
+        mu4e-headers-results-limit 200
+        mm-attachment-override-types '(
+                                       "text/x-vcard"
+                                       "application/pkcs7-mime"
+                                       "application/x-pkcs7-mime"
+                                       "application/pkcs7-signature"
+                                       "application/x-pkcs7-signature"
+                                       "image/.*"
+                                       )
         mm-decrypt-option 'always
         mm-verify-option  'always
         mu4e-contact-rewrite-function 'sheda-communication/mu4e-rewrite-function
@@ -268,36 +308,6 @@
            :char  ("*" . "✱")
            :prompt "*something"
            :action (mu4e-error "No action for deferred mark")))
-
-        ;; XXX Contexts don't seems to work as expected. And don't support
-        ;;     changing the maildir :/
-
-        ;; mu4e-context-policy         'ask-if-none
-        ;; mu4e-compose-context-policy 'ask-if-none
-        ;; mu4e-contexts `( ,(make-mu4e-context
-        ;; 				   :name "Sheda"
-        ;; 				   :enter-func (lambda () (mu4e-message "Entering Sheda context"))
-        ;; 				   :leave-func (lambda () (mu4e-message "Leaving Sheda context"))
-        ;; 				   :match-func (lambda (msg) (string= system-name "davinel.mg.rsph.local"))
-        ;; 				   :vars '( ( user-mail-address  . "sheda@fsfe.org"  )
-        ;; 							( user-full-name     . "Sheda" )
-        ;; 							( mu4e-sent-folder   . "/sent" )
-        ;; 							( mu4e-trash-folder  . "/trash" )
-        ;; 							( mu4e-drafts-folder . "/drafts" )
-        ;; 							( mu4e-refile-folder . "/archives" )
-        ;; 							))
-        ;; 				 ,(make-mu4e-context
-        ;; 				   :name "Work"
-        ;; 				   :enter-func (lambda () (mu4e-message "Entering Work context"))
-        ;; 				   :leave-func (lambda () (mu4e-message "Leaving Work context"))
-        ;; 				   :match-func (lambda (msg) (string= system-name "azathoth.stephaner.labo.int"))
-        ;; 				   :vars '( ( user-mail-address  . "stephane.rochoy@stormshield.eu"  )
-        ;; 							( user-full-name     . "Stéphane Rochoy" )
-        ;; 							( mu4e-sent-folder   . "/stormshield/sent" )
-        ;; 							( mu4e-trash-folder  . "/stormshield/trash" )
-        ;; 							( mu4e-drafts-folder . "/stormshield/drafts" )
-        ;; 							( mu4e-refile-folder . "/stormshield/archives" )
-        ;; 							)))
         ))
 
 (defun sheda-communication/post-init-mu4e ()
@@ -323,8 +333,14 @@
   (add-hook 'mu4e-compose-mode-hook #'sheda-communication/adjust-mu4e-compose-mode-map)
   (add-hook 'mu4e-compose-mode-hook #'sheda-communication/add-mu4e-buffer-to-persp-and-switch) ;; XXX Require perp-mode.
   (add-hook 'mu4e-compose-mode-hook (lambda ()
-                                      (set-fill-column 72)
-                                      (flyspell-mode)))
+                                      (set-fill-column 66)                                     ;; Keep consistent with fill-flowed-encode-column.
+                                      (spacemacs/toggle-fill-column-indicator-on)
+                                      (spacemacs/toggle-auto-fill-mode-on)
+                                      (flyspell-mode)
+                                      ;; (use-hard-newlines -1)
+                                      )
+            t ;; Append
+            )
 
   ;; Hooks when used in conjunction with persp-mode:
   ;; (eval-after-load "persp-mode"

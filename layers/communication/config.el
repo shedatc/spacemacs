@@ -2,6 +2,7 @@
       smtpmail-smtp-service       25
       message-send-mail-function  'message-send-mail-with-sendmail
       message-kill-buffer-on-exit t
+      message-fill-column         nil
       send-mail-function          'sendmail-send-it
 
       ;; XXX OpenPGP
