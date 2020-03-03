@@ -31,13 +31,13 @@
 
 (defconst sheda-org-packages
   '(
-    emacsql
-    emacsql-sqlite
-    gnuplot-mode
-    helm-org
+    ;; emacsql
+    ;; emacsql-sqlite
+    ;; gnuplot-mode
+    ;; helm-org
     helm-org-rifle
     org
-    org-brain
+    ;; org-brain
     (org-urgency :location local)
     )
   "The list of Lisp packages required by the sheda-org layer.
@@ -93,13 +93,18 @@ Each entry is either:
   (use-package helm-org
     :commands 'helm-org-in-buffer-headings))
 
-(defun sheda-org/init-helm-org-rifle ()
-  "Intialize the helm-org-rifle package."
-  (use-package helm-org-rifle
-    :commands 'helm-org-rifle
-    :init
-    (spacemacs/set-leader-keys
-      "oo" 'helm-org-rifle)))
+;; (defun sheda-org/init-helm-org-rifle ()
+;;   "Intialize the helm-org-rifle package."
+;;   (use-package helm-org-rifle
+;;     :commands 'helm-org-rifle
+;;     :init
+;;     (spacemacs/set-leader-keys
+;;       "oo" 'helm-org-rifle)))
+
+(defun sheda-org/post-init-helm-org-rifle ()
+  "Configure the helm-org-rifle package."
+  (spacemacs/set-leader-keys
+    "oo" 'helm-org-rifle))
 
 (defun sheda-org/pre-init-org ()
   "Pre-initialize the org package (org-mode)."
@@ -202,7 +207,7 @@ Each entry is either:
         org-archive-location         "attic/%s_archive::"
         org-id-search-archives       nil
         org-link-abbrev-alist
-        (list (cons "f"         "file://~/ens/f/%s")
+        (list (cons "f"         "file://~/%s")
               (cons "lp"        "https://liquipedia.net/starcraft/%s")
               (cons "man"       "http://www.freebsd.org/cgi/man.cgi?query=%s")
               (cons "pr"        "https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=%s")
