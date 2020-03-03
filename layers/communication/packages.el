@@ -220,7 +220,7 @@
   ;;       mu4e-compose-mode-hook nil
   ;;       )
 
-  (setq mu4e-debug                 t
+  (setq mu4e-debug                 nil
         mu4e-compose-format-flowed t
         mu4e-update-interval       120
         mu4e-use-fancy-chars       t
@@ -336,11 +336,9 @@
                                       (set-fill-column 66)                                     ;; Keep consistent with fill-flowed-encode-column.
                                       (spacemacs/toggle-fill-column-indicator-on)
                                       (spacemacs/toggle-auto-fill-mode-on)
-                                      (flyspell-mode)
-                                      ;; (use-hard-newlines -1)
-                                      )
-            t ;; Append
-            )
+                                      ))
+  (add-hook 'mu4e-compose-mode-hook #'flyspell-mode)
+  (add-hook 'mu4e-compose-mode-hook #'mml-secure-message-sign)
 
   ;; Hooks when used in conjunction with persp-mode:
   ;; (eval-after-load "persp-mode"
